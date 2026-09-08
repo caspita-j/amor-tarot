@@ -7,30 +7,24 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Camera, Flame, LogOut } from 'lucide-react';
-import {
-  guardarFotoPerfil,
-  leerFotoPerfil,
-  leerOnboarding,
-  leerRacha,
-  type Racha,
-  type RespuestasOnboarding,
-} from '@/lib/estado-app';
+import { guardarFotoPerfil, leerFotoPerfil } from '@/lib/estado-app';
+import { leerPerfil, type Perfil } from '@/lib/supabase/datos';
 import { recortarCuadrado } from '@/lib/imagen';
+import { createClient } from '@/lib/supabase/client';
 
 export default function PerfilPage() {
   const router = useRouter();
-  const [onboarding, setOnboarding] = useState<RespuestasOnboarding>({});
-  const [racha, setRacha] = useState<Racha>({ dias: 0, ultimaFecha: null });
+  const [perfil, setPerfil] = useState<Perfil | null>(null);
   const [foto, setFoto] = useState<string | null>(null);
   const inputFotoRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setOnboarding(leerOnboarding());
-    setRacha(leerRacha());
+    leerPerfil().then(setPerfil);
     setFoto(leerFotoPerfil());
   }, []);
 
-  const nombre = onboarding.nombre?.trim() || 'Tú';
+  const nombre = perfil?.nombre?.trim() || 'Tú';
+  const dias = perfil?.rachaDias ?? 0;
 
   const cambiarFoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const archivo = e.target.files?.[0];
@@ -46,7 +40,12 @@ export default function PerfilPage() {
     }
   };
 
-  const cerrarSesion = () => {
+  const cerrarSesion = async () => {
+    // Antes solo limpiaba sessionStorage — con Supabase Auth real, la
+    // cookie de sesión seguía viva del lado del servidor. signOut() la
+    // invalida de verdad.
+    const supabase = createClient();
+    await supabase.auth.signOut();
     sessionStorage.clear();
     router.push('/login');
   };
@@ -81,14 +80,14 @@ export default function PerfilPage() {
         />
         <div>
           <p className="text-base font-bold [font-family:var(--font-display)]">{nombre}</p>
-          {onboarding.signo && <p className="text-sm text-[var(--text-secondary)]">{onboarding.signo}</p>}
+          {perfil?.signo && <p className="text-sm text-[var(--text-secondary)]">{perfil.signo}</p>}
         </div>
       </div>
 
       <div className="mt-3 flex items-center gap-3 rounded-[var(--radius-card)] bg-[var(--accent-4)] p-4">
         <Flame size={20} color="var(--accent-4-ink)" aria-hidden="true" />
         <p className="text-sm font-bold text-[var(--accent-4-ink)]">
-          Racha: {racha.dias} {racha.dias === 1 ? 'día' : 'días'}
+          Racha: {dias} {dias === 1 ? 'día' : 'días'}
         </p>
       </div>
 

@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import { BotonPrincipal } from '@/components/onboarding/ui';
-import { leerLecturas, type Lectura } from '@/lib/estado-app';
+import { leerLecturasReales, type LecturaGuardada } from '@/lib/supabase/datos';
 
 function formatearFecha(iso: string): string {
   const d = new Date(iso);
@@ -16,10 +16,10 @@ function formatearFecha(iso: string): string {
 }
 
 export default function HistorialPage() {
-  const [lecturas, setLecturas] = useState<Lectura[] | null>(null);
+  const [lecturas, setLecturas] = useState<LecturaGuardada[] | null>(null);
 
   useEffect(() => {
-    setLecturas(leerLecturas());
+    leerLecturasReales().then(setLecturas);
   }, []);
 
   if (lecturas === null) {

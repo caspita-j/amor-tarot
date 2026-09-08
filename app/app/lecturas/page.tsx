@@ -13,13 +13,13 @@ import {
   esenciaDe,
   esSituacionDeCrisis,
   fraseDe,
-  hoyISO,
   mensajeDeCrisis,
   nombreConOrientacion,
   sortearCartas,
   type CartaSalida,
 } from '@/lib/tarot-data';
-import { guardarLectura, leerOnboarding, registrarHoy, type RespuestasOnboarding } from '@/lib/estado-app';
+import { leerOnboarding, type RespuestasOnboarding } from '@/lib/estado-app';
+import { guardarLecturaReal, registrarDia } from '@/lib/supabase/datos';
 import { comprimirProporcional } from '@/lib/imagen';
 
 const MAX_FOTOS = 3;
@@ -40,6 +40,7 @@ export default function LecturasPage() {
   const [resumenListo, setResumenListo] = useState(false);
   const [errorLectura, setErrorLectura] = useState<string | null>(null);
   const [guardada, setGuardada] = useState(false);
+  const [guardando, setGuardando] = useState(false);
   const [signoA, setSignoA] = useState('');
   const [signoB, setSignoB] = useState('');
   const [compat, setCompat] = useState<{ puntaje: number; texto: string } | null>(null);
@@ -129,22 +130,25 @@ export default function LecturasPage() {
     }
   };
 
-  const guardarEnHistorial = () => {
-    if (!cartas || !resumenListo || guardada) return;
-    guardarLectura({
-      id: crypto.randomUUID(),
-      fecha: new Date().toISOString(),
-      situacion: situacion.trim(),
-      cartas: [
-        nombreConOrientacion(cartas[0]),
-        nombreConOrientacion(cartas[1]),
-        nombreConOrientacion(cartas[2]),
-      ],
-      resumen,
-      fotos: fotos.length > 0 ? fotos : undefined,
-    });
-    registrarHoy(hoyISO());
-    setGuardada(true);
+  const guardarEnHistorial = async () => {
+    if (!cartas || !resumenListo || guardada || guardando) return;
+    setGuardando(true);
+    try {
+      await guardarLecturaReal({
+        situacion: situacion.trim(),
+        cartas: [
+          nombreConOrientacion(cartas[0]),
+          nombreConOrientacion(cartas[1]),
+          nombreConOrientacion(cartas[2]),
+        ],
+        resumen,
+        fotos: fotos.length > 0 ? fotos : undefined,
+      });
+      await registrarDia();
+      setGuardada(true);
+    } finally {
+      setGuardando(false);
+    }
   };
 
   const agregarFotos = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -360,7 +364,7 @@ export default function LecturasPage() {
         )}
         {!errorLectura && (
           <div className="mt-5">
-            <BotonPrincipal onClick={guardarEnHistorial} disabled={!resumenListo || guardada}>
+            <BotonPrincipal onClick={guardarEnHistorial} disabled={!resumenListo || guardada} cargando={guardando}>
               {guardada ? 'Guardada en tu historial ✓' : 'Guardar en mi historial'}
             </BotonPrincipal>
           </div>

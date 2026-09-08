@@ -239,11 +239,44 @@ presionar ni asustar."
   técnicas). Supabase Etapa 1 (auth real): LISTA — proyecto creado por el usuario (ref
   `bevnbpphapljvkmpnoaf`), login conectado a Supabase Auth (magic link/OTP + Google, `app/login/page.tsx`),
   proxy de sesión (`proxy.ts` + `lib/supabase/proxy.ts`, patrón Next 16) protegiendo `/app` y sus rutas
-  de datos. Etapa 2 (lecturas/racha/perfil en Postgres) y Etapa 3 (fotos en Storage) SIN empezar — la
-  app interna sigue 100% en sessionStorage, sin conexión real a la cuenta del usuario (ver Problemas
-  conocidos). Auditoría `/auditoria --rapido` corrida 2026-09-08 (puntaje 6.5/10) — los 2 hallazgos
-  críticos/importantes de seguridad ya resueltos (tope de IA + auth check en el endpoint, ver Decisiones
-  técnicas). Hotmart, Vercel, dominio y seguridad (auditoría OWASP formal) siguen sin arrancar.
+  de datos. Control de versiones (git) activado 2026-09-08 — primer commit hecho, identidad de git
+  configurada SOLO para este repo (no global). Auditoría `/auditoria --rapido` corrida 2026-09-08
+  (6.5/10) y re-corrida 2026-09-08 tras los fixes (7.5/10) — los 2 hallazgos críticos de la primera
+  pasada (endpoint de IA sin protección, sin control de versiones) ya resueltos.
+- 2026-09-08 — Supabase Etapa 2 (lecturas/racha/perfil en Postgres) LISTA: la app interna ya NO usa
+  sessionStorage para racha/perfil/lecturas — pedido explícito del usuario ("avanza") tras la
+  re-auditoría. Migración `crear_perfiles_y_lecturas` (+ `restringir_handle_new_user` para cerrar un
+  hallazgo del linter de seguridad sobre esa función): tabla `profiles` (1:1 con `auth.users` —
+  nombre, signo, otra_persona_nombre, otra_persona_signo, racha_dias, racha_ultima_fecha, foto_url
+  todavía NULL) con RLS (`select_own`/`update_own`/`insert_own`) y un trigger `on_auth_user_created`
+  que crea la fila automáticamente al registrarse; tabla `lecturas` (user_id, situacion, cartas jsonb,
+  resumen, fotos text[] — todavía data URLs, Etapa 3 las mueve a Storage) con RLS
+  (`select_own`/`insert_own`/`delete_own`) e índice `(user_id, created_at desc)`. Nueva función
+  `registrar_dia()` (RPC security definer, mismo patrón atómico que `registrar_lectura_ia()`: hace el
+  insert-if-missing del perfil + el incremento de racha en una sola transacción, usa
+  `(now() at time zone 'utc')::date` para alinear con `hoyISO()` del cliente que también es UTC) —
+  preserva el comportamiento exacto de la racha mock anterior (siempre +1 si no es el mismo día, sin
+  detectar huecos/días saltados — no se tocó esa lógica, fuera de alcance de esta tarea).
+  Nuevo `lib/supabase/datos.ts`: capa de datos real (leerPerfil, sincronizarOnboardingSiHaceFalta —
+  copia las respuestas del onboarding hechas ANTES de tener cuenta a la fila real, una sola vez y solo
+  si el perfil sigue vacío, para no pisar ediciones futuras —, actualizarPerfil, registrarDia,
+  guardarLecturaReal, leerLecturasReales). Conectadas las 4 pantallas: `app/app/page.tsx` (Inicio),
+  `app/app/lecturas/page.tsx` (guardar lectura ahora es async con estado de carga),
+  `app/app/historial/page.tsx`, `app/app/perfil/page.tsx`. `lib/estado-app.ts` se redujo: se eliminó el
+  código muerto de racha/lecturas en sessionStorage (ya no lo usa nadie) — solo quedan
+  `leerOnboarding` (onboarding pre-cuenta) y las funciones de foto de perfil (sin cambios, Etapa 3
+  pendiente). BUG REAL encontrado y corregido de paso: "Cerrar sesión" en Perfil solo limpiaba
+  sessionStorage, nunca invalidaba la sesión real de Supabase (`auth.signOut()` faltaba) — con auth
+  mock esto no se notaba, con auth real dejaba la cookie de sesión viva.
+  Verificado: tsc/build limpios · `get_advisors` de seguridad limpio (solo quedan los 2 RPC
+  intencionalmente expuestos a `authenticated` + el interruptor de contraseñas filtradas, ya conocido)
+  · probado el flujo completo con SQL simulando RLS como el usuario de prueba real
+  (`92af52a2-…`, `jonathancaspita@gmail.com`): `registrar_dia()` crea el perfil solo, sube la racha a 1
+  sin duplicar en una segunda llamada, insertar una lectura funciona, y un usuario distinto (uuid al
+  azar) NO puede verla — RLS confirmado. Dato de prueba de la lectura limpiado después; el racha_dias=1
+  del usuario de prueba se dejó (es un estado real válido, no hace falta revertirlo).
+  Etapa 3 (fotos en Storage) sigue sin empezar — perfil y fotos de lecturas siguen en sessionStorage
+  como data URLs, documentado explícitamente en los comentarios de los archivos que la tocan.
 - 2026-09-08 — Pantalla principal (Inicio), primera pasada de `revisor-visual` (nunca se había
   certificado, es una de las 4 del dinero por Regla 7): 27/40 usabilidad, 11/20 craft, NO LISTA. 5
   defectos: (1) el flip de `TarjetaTarot` no animaba al montar ya revelada (mismo bug de Framer Motion

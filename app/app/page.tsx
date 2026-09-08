@@ -20,13 +20,14 @@ import { SemanaStrip } from '@/components/app/SemanaStrip';
 import { VideoCartaDelDia } from '@/components/app/VideoCartaDelDia';
 import { TarjetaTarot } from '@/components/onboarding/ui';
 import { cartaDelDia, hoyISO, tituloFecha } from '@/lib/tarot-data';
-import { leerFotoPerfil, leerOnboarding, leerRacha, registrarHoy, type Racha } from '@/lib/estado-app';
+import { leerFotoPerfil, leerOnboarding } from '@/lib/estado-app';
+import { leerPerfil, registrarDia, sincronizarOnboardingSiHaceFalta } from '@/lib/supabase/datos';
 
 export default function InicioPage() {
   const [listo, setListo] = useState(false);
   const [nombre, setNombre] = useState('');
   const [foto, setFoto] = useState<string | null>(null);
-  const [racha, setRacha] = useState<Racha>({ dias: 0, ultimaFecha: null });
+  const [racha, setRacha] = useState<{ dias: number; ultimaFecha: string | null }>({ dias: 0, ultimaFecha: null });
   const [cartaRevelada, setCartaRevelada] = useState(false);
   const [aroRevelado, setAroRevelado] = useState(false);
   const reduce = useReducedMotion();
@@ -34,10 +35,14 @@ export default function InicioPage() {
   const carta = cartaDelDia(hoy);
 
   useEffect(() => {
-    setNombre(leerOnboarding().nombre?.trim() || 'ahí');
-    setFoto(leerFotoPerfil());
-    setRacha(leerRacha());
-    setListo(true);
+    (async () => {
+      await sincronizarOnboardingSiHaceFalta(leerOnboarding());
+      const perfil = await leerPerfil();
+      setNombre(perfil.nombre?.trim() || 'ahí');
+      setFoto(leerFotoPerfil());
+      setRacha({ dias: perfil.rachaDias, ultimaFecha: perfil.rachaUltimaFecha });
+      setListo(true);
+    })();
   }, []);
 
   const registradoHoy = racha.ultimaFecha === hoy;
@@ -62,7 +67,12 @@ export default function InicioPage() {
   // aro nunca llegaba a mostrarse relleno.
   const revelarYRegistrar = () => {
     setAroRevelado(true);
-    setTimeout(() => setRacha(registrarHoy(hoy)), reduce ? 0 : 900);
+    setTimeout(
+      () => {
+        registrarDia().then(setRacha);
+      },
+      reduce ? 0 : 900
+    );
   };
 
   if (!listo) {
