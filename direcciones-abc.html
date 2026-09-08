@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direcciones de arte — Amor &amp; Tarot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     TOKENS — shell del comparador (dual-theme, per artifact rules)
+     ============================================================ */
+  :root {
+    --shell-bg: #F3EEFC;
+    --shell-bg-2: #EAE1FA;
+    --shell-ink: #1C1730;
+    --shell-ink-2: #6B6580;
+    --shell-line: #DFD6F4;
+    --shell-card: #FFFFFF;
+    --shell-accent: #7A6AE8;
+    --shell-accent-soft: rgba(122,106,232,0.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --shell-bg: #150F24;
+      --shell-bg-2: #1C1433;
+      --shell-ink: #F1ECFC;
+      --shell-ink-2: #ABA0D1;
+      --shell-line: #332A55;
+      --shell-card: #1E1836;
+      --shell-accent: #A79AFF;
+      --shell-accent-soft: rgba(167,154,255,0.16);
+    }
+  }
+  :root[data-theme="dark"] {
+    --shell-bg: #150F24;
+    --shell-bg-2: #1C1433;
+    --shell-ink: #F1ECFC;
+    --shell-ink-2: #ABA0D1;
+    --shell-line: #332A55;
+    --shell-card: #1E1836;
+    --shell-accent: #A79AFF;
+    --shell-accent-soft: rgba(167,154,255,0.16);
+  }
+
+  /* ============================================================
+     TOKENS — producto (Amor & Tarot). Fijos: la referencia del
+     usuario los MANDA. Modo claro único y deliberado (16, doctrina
+     de fidelidad) — no se derivan del tema del visor.
+     ============================================================ */
+  :root {
+    --bg: #FFFFFF;
+    --hero: #8D7FEF;
+    --hero-ink: #17132B;
+    --hero-ink-soft: #4A4270;
+    --card-orange: #FFA24C;
+    --card-blue: #ABDBF7;
+    --card-pink: #F6A8DC;
+    --ink-1: #16131F;
+    --ink-2: #6E6885;
+    --ink-3: #9994B3;
+    --line: #EDE8F9;
+    --nav-bg: #15111F;
+    --radius-card: 26px;
+    --radius-chip: 16px;
+    --shadow-tint: 141,126,239;
+    --font-display: 'Baloo 2', monospace;
+    --font-body: 'Mulish', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, var(--shell-accent-soft), transparent 60%),
+      var(--shell-bg);
+    color: var(--shell-ink);
+    font-family: 'Mulish', system-ui, sans-serif;
+    padding: 48px 24px 72px;
+  }
+
+  .cabecera { max-width: 1220px; margin: 0 auto 8px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--shell-accent); margin-bottom: 12px;
+  }
+  .eyebrow svg { display: block; }
+  .cabecera h1 {
+    font-family: 'Baloo 2', sans-serif; font-size: clamp(28px, 4vw, 38px); font-weight: 700;
+    letter-spacing: -0.01em; text-wrap: balance; max-width: 22ch;
+  }
+  .cabecera p.sub {
+    margin-top: 10px; font-size: 15px; color: var(--shell-ink-2); max-width: 62ch; line-height: 1.55;
+  }
+
+  .salidas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .salidas span {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid var(--shell-line); border-radius: 999px;
+    padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--shell-ink-2);
+    background: var(--shell-card);
+  }
+  .salidas b { color: var(--shell-ink); }
+
+  .aviso-fuentes {
+    max-width: 1220px; margin: 16px auto 40px; font-size: 12.5px; color: var(--shell-ink-2);
+    border-left: 2px solid var(--shell-line); padding-left: 12px; line-height: 1.6;
+  }
+
+  .opciones {
+    max-width: 1220px; margin: 0 auto; display: grid; gap: 44px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+
+  .opcion { display: flex; flex-direction: column; gap: 20px; }
+
+  .meta {
+    background: var(--shell-card); border: 1px solid var(--shell-line);
+    border-radius: 20px; padding: 20px;
+    box-shadow: 0 18px 40px -24px rgba(20,15,40,0.28);
+  }
+  .meta .letra {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 10px; font-weight: 800; font-size: 15px;
+    font-family: 'Baloo 2', sans-serif;
+    color: #fff; background: var(--shell-accent); margin-right: 9px;
+  }
+  .meta h2 {
+    display: flex; align-items: center; font-family: 'Baloo 2', sans-serif;
+    font-size: 18px; font-weight: 700; color: var(--shell-ink);
+  }
+  .meta .direccion { margin-top: 6px; font-size: 13px; color: var(--shell-ink-2); line-height: 1.5; }
+  .hipotesis { margin-top: 12px; font-size: 13px; line-height: 1.55; color: var(--shell-ink); }
+  .hipotesis strong { color: var(--shell-accent); }
+
+  .paleta { display: flex; gap: 7px; margin-top: 14px; }
+  .paleta i { width: 26px; height: 26px; border-radius: 9px; display: block; border: 1px solid rgba(0,0,0,0.06); }
+
+  .especimen { margin-top: 14px; border-top: 1px solid var(--shell-line); padding-top: 12px; }
+  .especimen .esp-display { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--shell-ink); }
+  .especimen .esp-body { margin-top: 5px; font-family: var(--font-body); font-size: 13px; color: var(--shell-ink-2); }
+
+  /* ── Chasis de teléfono ── */
+  .telefono {
+    width: 300px; margin: 0 auto;
+    aspect-ratio: 9 / 19.5;
+    border: 10px solid #0E0B1A;
+    border-radius: 46px;
+    box-shadow:
+      0 30px 60px -20px rgba(20,10,50,0.45),
+      0 10px 24px -12px rgba(20,10,50,0.35);
+    overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+    background: var(--bg);
+  }
+  .isla {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 90px; height: 22px; border-radius: 999px; background: #0E0B1A; z-index: 5;
+  }
+  .statusbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px 4px; font-size: 12.5px; font-weight: 700; color: var(--ink-1);
+    font-variant-numeric: tabular-nums; font-family: var(--font-body);
+  }
+  .statusbar .der { display: flex; align-items: center; gap: 5px; }
+  .home-indicator {
+    position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%);
+    width: 116px; height: 5px; border-radius: 999px; background: var(--ink-1); opacity: 0.9; z-index: 5;
+  }
+  .pantalla { flex: 1; display: flex; flex-direction: column; overflow: hidden; font-family: var(--font-body); color: var(--ink-1); }
+
+  .chip-icono {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; flex-shrink: 0; border-radius: var(--radius-chip);
+  }
+
+  /* Nav inferior — píldora oscura, común a las 3 (parte del contrato) */
+  .navbar {
+    margin: 0 16px 14px; height: 58px; border-radius: 999px; background: var(--nav-bg);
+    display: flex; align-items: center; justify-content: space-around; padding: 0 8px;
+    box-shadow: 0 10px 24px -8px rgba(21,17,31,0.5);
+  }
+  .navbar .item { width: 38px; height: 38px; border-radius: 999px; display: flex; align-items: center; justify-content: center; }
+  .navbar .item.activo { background: #fff; }
+  .navbar .item.activo svg { stroke: var(--nav-bg); }
+  .navbar .item svg { stroke: #7A7492; }
+
+  .pie {
+    max-width: 1220px; margin: 48px auto 0; font-size: 12.5px; color: var(--shell-ink-2);
+    border-top: 1px solid var(--shell-line); padding-top: 16px; line-height: 1.65;
+  }
+
+  /* ============================================================
+     OPCIÓN A — Héroe carta-del-día + duo de cards (más cercana 1:1
+     a la composición de la referencia)
+     ============================================================ */
+  .op-a .encabezado { padding: 14px 18px 0; }
+  .op-a .saludo { font-size: 12px; font-weight: 700; color: var(--ink-3); font-family: var(--font-body); }
+  .op-a .titulo { font-family: var(--font-display); font-size: 21px; font-weight: 700; color: var(--ink-1); margin-top: 2px; }
+
+  .op-a .heroe {
+    margin: 14px 18px 0; border-radius: var(--radius-card); background: var(--hero);
+    padding: 18px; position: relative; overflow: hidden;
+    box-shadow: 0 16px 30px -12px rgb(var(--shadow-tint) / 0.45);
+  }
+  .op-a .heroe::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 85% -10%, rgba(255,255,255,0.35), transparent 55%);
+  }
+  .op-a .heroe .label { font-size: 12px; font-weight: 700; color: var(--hero-ink-soft); position: relative; }
+  .op-a .heroe .carta-nombre { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--hero-ink); margin-top: 4px; position: relative; }
+  .op-a .heroe .carta-frase { margin-top: 6px; font-size: 12.5px; color: var(--hero-ink-soft); line-height: 1.5; max-width: 74%; position: relative; }
+  .op-a .heroe .ilustracion { position: absolute; right: 10px; bottom: 6px; width: 74px; height: 74px; }
+
+  .op-a .dias { display: flex; gap: 6px; margin: 14px 18px 0; }
+  .op-a .dia {
+    flex: 1; text-align: center; padding: 7px 0; border-radius: 14px; background: #F7F4FE;
+    font-family: var(--font-body); font-size: 10.5px; font-weight: 700; color: var(--ink-3);
+  }
+  .op-a .dia b { display: block; font-size: 13px; color: var(--ink-1); margin-top: 1px; }
+  .op-a .dia.hoy { background: var(--ink-1); color: #fff; }
+  .op-a .dia.hoy b { color: #fff; }
+
+  .op-a .seccion-titulo { margin: 18px 18px 0; font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ink-1); }
+
+  .op-a .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 18px 0; }
+  .op-a .tile { border-radius: 20px; padding: 13px; min-height: 118px; display: flex; flex-direction: column; justify-content: space-between; }
+  .op-a .tile.naranja { background: var(--card-orange); }
+  .op-a .tile.azul { background: var(--card-blue); }
+  .op-a .tile .etiqueta { font-size: 10px; font-weight: 700; color: rgba(22,19,31,0.55); background: rgba(255,255,255,0.55); display: inline-block; padding: 3px 8px; border-radius: 999px; align-self: flex-start; }
+  .op-a .tile h4 { font-family: var(--font-display); font-size: 14.5px; font-weight: 700; color: var(--ink-1); margin-top: 8px; line-height: 1.2; }
+  .op-a .tile p { font-size: 10.5px; color: rgba(22,19,31,0.6); margin-top: 3px; }
+
+  .op-a .franja {
+    margin: 10px 18px 0; background: var(--card-pink); border-radius: 20px; padding: 12px 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .op-a .franja p { font-size: 11.5px; font-weight: 700; color: #6B2C57; }
+
+  /* ============================================================
+     OPCIÓN B — Anillo de energía + lista vertical
+     ============================================================ */
+  .op-b .encabezado-b { padding: 14px 18px 0; text-align: center; }
+  .op-b .periodo { font-size: 11.5px; font-weight: 700; color: var(--ink-3); }
+  .op-b .titulo-b { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--ink-1); margin-top: 2px; }
+
+  .op-b .anillo-wrap { margin: 16px auto 0; position: relative; width: 138px; height: 138px; }
+  .op-b .anillo-wrap .centro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .op-b .anillo-wrap .carta { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ink-1); text-align: center; line-height: 1.15; padding: 0 8px; }
+  .op-b .anillo-wrap .carta-label { font-size: 9.5px; color: var(--ink-3); font-weight: 700; margin-top: 3px; }
+
+  .op-b .lista { margin: 18px 18px 0; display: flex; flex-direction: column; gap: 9px; }
+  .op-b .fila { display: flex; align-items: center; gap: 11px; background: #F7F4FE; border-radius: 18px; padding: 10px 12px; }
+  .op-b .fila .chip-icono { border-radius: 14px; }
+  .op-b .fila .chip-icono.naranja { background: var(--card-orange); }
+  .op-b .fila .chip-icono.azul { background: var(--card-blue); }
+  .op-b .fila .chip-icono.morado { background: var(--hero); }
+  .op-b .fila h4 { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--ink-1); }
+  .op-b .fila p { font-size: 10.5px; color: var(--ink-2); margin-top: 1px; }
+
+  /* ============================================================
+     OPCIÓN C — Héroe + carrusel horizontal de lecturas
+     ============================================================ */
+  .op-c .encabezado { padding: 14px 18px 0; }
+  .op-c .saludo { font-size: 12px; font-weight: 700; color: var(--ink-3); }
+  .op-c .titulo { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--ink-1); margin-top: 2px; }
+
+  .op-c .heroe-c {
+    margin: 12px 18px 0; border-radius: var(--radius-card); background: var(--hero);
+    padding: 16px; display: flex; align-items: center; gap: 12px; position: relative; overflow: hidden;
+    box-shadow: 0 16px 30px -12px rgb(var(--shadow-tint) / 0.45);
+  }
+  .op-c .heroe-c::after { content:''; position:absolute; inset:0; background: radial-gradient(circle at 90% 0%, rgba(255,255,255,0.3), transparent 55%); }
+  .op-c .heroe-c .txt { position: relative; }
+  .op-c .heroe-c .label { font-size: 11px; font-weight: 700; color: var(--hero-ink-soft); }
+  .op-c .heroe-c h3 { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--hero-ink); margin-top: 2px; }
+  .op-c .heroe-c .cta-mini { margin-top: 8px; display: inline-block; font-size: 11px; font-weight: 700; color: var(--hero); background: #fff; padding: 6px 12px; border-radius: 999px; }
+
+  .op-c .carrusel-titulo { margin: 18px 18px 0; font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ink-1); }
+  .op-c .carrusel { display: flex; gap: 10px; margin: 10px 0 0; padding: 0 18px 4px; overflow-x: auto; }
+  .op-c .mini { min-width: 118px; border-radius: 20px; padding: 12px; flex-shrink: 0; }
+  .op-c .mini.naranja { background: var(--card-orange); }
+  .op-c .mini.azul { background: var(--card-blue); }
+  .op-c .mini.rosa { background: var(--card-pink); }
+  .op-c .mini h4 { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--ink-1); margin-top: 6px; line-height: 1.2; }
+  .op-c .mini p { font-size: 10px; color: rgba(22,19,31,0.6); margin-top: 3px; }
+
+  .op-c .nota { margin: 14px 18px 0; background: #F7F4FE; border-radius: 18px; padding: 12px 13px; display: flex; gap: 10px; align-items: flex-start; }
+  .op-c .nota p { font-size: 11px; color: var(--ink-2); line-height: 1.5; }
+  .op-c .nota p b { color: var(--ink-1); }
+</style>
+</head>
+<body>
+
+<header class="cabecera">
+  <span class="eyebrow">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.6 6.9L22 9.3l-5.4 4.6 1.8 7.1L12 17l-6.4 4 1.8-7.1L2 9.3l7.4-.4Z"/></svg>
+    Sesión 2 · Identidad visual
+  </span>
+  <h1>Elige la dirección visual de Amor &amp; Tarot</h1>
+  <p class="sub">
+    Misma pantalla clave (la carta del día), fiel a tu referencia: fondo claro, tarjetas muy
+    redondeadas en lila/naranja/azul/rosa, tipografía redonda y bold, nav inferior en píldora
+    negra. Las 3 opciones NO cambian el color ni la tipografía — divergen en cómo se organiza
+    la pantalla.
+  </p>
+  <div class="salidas" role="list">
+    <span role="listitem"><b>1 · Elegir</b> A, B o C</span>
+    <span role="listitem"><b>2 · Combinar</b> ("la A pero con el anillo de la B")</span>
+    <span role="listitem"><b>3 · Pedir otras 3</b> composiciones nuevas</span>
+    <span role="listitem"><b>4 · Ajustar un detalle</b> ("más lila, menos naranja")</span>
+  </div>
+</header>
+<p class="aviso-fuentes">
+  Verificación de fuentes: el nombre de cada familia (panel de abajo) se muestra EN su propia
+  fuente. Si se ve letra de máquina de escribir, esa fuente no cargó — no evaluar así.
+</p>
+
+<div class="opciones">
+
+  <!-- ═══════════════════════ OPCIÓN A ═══════════════════════ -->
+  <section class="opcion op-a" aria-label="Opción A">
+    <div class="meta">
+      <h2><span class="letra">A</span> Carta del día + duo de cards</h2>
+      <p class="direccion">Layout casi 1:1 a tu referencia: héroe grande arriba, tira de días, 2 tarjetas de color debajo y una franja de cierre.</p>
+      <p class="hipotesis"><strong>Por qué convierte:</strong> es lo más parecido a lo que ya te gustó — cero curva de aprendizaje, reconocible desde el primer vistazo.</p>
+      <div class="paleta">
+        <i style="background:#8D7FEF"></i><i style="background:#FFA24C"></i><i style="background:#ABDBF7"></i><i style="background:#F6A8DC"></i><i style="background:#15111F"></i><i style="background:#FFFFFF;border:1px solid #E5E0F5"></i>
+      </div>
+      <div class="especimen">
+        <p class="esp-display">Baloo 2 — AaBbÑñ 0123</p>
+        <p class="esp-body">Mulish — El veloz murciélago hindú comía feliz cardillo y kiwi.</p>
+      </div>
+    </div>
+
+    <div class="telefono">
+      <div class="isla"></div>
+      <div class="statusbar">
+        <span>9:41</span>
+        <span class="der">
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor" aria-hidden="true"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.5" y="5" width="3" height="6" rx="0.8"/><rect x="9" y="3" width="3" height="8" rx="0.8"/><rect x="13.5" y="0.5" width="3" height="10.5" rx="0.8"/></svg>
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M1.5 4.2a9.5 9.5 0 0 1 13 0"/><path d="M3.8 6.6a6.2 6.2 0 0 1 8.4 0"/><path d="M6.2 9a2.8 2.8 0 0 1 3.6 0"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" aria-hidden="true"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="currentColor"/><rect x="22.5" y="3.8" width="2" height="4.4" rx="1" fill="currentColor" opacity="0.4"/></svg>
+        </span>
+      </div>
+
+      <div class="pantalla">
+        <div class="encabezado">
+          <p class="saludo">Miércoles 25 de nov.</p>
+          <p class="titulo">Tu carta de hoy</p>
+        </div>
+
+        <div class="heroe">
+          <p class="label">CARTA DEL DÍA</p>
+          <p class="carta-nombre">La Estrella</p>
+          <p class="carta-frase">Después de la duda, un momento de calma. Hoy no necesitas responderle — necesitas responderte a ti.</p>
+          <svg class="ilustracion" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <circle cx="50" cy="42" r="26" fill="#fff" opacity="0.18"/>
+            <path d="M50 18 L55 34 L72 34 L58 44 L63 60 L50 50 L37 60 L42 44 L28 34 L45 34 Z" fill="#fff" opacity="0.9"/>
+          </svg>
+        </div>
+
+        <div class="dias">
+          <div class="dia">DOM<b>22</b></div>
+          <div class="dia">LUN<b>23</b></div>
+          <div class="dia">MAR<b>24</b></div>
+          <div class="dia hoy">MIÉ<b>25</b></div>
+          <div class="dia">JUE<b>26</b></div>
+          <div class="dia">VIE<b>27</b></div>
+          <div class="dia">SÁB<b>28</b></div>
+        </div>
+
+        <p class="seccion-titulo">Tu momento</p>
+        <div class="grid2">
+          <div class="tile naranja">
+            <span class="etiqueta">Situación</span>
+            <div>
+              <h4>Tu lectura de pareja</h4>
+              <p>3 cartas · Tú, Él/Ella, la Dinámica</p>
+            </div>
+          </div>
+          <div class="tile azul">
+            <span class="etiqueta">Rápido</span>
+            <div>
+              <h4>Compatibilidad</h4>
+              <p>Escorpio + Piscis</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="franja">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B2C57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+          <p>Racha activa: 6 días seguidos leyendo tu carta</p>
+        </div>
+
+        <div class="navbar">
+          <span class="item activo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>
+          <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+          <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>
+          <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg></span>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ OPCIÓN B ═══════════════════════ -->
+  <section class="opcion op-b" aria-label="Opción B">
+    <div class="meta">
+      <h2><span class="letra">B</span> Anillo de energía + lista</h2>
+      <p class="direccion">La carta del día vive dentro de un anillo circular (como un "medidor de energía"), y debajo una lista vertical de accesos en vez de la grilla 2×2.</p>
+      <p class="hipotesis"><strong>Por qué convierte:</strong> el anillo se siente ritual, como un termómetro emocional del día — refuerza el hábito de volver cada mañana a "ver cómo está tu energía".</p>
+      <div class="paleta">
+        <i style="background:#8D7FEF"></i><i style="background:#FFA24C"></i><i style="background:#ABDBF7"></i><i style="background:#F6A8DC"></i><i style="background:#15111F"></i><i style="background:#FFFFFF;border:1px solid #E5E0F5"></i>
+      </div>
+      <div class="especimen">
+        <p class="esp-display">Baloo 2 — AaBbÑñ 0123</p>
+        <p class="esp-body">Mulish — El veloz murciélago hindú comía feliz cardillo y kiwi.</p>
+      </div>
+    </div>
+
+    <div class="telefono">
+      <div class="isla"></div>
+      <div class="statusbar">
+        <span>9:41</span>
+        <span class="der">
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor" aria-hidden="true"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.5" y="5" width="3" height="6" rx="0.8"/><rect x="9" y="3" width="3" height="8" rx="0.8"/><rect x="13.5" y="0.5" width="3" height="10.5" rx="0.8"/></svg>
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M1.5 4.2a9.5 9.5 0 0 1 13 0"/><path d="M3.8 6.6a6.2 6.2 0 0 1 8.4 0"/><path d="M6.2 9a2.8 2.8 0 0 1 3.6 0"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" aria-hidden="true"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="currentColor"/><rect x="22.5" y="3.8" width="2" height="4.4" rx="1" fill="currentColor" opacity="0.4"/></svg>
+        </span>
+      </div>
+
+      <div class="pantalla">
+        <div class="encabezado-b">
+          <p class="periodo">Miércoles 25 de noviembre</p>
+          <p class="titulo-b">Tu energía de hoy</p>
+        </div>
+
+        <div class="anillo-wrap">
+          <svg width="138" height="138" viewBox="0 0 138 138" role="img" aria-label="Carta del día: La Estrella">
+            <circle cx="69" cy="69" r="59" fill="none" stroke-width="12" stroke="#EDE8F9"/>
+            <circle cx="69" cy="69" r="59" fill="none" stroke-width="12" stroke="#8D7FEF" stroke-linecap="round"
+                    stroke-dasharray="370.7" stroke-dashoffset="96" transform="rotate(-90 69 69)"/>
+          </svg>
+          <div class="centro">
+            <span class="carta">La Estrella</span>
+            <span class="carta-label">calma · 74%</span>
+          </div>
+        </div>
+
+        <div class="lista">
+          <div class="fila">
+            <span class="chip-icono naranja">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16131F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            </span>
+            <div><h4>Tu lectura de pareja</h4><p>Cuéntale tu situación y saca 3 cartas</p></div>
+          </div>
+          <div class="fila">
+            <span class="chip-icono azul">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16131F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+            </span>
+            <div><h4>Compatibilidad</h4><p>Escorpio + Piscis · 82% de conexión</p></div>
+          </div>
+          <div class="fila">
+            <span class="chip-icono morado">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+            </span>
+            <div><h4>Tu historial</h4><p>12 lecturas guardadas este mes</p></div>
+          </div>
+        </div>
+
+        <div class="navbar">
+          <span class="item activo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>
+          <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+          <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>
+          <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg></span>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ OPCIÓN C ═══════════════════════ -->
+  <section class="opcion op-c" aria-label="Opción C">
+    <div class="meta">
+      <h2><span class="letra">C</span> Héroe compacto + carrusel</h2>
+      <p class="direccion">Héroe más chico y con CTA propio, y las funciones (lectura, compatibilidad, historial) en un carrusel horizontal que se desliza con el dedo.</p>
+      <p class="hipotesis"><strong>Por qué convierte:</strong> dedica más pantalla a invitar a leer las cartas (CTA visible de inmediato) y dosifica el resto sin saturar de un vistazo.</p>
+      <div class="paleta">
+        <i style="background:#8D7FEF"></i><i style="background:#FFA24C"></i><i style="background:#ABDBF7"></i><i style="background:#F6A8DC"></i><i style="background:#15111F"></i><i style="background:#FFFFFF;border:1px solid #E5E0F5"></i>
+      </div>
+      <div class="especimen">
+        <p class="esp-display">Baloo 2 — AaBbÑñ 0123</p>
+        <p class="esp-body">Mulish — El veloz murciélago hindú comía feliz cardillo y kiwi.</p>
+      </div>
+    </div>
+
+    <div class="telefono">
+      <div class="isla"></div>
+      <div class="statusbar">
+        <span>9:41</span>
+        <span class="der">
+          <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor" aria-hidden="true"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.5" y="5" width="3" height="6" rx="0.8"/><rect x="9" y="3" width="3" height="8" rx="0.8"/><rect x="13.5" y="0.5" width="3" height="10.5" rx="0.8"/></svg>
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M1.5 4.2a9.5 9.5 0 0 1 13 0"/><path d="M3.8 6.6a6.2 6.2 0 0 1 8.4 0"/><path d="M6.2 9a2.8 2.8 0 0 1 3.6 0"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" aria-hidden="true"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="currentColor"/><rect x="22.5" y="3.8" width="2" height="4.4" rx="1" fill="currentColor" opacity="0.4"/></svg>
+        </span>
+      </div>
+
+      <div class="pantalla">
+        <div class="encabezado">
+          <p class="saludo">Miércoles 25 de nov.</p>
+          <p class="titulo">Hola de nuevo</p>
+        </div>
+
+        <div class="heroe-c">
+          <svg width="46" height="46" viewBox="0 0 100 100" fill="none" aria-hidden="true" style="flex-shrink:0">
+            <circle cx="50" cy="50" r="46" fill="rgba(255,255,255,0.16)"/>
+            <path d="M50 22 L56 42 L77 42 L60 54 L66 74 L50 62 L34 74 L40 54 L23 42 L44 42 Z" fill="#fff"/>
+          </svg>
+          <div class="txt">
+            <p class="label">CARTA DEL DÍA</p>
+            <h3>La Estrella</h3>
+            <span class="cta-mini">Ver mi lectura</span>
+          </div>
+        </div>
+
+        <p class="carrusel-titulo">Explora</p>
+        <div class="carrusel">
+          <div class="mini naranja">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16131F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            <h4>Tu situación</h4>
+            <p>Lectura de 3 cartas</p>
+          </div>
+          <div class="mini azul">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16131F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+            <h4>Compatibilidad</h4>
+            <p>Escorpio + Piscis</p>
+          </div>
+          <div class="mini rosa">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16131F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+            <h4>Historial</h4>
+            <p>12 lecturas</p>
+          </div>
+        </div>
+
+        <div class="nota">
+          <span class="chip-icono" style="background:#EDE8F9">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8D7FEF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.6 6.9L22 9.3l-5.4 4.6 1.8 7.1L12 17l-6.4 4 1.8-7.1L2 9.3l7.4-.4Z"/></svg>
+          </span>
+          <p><b>Racha activa: 6 días.</b> Vuelve mañana antes de las 9 AM para no perderla.</p>
+        </div>
+
+        <div class="navbar">
+          <span class="item activo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>
+          <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+          <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>
+          <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg></span>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="pie">
+  Las 3 opciones son interpretaciones FIELES de tu referencia (16-DIRECCION-DE-ARTE.md, protocolo
+  REFERENCIA=CONTRATO): mismo fondo claro, misma paleta lila/naranja/azul/rosa, misma tipografía
+  redonda y bold, mismo nav en píldora negra. Solo cambia cómo se organiza la pantalla. La opción
+  elegida (o su combinación) se vuelca en <code>FICHA-ARTE.md</code> y en los tokens antes de
+  construir la primera pantalla real.
+</footer>
+
+</body>
+</html>

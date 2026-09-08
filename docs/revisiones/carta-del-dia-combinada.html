@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amor & Tarot — dirección confirmada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Mulish:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --shell-bg: #F3EEFC; --shell-bg-2: #EAE1FA; --shell-ink: #1C1730; --shell-ink-2: #6B6580;
+    --shell-line: #DFD6F4; --shell-card: #FFFFFF; --shell-accent: #7A6AE8; --shell-accent-soft: rgba(122,106,232,0.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --shell-bg: #150F24; --shell-bg-2: #1C1433; --shell-ink: #F1ECFC; --shell-ink-2: #ABA0D1;
+      --shell-line: #332A55; --shell-card: #1E1836; --shell-accent: #A79AFF; --shell-accent-soft: rgba(167,154,255,0.16);
+    }
+  }
+  :root[data-theme="dark"] {
+    --shell-bg: #150F24; --shell-bg-2: #1C1433; --shell-ink: #F1ECFC; --shell-ink-2: #ABA0D1;
+    --shell-line: #332A55; --shell-card: #1E1836; --shell-accent: #A79AFF; --shell-accent-soft: rgba(167,154,255,0.16);
+  }
+  :root {
+    --bg: #FFFFFF; --hero: #8D7FEF; --hero-ink: #17132B; --hero-ink-soft: #4A4270;
+    --card-orange: #FFA24C; --card-blue: #ABDBF7; --card-pink: #F6A8DC;
+    --ink-1: #16131F; --ink-2: #6E6885; --ink-3: #9994B3; --nav-bg: #15111F;
+    --radius-card: 26px; --shadow-tint: 141,126,239;
+    --font-display: 'Baloo 2', sans-serif; --font-body: 'Mulish', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: radial-gradient(ellipse 900px 500px at 50% -10%, var(--shell-accent-soft), transparent 60%), var(--shell-bg);
+    color: var(--shell-ink); font-family: 'Mulish', system-ui, sans-serif; padding: 48px 24px 72px;
+  }
+  .cabecera { max-width: 640px; margin: 0 auto 28px; text-align: center; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--shell-accent); margin-bottom: 12px; }
+  .cabecera h1 { font-family: 'Baloo 2', sans-serif; font-size: clamp(24px,4vw,30px); font-weight: 700; }
+  .cabecera p { margin-top: 10px; font-size: 14.5px; color: var(--shell-ink-2); line-height: 1.55; }
+  .salidas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; justify-content: center; }
+  .salidas span { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--shell-line); border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--shell-ink-2); background: var(--shell-card); }
+  .salidas b { color: var(--shell-ink); }
+
+  .wrap { max-width: 360px; margin: 40px auto 0; }
+  .meta { background: var(--shell-card); border: 1px solid var(--shell-line); border-radius: 18px; padding: 16px; margin-bottom: 18px; box-shadow: 0 14px 32px -20px rgba(20,15,40,0.3); }
+  .meta p { font-size: 13px; color: var(--shell-ink-2); line-height: 1.5; }
+  .meta b { color: var(--shell-ink); }
+
+  .telefono { width: 320px; margin: 0 auto; aspect-ratio: 9/19.5; border: 10px solid #0E0B1A; border-radius: 46px;
+    box-shadow: 0 30px 60px -20px rgba(20,10,50,0.45), 0 10px 24px -12px rgba(20,10,50,0.35);
+    overflow: hidden; position: relative; display: flex; flex-direction: column; background: var(--bg); }
+  .isla { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 90px; height: 22px; border-radius: 999px; background: #0E0B1A; z-index: 5; }
+  .statusbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 22px 4px; font-size: 12.5px; font-weight: 700; color: var(--ink-1); font-variant-numeric: tabular-nums; }
+  .statusbar .der { display: flex; align-items: center; gap: 5px; }
+  .home-indicator { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 116px; height: 5px; border-radius: 999px; background: var(--ink-1); opacity: 0.9; z-index: 5; }
+  .pantalla { flex: 1; display: flex; flex-direction: column; overflow: hidden; font-family: var(--font-body); color: var(--ink-1); }
+
+  .encabezado { padding: 14px 18px 0; }
+  .saludo { font-size: 12px; font-weight: 700; color: var(--ink-3); }
+  .titulo { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--ink-1); margin-top: 2px; }
+
+  .heroe { margin: 14px 18px 0; border-radius: var(--radius-card); background: var(--hero); padding: 20px 18px 18px;
+    position: relative; overflow: hidden; text-align: center; box-shadow: 0 16px 30px -12px rgb(var(--shadow-tint) / 0.45); }
+  .heroe::after { content:''; position:absolute; inset:0; background: radial-gradient(circle at 85% -10%, rgba(255,255,255,0.28), transparent 55%); }
+  .heroe .label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em; color: rgba(255,255,255,0.65); text-align: left; position: relative; }
+  .anillo-wrap { margin: 10px auto 0; position: relative; width: 128px; height: 128px; }
+  .anillo-wrap .centro { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .anillo-wrap .carta { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: #fff; }
+  .anillo-wrap .carta-label { font-size: 10px; color: rgba(255,255,255,0.7); font-weight: 700; margin-top: 2px; }
+  .heroe .frase { margin-top: 10px; font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.5; position: relative; }
+
+  .dias { display: flex; gap: 6px; margin: 14px 18px 0; }
+  .dia { flex: 1; text-align: center; padding: 7px 0; border-radius: 14px; background: #F7F4FE; font-size: 10.5px; font-weight: 700; color: var(--ink-3); }
+  .dia b { display: block; font-size: 13px; color: var(--ink-1); margin-top: 1px; }
+  .dia.hoy { background: var(--ink-1); color: #fff; }
+  .dia.hoy b { color: #fff; }
+
+  .seccion-titulo { margin: 18px 18px 0; font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ink-1); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 18px 0; }
+  .tile { border-radius: 20px; padding: 13px; min-height: 112px; display: flex; flex-direction: column; justify-content: space-between; }
+  .tile.naranja { background: var(--card-orange); }
+  .tile.azul { background: var(--card-blue); }
+  .tile .etiqueta { font-size: 10px; font-weight: 700; color: rgba(22,19,31,0.55); background: rgba(255,255,255,0.55); display: inline-block; padding: 3px 8px; border-radius: 999px; align-self: flex-start; }
+  .tile h4 { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--ink-1); margin-top: 8px; line-height: 1.2; }
+  .tile p { font-size: 10.5px; color: rgba(22,19,31,0.6); margin-top: 3px; }
+
+  .franja { margin: 10px 18px 0; background: var(--card-pink); border-radius: 20px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+  .franja p { font-size: 11.5px; font-weight: 700; color: #6B2C57; }
+
+  .navbar { margin: auto 16px 14px; height: 58px; border-radius: 999px; background: var(--nav-bg); display: flex; align-items: center; justify-content: space-around; padding: 0 8px; box-shadow: 0 10px 24px -8px rgba(21,17,31,0.5); }
+  .navbar .item { width: 38px; height: 38px; border-radius: 999px; display: flex; align-items: center; justify-content: center; }
+  .navbar .item.activo { background: #fff; }
+  .navbar .item.activo svg { stroke: var(--nav-bg); }
+  .navbar .item svg { stroke: #7A7492; }
+
+  .pie { max-width: 360px; margin: 32px auto 0; font-size: 12px; color: var(--shell-ink-2); text-align: center; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<header class="cabecera">
+  <span class="eyebrow">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.6 6.9L22 9.3l-5.4 4.6 1.8 7.1L12 17l-6.4 4 1.8-7.1L2 9.3l7.4-.4Z"/></svg>
+    Combinación confirmada
+  </span>
+  <h1>Así queda tu pantalla principal</h1>
+  <p>Distribución y tarjetas de la Opción A, con el aro medidor de la Opción B para la carta del día, y el saludo con tu nombre arriba.</p>
+  <div class="salidas" role="list">
+    <span role="listitem"><b>✓ Confirmar</b> así queda</span>
+    <span role="listitem"><b>Ajustar</b> algo puntual</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="telefono">
+    <div class="isla"></div>
+    <div class="statusbar">
+      <span>9:41</span>
+      <span class="der">
+        <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor" aria-hidden="true"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.5" y="5" width="3" height="6" rx="0.8"/><rect x="9" y="3" width="3" height="8" rx="0.8"/><rect x="13.5" y="0.5" width="3" height="10.5" rx="0.8"/></svg>
+        <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M1.5 4.2a9.5 9.5 0 0 1 13 0"/><path d="M3.8 6.6a6.2 6.2 0 0 1 8.4 0"/><path d="M6.2 9a2.8 2.8 0 0 1 3.6 0"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" aria-hidden="true"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="currentColor"/><rect x="22.5" y="3.8" width="2" height="4.4" rx="1" fill="currentColor" opacity="0.4"/></svg>
+      </span>
+    </div>
+
+    <div class="pantalla">
+      <div class="encabezado">
+        <p class="saludo">Miércoles 25 de nov.</p>
+        <p class="titulo">Hola, Dani</p>
+      </div>
+
+      <div class="heroe">
+        <p class="label">CARTA DEL DÍA</p>
+        <div class="anillo-wrap">
+          <svg width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Carta del día: La Estrella, calma al 74 por ciento">
+            <circle cx="64" cy="64" r="55" fill="none" stroke-width="11" stroke="rgba(255,255,255,0.22)"/>
+            <circle cx="64" cy="64" r="55" fill="none" stroke-width="11" stroke="#FFFFFF" stroke-linecap="round"
+                    stroke-dasharray="345.6" stroke-dashoffset="90" transform="rotate(-90 64 64)"/>
+          </svg>
+          <div class="centro">
+            <span class="carta">La Estrella</span>
+            <span class="carta-label">calma · 74%</span>
+          </div>
+        </div>
+        <p class="frase">Después de la duda, un momento de calma. Hoy no necesitas responderle — necesitas responderte a ti.</p>
+      </div>
+
+      <div class="dias">
+        <div class="dia">DOM<b>22</b></div>
+        <div class="dia">LUN<b>23</b></div>
+        <div class="dia">MAR<b>24</b></div>
+        <div class="dia hoy">MIÉ<b>25</b></div>
+        <div class="dia">JUE<b>26</b></div>
+        <div class="dia">VIE<b>27</b></div>
+        <div class="dia">SÁB<b>28</b></div>
+      </div>
+
+      <p class="seccion-titulo">Tu momento</p>
+      <div class="grid2">
+        <div class="tile naranja">
+          <span class="etiqueta">Situación</span>
+          <div><h4>Tu lectura de pareja</h4><p>3 cartas · Tú, Él/Ella, la Dinámica</p></div>
+        </div>
+        <div class="tile azul">
+          <span class="etiqueta">Rápido</span>
+          <div><h4>Compatibilidad</h4><p>Escorpio + Piscis</p></div>
+        </div>
+      </div>
+
+      <div class="franja">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B2C57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+        <p>Racha activa: 6 días seguidos leyendo tu carta</p>
+      </div>
+
+      <div class="navbar">
+        <span class="item activo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>
+        <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+        <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></span>
+        <span class="item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6 8-6s6.5 1.5 8 6"/></svg></span>
+      </div>
+    </div>
+    <div class="home-indicator"></div>
+  </div>
+  <p class="pie">"Dani" es un nombre de ejemplo — en tu app real ese espacio muestra el nombre que la persona escriba en el onboarding.</p>
+</div>
+
+</body>
+</html>
