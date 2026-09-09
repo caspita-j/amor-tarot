@@ -1,5 +1,29 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-03 | Sesión actual: 7 (certificación visual, en pausa por rendimientos decrecientes)
+Última actualización: 2026-09-08 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados)
+
+✅ CHECKPOINT — GitHub + Vercel conectados, APP PUBLICADA EN INTERNET: 2026-09-08. Repo en
+github.com/caspita-j/amor-tarot (privado/público según el usuario), conectado con push por SSH (llave
+dedicada `~/.ssh/id_ed25519_amortarot`, solo para este proyecto). Proyecto de Vercel `amor-tarot` en el
+equipo "Amor y tarot" (hobby), con las 4 variables de entorno cargadas (`ANTHROPIC_API_KEY`, `AI_MODEL`,
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`) vía "Import .env" desde
+`.env.local` — el usuario las cargó él mismo en el dashboard de Vercel, nunca se pegó ningún valor en
+el chat. URL pública: **https://amor-tarot.vercel.app** — verificado en vivo: landing/onboarding/login
+200, `/app` redirige a login si no hay sesión (protección real funcionando), las 78 imágenes de cartas
+y el video cargan bien (se subieron completas vía git push, no hubo problema de tamaño).
+⚠️ Nota técnica para la próxima sesión: la integración MCP de Vercel usada esta sesión (`list_projects`/
+`get_project`) tiene un bug — nunca pudo ver el proyecto ni sus deployments desde las herramientas de
+Claude, aunque el proyecto SÍ existe y funciona (confirmado en el dashboard del usuario). `create_git_project`
+falló 4 veces seguidas con "git link no verificado" antes de funcionar por el dashboard directamente —
+si se necesita tocar el proyecto de Vercel otra vez, ir directo al dashboard (vercel.com) en vez de
+confiar en que las herramientas de Claude lo vean. Quedaron 3 proyectos vacíos/fantasma en el equipo de
+Vercel del usuario (`amortarot-web`, `amor-tarot-app`, `amor-y-tarot`) — no hacen daño, se pueden borrar
+cuando quiera desde el dashboard. Cada push a `main` en GitHub ahora despliega solo (CI/CD real).
+⚠️ FIX — magic link/OTP mandaba a `localhost:3000` en vez de a la app publicada: la configuración de
+Supabase Auth (Authentication → URL Configuration) todavía tenía el "Site URL" en localhost desde el
+desarrollo local — nunca se actualizó al pasar a producción. Corregido por el usuario 2026-09-08:
+Site URL → `https://amor-tarot.vercel.app`, Redirect URLs → `https://amor-tarot.vercel.app/**`. Si en el
+futuro se agrega un dominio propio, este es el lugar donde también hay que actualizarlo (y agregar el
+nuevo dominio a Redirect URLs sin borrar el de vercel.app, por si acaso).
 
 ⏸️ CHECKPOINT — Arte real de Canva integrado: LOS 22 ARCANOS MAYORES COMPLETOS. El usuario conectó
 Canva a Claude (MCP), se generaron ilustraciones con simbología fiel al tarot Rider-Waite-Smith

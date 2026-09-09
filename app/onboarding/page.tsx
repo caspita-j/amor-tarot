@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { Moon } from 'lucide-react';
 import { BotonPrincipal, ChipGrid, ChipOpcion, PantallaOnboarding, TarjetaTarot } from '@/components/onboarding/ui';
+import { sortearCartas, type Carta } from '@/lib/tarot-data';
 
 const SITUACIONES = [
   'Una situationship (un casi algo)',
@@ -63,6 +64,7 @@ export default function OnboardingPage() {
   const [r, setR] = useState<Respuestas>({});
   const [fraseCarga, setFraseCarga] = useState(0);
   const [cartaRevelada, setCartaRevelada] = useState(false);
+  const [cartaTu, setCartaTu] = useState<Carta | null>(null);
   const [navegando, setNavegando] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const reduce = useReducedMotion();
@@ -98,12 +100,17 @@ export default function OnboardingPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paso]);
 
-  // Paso 10: revela la primera carta con un pequeño delay dramático.
+  // Paso 10: revela la primera carta con un pequeño delay dramático. La carta
+  // se sortea acá (una sola vez al entrar al paso) a partir de lo que la
+  // persona escribió — antes quedaba hardcodeada en "La Estrella" sin
+  // importar el texto, un bug real que el usuario detectó probando la app.
   useEffect(() => {
     if (paso !== 10) return;
     setCartaRevelada(false);
+    setCartaTu(sortearCartas(r.detalle ?? '')[0].carta);
     const t = setTimeout(() => setCartaRevelada(true), reduce ? 0 : 500);
     return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paso, reduce]);
 
   const irAPaywall = () => {
@@ -445,19 +452,20 @@ export default function OnboardingPage() {
                 'radial-gradient(320px 200px at 50% 50%, color-mix(in oklab, var(--accent) 20%, transparent) 0%, transparent 72%)',
             }}
           >
-            <TarjetaTarot revelada={cartaRevelada} nombreCarta="La Estrella" etiqueta="Tú" tamano="lg" />
+            <TarjetaTarot revelada={cartaRevelada} nombreCarta={cartaTu?.nombre ?? ''} etiqueta="Tú" tamano="lg" />
             <TarjetaTarot revelada={false} etiqueta={nombreOtra} />
             <TarjetaTarot revelada={false} etiqueta="La Dinámica" />
           </motion.div>
 
-          {primerasPalabras && (
+          {primerasPalabras && cartaTu && (
             <motion.div
               variants={{ hidden: { opacity: 0, y: reduce ? 0 : 10 }, visible: { opacity: 1, y: 0 } }}
               className="relative mt-6 max-w-xs overflow-hidden rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--text-secondary)_18%,transparent)] bg-[var(--surface)] px-5 py-4 text-left"
             >
               <p className="text-sm leading-relaxed text-[var(--text-primary)]">
                 “{primerasPalabras}
-                {detalleLargo ? '…' : ''}” — La Estrella indica que después de la duda llega calma.{' '}
+                {detalleLargo ? '…' : ''}” — {cartaTu.nombre} marca un momento de {cartaTu.esencia} en tu
+                situación.{' '}
                 <strong className="font-bold">Pero eso es solo la mitad de tu lectura.</strong>
               </p>
             </motion.div>
