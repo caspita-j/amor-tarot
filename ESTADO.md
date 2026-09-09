@@ -1,6 +1,27 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal)
 
+✅ CHECKPOINT — Prueba real end-to-end del borrado de cuenta, 2026-09-09, a pedido del usuario. Contra
+producción: usuario de prueba creado con la Admin API (perfil con datos + 1 lectura + 1 ai_call),
+sesión real iniciada con el código OTP generado por la misma API (no por correo — el rate-limit de
+correo ya documentado seguía activo e impidió el flujo normal de login), y el botón "Eliminar mi
+cuenta" ejecutado de verdad desde la UI (escribiendo "ELIMINAR", sin atajos). Resultado: redirige a
+`/` sin sesión, y se confirmó con SQL que `auth.users`, `profiles`, `lecturas` y `ai_calls` quedaron
+en cero filas para ese usuario — el cascade funciona como se diseñó. `/app` vuelve a pedir login
+después, confirmando que la sesión se cerró también del lado del servidor. Usuario y datos de
+prueba, y el script temporal usado, se borraron todos al terminar.
+⚠️ BUG REAL encontrado en el camino (no es de esta auditoría, es de la feature de Sesión 6 "agregar
+usuario manualmente"): el enlace que genera `admin.auth.admin.generateLink()` en
+`app/api/admin/usuarios/route.ts` vuelve en flujo implícito (tokens en el `#fragmento` de la URL), no
+en `?code=` — porque quien lo abre nunca inició el flujo desde su propio navegador (no hay
+`code_verifier` guardado ahí). `app/auth/callback/route.ts` solo sabe leer `?code=`, así que la
+persona termina en `/login?error=enlace_invalido` con el enlace "de acceso" sin dejarla entrar. La
+nota anterior en ESTADO.md ("probó agregar usuario… funcionó, devolvió un enlace") solo confirmó que
+el enlace se generó, nunca que alguien lo haya CLICKEADO y quedado adentro — quedó sin probar hasta
+hoy. No se tocó código para corregirlo (fuera del pedido de esta tarea) — queda pendiente de que el
+usuario decida si lo arreglamos (la solución es agregar en `/login` o `/auth/callback` una lectura del
+`#access_token`/`refresh_token` del fragmento con `supabase.auth.setSession()` cuando no venga `code`).
+
 ✅ CHECKPOINT — Auditoría legal completa, 2026-09-09, siguiendo `docs/sistema/47-LEGAL-FISCAL-Y-PRIVACIDAD.md`
 al pie de la letra (skill `legal`, a pedido explícito del usuario). Responsable declarado: Jonathan,
 persona natural, Colombia. Contacto legal: `jonathanrd198@gmail.com` (temporal — el usuario compró
