@@ -1,5 +1,48 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, nueva sección Bienestar)
+Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin en progreso)
+
+🔧 EN PROGRESO — Panel de administración (`/admin`), a pedido explícito del usuario, siguiendo el skill
+`backoffice` (`PROMPT-BACKOFFICE.txt` + 21-BACKOFFICE/09-SEGURIDAD/26-AUTH-MODERNO/40-UNIT-ECONOMICS/
+36-ANALITICA-Y-EVENTOS/17-VISUALIZACION-DATOS).
+Auditoría de fuentes (Fase 1) — honesta, sin inventar: HOY existen datos reales de usuarios
+(`auth.users`), perfiles/racha (`profiles`), lecturas (`lecturas`) y costo real de IA (`ai_calls`).
+NO existen: Hotmart/webhook (cero ventas/MRR/churn reales), `event_log` (cero funnel de
+conversión/trial ni retención D1/D7/D30 reales), `profiles.source` (cero LTV/CAC por canal), Sentry
+(cero errores). El panel construido refleja esto tal cual — cada sección sin dato real muestra
+"No instrumentado todavía" con qué falta conectar, nunca un número inventado.
+Seguridad implementada y VERIFICADA con SQL simulando RLS (usuario admin real vs. uuid al azar):
+columna `profiles.role` ('user'|'admin', default 'user'), con un trigger que bloquea CUALQUIER cambio
+de `role` desde el cliente (ni el propio admin puede cambiárselo vía la app — solo por migración
+directa) — sigue al pie de la letra 26-AUTH-MODERNO.md, que prohíbe explícitamente listas de correos
+autorizados como sustituto de un rol real server-side. Función `es_admin()` + 4 RPCs
+(`admin_salud_datos`, `admin_resumen_usuarios`, `admin_costo_ia`, `admin_listar_usuarios`), todas
+`security definer` y TODAS verifican `es_admin()` POR DENTRO antes de devolver nada — un usuario
+normal que las llame directo (saltándose la pantalla) recibe `NOT_AUTHORIZED`, verificado en vivo.
+Admin seed: `jonathancaspita@gmail.com` (la cuenta de prueba ya confirmada — el usuario prefirió esta
+sobre su correo real porque ese todavía no tiene cuenta creada, y crear una ahora chocaría con el
+límite de correo de Supabase, ver más abajo). BUG REAL encontrado y corregido en el camino: la función
+`admin_listar_usuarios` fallaba con "structure of query does not match function result type" porque
+`auth.users.email` es `varchar(255)`, no `text` — se corrigió con un cast explícito.
+Páginas: `app/admin/page.tsx` (resumen: salud del dato, usuarios, costo de IA con gráfico de barras de
+30 días — todo real; conversión/trial/ventas/negocio marcados "no instrumentado") y
+`app/admin/usuarios/page.tsx` (lista real de usuarios + formulario "agregar usuario manualmente").
+`app/admin/layout.tsx` verifica `es_admin()` en el servidor y redirige a `/app` si no lo es — protege
+antes de renderizar cualquier dato (no es "esconder la ruta").
+Función de agregar usuario a mano: `app/api/admin/usuarios/route.ts` verifica sesión + admin en el
+servidor ANTES de tocar nada, y usa la Admin API de Supabase (crea el usuario ya confirmado +
+genera un enlace de acceso que el dueño puede copiar y mandar por cualquier canal — resuelve de raíz
+el problema de "no le llega el correo"). Requiere `SUPABASE_SERVICE_ROLE_KEY` — el usuario todavía no
+la ha configurado (es el primer uso real de esa clave en el proyecto; hasta ahora se evitó a
+propósito). Sin esa variable, la ruta responde 500 con un mensaje claro en vez de romperse.
+Verificado: tsc/build limpios en cada capa · `/admin` y `/admin/usuarios` confirmados con curl
+redirigiendo a `/login` sin sesión · las 4 RPCs probadas con SQL como admin real y como usuario al
+azar (todas correctas). ⚠️ PENDIENTE: verificación visual completa (screenshot real + veredicto de
+`revisor-visual`, exigido por el propio pedido del usuario) — no se pudo togear una sesión real de
+admin en este entorno sin usar un atajo inseguro (se descartó a propósito un intento de bypass
+temporal en `app/admin/layout.tsx` por ser exactamente el patrón de "puerta trasera" que
+26-AUTH-MODERNO.md prohíbe — se revirtió antes de continuar). Falta: (1) que el usuario inicie sesión
+como `jonathancaspita@gmail.com` (puede que el límite de correo ya se haya liberado) y mande captura
+de `/admin`, y (2) la clave `SUPABASE_SERVICE_ROLE_KEY` para completar y probar "agregar usuario".
 
 ✅ CHECKPOINT — Nueva sección "Bienestar" agregada 2026-09-09, a partir de un prompt externo que el
 usuario pegó (pedía una sección "Rituales" con prácticas de amor/dinero/descanso/limpieza energética).
