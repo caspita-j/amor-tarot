@@ -21,6 +21,13 @@ el enlace se generó, nunca que alguien lo haya CLICKEADO y quedado adentro — 
 hoy. No se tocó código para corregirlo (fuera del pedido de esta tarea) — queda pendiente de que el
 usuario decida si lo arreglamos (la solución es agregar en `/login` o `/auth/callback` una lectura del
 `#access_token`/`refresh_token` del fragmento con `supabase.auth.setSession()` cuando no venga `code`).
+✅ CORREGIDO el mismo día, a pedido del usuario: `app/login/page.tsx` ahora detecta
+`window.location.hash` con `access_token`/`refresh_token` al montar y llama a `setSession()` a mano
+(con un estado "Entrando con tu enlace…" mientras resuelve) — cubre el caso que `/auth/callback`
+(server-only) no puede leer, porque el fragmento nunca llega al servidor. Probado de nuevo end-to-end
+en producción con un usuario y un enlace nuevos (mismo patrón que la Admin API usa de verdad): abrir
+el enlace ahora sí termina en `/app` con sesión real, en vez de `/login?error=enlace_invalido`.
+Usuario y script de prueba borrados al terminar. tsc/build limpios. Publicado.
 
 ✅ CHECKPOINT — Auditoría legal completa, 2026-09-09, siguiendo `docs/sistema/47-LEGAL-FISCAL-Y-PRIVACIDAD.md`
 al pie de la letra (skill `legal`, a pedido explícito del usuario). Responsable declarado: Jonathan,
