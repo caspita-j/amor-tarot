@@ -1,7 +1,10 @@
 // Lista de usuarios reales + acción de agregar uno manualmente (por si el
 // correo automático no le llega a alguien — ver AgregarUsuarioForm).
 
-import { leerUsuarios } from '@/lib/supabase/admin-datos';
+import { Users } from 'lucide-react';
+import { leerUsuarios, leerUsuariosPorDia } from '@/lib/supabase/admin-datos';
+import { Seccion } from '@/components/admin/ui';
+import { GraficoBarras } from '@/components/admin/GraficoBarras';
 import { AgregarUsuarioForm } from './AgregarUsuarioForm';
 
 function formatearFecha(iso: string): string {
@@ -9,14 +12,24 @@ function formatearFecha(iso: string): string {
 }
 
 export default async function AdminUsuariosPage() {
-  const usuarios = await leerUsuarios();
+  const [usuarios, usuariosPorDia] = await Promise.all([leerUsuarios(), leerUsuariosPorDia(30)]);
+  const datosGrafico = usuariosPorDia.map((d) => ({ etiqueta: d.dia, valor: d.nuevos }));
 
   return (
     <div>
-      <h1 className="text-xl font-bold [font-family:var(--font-display)]">Usuarios</h1>
+      <div className="flex items-center gap-2.5">
+        <Users size={20} color="var(--accent-4)" aria-hidden="true" />
+        <h1 className="text-xl font-bold [font-family:var(--font-display)]">Usuarios</h1>
+      </div>
       <p className="mt-1 text-sm text-[var(--text-secondary)]">
         {usuarios.length} {usuarios.length === 1 ? 'persona registrada' : 'personas registradas'}
       </p>
+
+      <Seccion titulo="Registros nuevos (últimos 30 días)">
+        <div className="rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
+          <GraficoBarras datos={datosGrafico} color="var(--accent-4)" vacio="Sin registros nuevos todavía." />
+        </div>
+      </Seccion>
 
       <div className="mt-5 rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
         <p className="text-sm font-bold">Agregar usuario manualmente</p>

@@ -6,8 +6,8 @@
 
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Users } from 'lucide-react';
 import { esAdmin } from '@/lib/supabase/admin-datos';
+import { AdminNav } from './AdminNav';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const autorizado = await esAdmin();
@@ -18,30 +18,17 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="min-h-dvh bg-[var(--bg)] text-[var(--text-primary)] [font-family:var(--font-body)]">
       <header className="border-b border-[color-mix(in_oklab,var(--text-secondary)_14%,transparent)] px-4 py-3">
-        <div className="mx-auto flex max-w-3xl items-center justify-between">
+        <div className="mx-auto flex max-w-4xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm font-bold [font-family:var(--font-display)]">Panel de administración</p>
-          <nav className="flex items-center gap-4">
-            <Link
-              href="/admin"
-              className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-secondary)]"
-            >
-              <LayoutDashboard size={15} aria-hidden="true" />
-              Resumen
-            </Link>
-            <Link
-              href="/admin/usuarios"
-              className="flex items-center gap-1.5 text-sm font-semibold text-[var(--text-secondary)]"
-            >
-              <Users size={15} aria-hidden="true" />
-              Usuarios
-            </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <AdminNav />
             <Link href="/app" className="text-sm font-semibold text-[var(--text-secondary)]">
               Volver a la app
             </Link>
-          </nav>
+          </div>
         </div>
       </header>
-      <main className="mx-auto max-w-3xl px-4 py-6">{children}</main>
+      <main className="mx-auto max-w-4xl px-4 py-6">{children}</main>
     </div>
   );
 }

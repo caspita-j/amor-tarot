@@ -90,6 +90,15 @@ export async function leerCostoIa(dias = 30): Promise<CostoIaPorDia[]> {
   }));
 }
 
+export type UsuariosPorDia = { dia: string; nuevos: number };
+
+export async function leerUsuariosPorDia(dias = 30): Promise<UsuariosPorDia[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc('admin_usuarios_por_dia', { dias });
+  if (error || !data) return [];
+  return (data as { dia: string; nuevos: number }[]).map((f) => ({ dia: f.dia, nuevos: f.nuevos }));
+}
+
 export type UsuarioAdmin = {
   id: string;
   email: string;

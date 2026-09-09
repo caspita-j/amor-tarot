@@ -60,6 +60,35 @@ Corregido en `app/api/admin/usuarios/route.ts`: `options: { redirectTo: `${orige
 usando el origin real de la request. Verificado con un script temporal (creado y borrado en el
 momento) que el enlace generado ahora sí trae `redirect_to=.../auth/callback`. Publicado.
 
+✅ CHECKPOINT — Panel de admin reestructurado en pestañas propias, 2026-09-09, a pedido del usuario
+(sentía el Resumen "muy plano" y quería más variedad/gráficos). Nueva navegación en
+`app/admin/AdminNav.tsx` (5 pestañas con ícono y color propio, reusando SOLO los acentos ya existentes
+de la app — nunca colores nuevos): Resumen, Salud del dato (accent-3), Usuarios (accent-4), Operación
+(accent), Negocio (accent-2, agrupa Conversión/Trial/Ventas/Ganancia/LTV-CAC ahí — no se les dio pestaña
+propia a esas 5 porque hoy están todas vacías por igual, "no instrumentado"; llenar el nav de pestañas
+en blanco no ayuda). Piezas compartidas movidas a `components/admin/ui.tsx` (Metrica, NoInstrumentado,
+Seccion, hace) y nuevo `components/admin/GraficoBarras.tsx` (specs Tufte del propio pedido original:
+sin sombras, sin relleno 3D, etiqueta directa al pasar el mouse, color = el acento de la sección).
+Nueva función `admin_usuarios_por_dia()` (mismo patrón atómico/verificado que las otras RPCs admin) para
+un gráfico real de registros nuevos en Usuarios — el segundo gráfico real del panel, junto al de costo
+de IA que ya existía en Operación.
+⚠️ BUG REAL encontrado y corregido verificando en vivo (con el usuario mirando el error al mismo
+tiempo, en su propia captura): `AdminOperacionPage` (Server Component) le pasaba una función
+(`formatear={(v) => ...}`) como prop a `GraficoBarras` (Client Component) — React no puede serializar
+funciones cruzando ese límite, tira "Functions cannot be passed directly to Client Components". Se
+corrigió calculando el texto ya formateado en el servidor (`valorFormateado` como string, no función) y
+pasándolo como dato en vez de como callback — `PuntoBarra` ahora lleva `valorFormateado?: string`.
+Explícitamente NO se agregaron animaciones 3D ni brillos decorativos que el usuario pidió — se le
+explicó que eso es justo lo que las specs Tufte del pedido original piden evitar (hace los números más
+difíciles de leer, no más fáciles); en cambio se usaron colores vivos ya existentes de la app +
+entrada animada de las barras + números grandes con interpretación al lado.
+Verificado: tsc/build limpios · las 5 pantallas revisadas visualmente con una página temporal de
+solo-vista-previa (`app/dev-preview-temp/`, agregada a `PUBLIC_PATHS` solo mientras se revisaba, NUNCA
+tocó el chequeo de admin real) — creada, usada, y borrada por completo en la misma sesión, junto con la
+línea de `PUBLIC_PATHS`; confirmado con curl que las 5 rutas (`/admin`, `/admin/salud`,
+`/admin/usuarios`, `/admin/operacion`, `/admin/negocio`) siguen protegidas y que la ruta temporal ya no
+existe. Publicado.
+
 ✅ CHECKPOINT — Nueva sección "Bienestar" agregada 2026-09-09, a partir de un prompt externo que el
 usuario pegó (pedía una sección "Rituales" con prácticas de amor/dinero/descanso/limpieza energética).
 ⚠️ Se detectó y se resolvió ANTES de construir un choque real con una decisión ya aprobada: la promesa
