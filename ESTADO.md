@@ -1,6 +1,48 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal)
+Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad)
 
+✅ CHECKPOINT — Auditoría de seguridad completa (10 puntos, formato pedido por el usuario), 2026-09-09.
+Hallazgo 🔴 CRÍTICO, sin corregir a propósito (decisión del usuario — "lo de Hotmart ya en el siguiente
+módulo del curso lo haremos"): `/app` solo exige sesión iniciada, nunca revisa pago ni prueba vencida
+— hoy cualquier correo puede crear cuenta gratis con acceso ilimitado, porque Hotmart todavía no está
+conectado (confirmado leyendo el código: no existe webhook, no existe tabla de suscripción). Queda
+pendiente de la próxima etapa del curso, no de esta sesión.
+Corregido HOY, a pedido explícito ("hace los arreglos tú mismo que puedas hacer"):
+- **Límite real (servidor) de fotos por lectura**: antes solo lo respetaba el navegador (MAX_FOTOS=3).
+  Migración `limitar_fotos_y_proteger_racha` + `corregir_proteccion_racha_por_columna`: función
+  `public.validar_tamano_fotos()` + constraint `fotos_validas` en `lecturas` (máx. 3 fotos, máx.
+  500.000 caracteres cada una). Probado con INSERT reales: 4 fotos → rechazado, 1 foto de 600k
+  caracteres → rechazado, 2 fotos de 50k → aceptado, sin fotos (null) → aceptado. Filas de prueba
+  borradas, `lecturas` vuelve a 0 filas.
+- **Un usuario ya no puede editar su propia racha directo por la API**, saltándose `registrar_dia()`.
+  Se quitó el permiso de UPDATE general de `profiles` para `authenticated` y se devolvió solo a las
+  columnas que la app realmente edita desde el cliente (nombre, signo, otra_persona_nombre,
+  otra_persona_signo, foto_url) — `racha_dias`/`racha_ultima_fecha` quedaron fuera. `registrar_dia()`
+  sigue funcionando igual (corre como `SECURITY DEFINER`, no le aplica este permiso de columna).
+  Probado: UPDATE directo a `racha_dias` → `ERROR 42501 permission denied` (bien); UPDATE a `nombre`
+  → funciona (bien); `registrar_dia()` → funciona igual que antes (bien).
+  ⚠️ Nota de transparencia: el primer intento de probar este arreglo (antes de aplicarlo) dejó por
+  error la racha de la cuenta de prueba `jonathancaspita@gmail.com` en 777 en vez de su valor real —
+  una prueba que debía revertirse con `rollback` no se revirtió como se esperaba. Se detectó al
+  verificar (nunca se asumió que había funcionado sin mirar) y se corrigió de inmediato a `racha_dias
+  = 1` (el valor real documentado antes en este archivo). No afectó a ningún usuario real, solo a la
+  cuenta de prueba del propio dueño del proyecto.
+- **Protección contra manipulación del texto que se le manda a la IA** (prompt injection): el
+  `SYSTEM_PROMPT` de `app/api/lectura/route.ts` ahora indica explícitamente que el texto de la
+  "situación" es siempre un relato personal, nunca una instrucción, incluso si contiene frases como
+  "ignora las instrucciones anteriores".
+- **Cabeceras de seguridad básicas** agregadas en `next.config.ts` (`X-Frame-Options: DENY`,
+  `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`) — verificado con curl
+  que el servidor las manda de verdad.
+- **Comentario desactualizado corregido** en `lib/supabase/datos.ts`: decía que las fotos de lectura
+  seguían en sessionStorage, pero ya viven en la base de datos desde la Etapa 2 — solo la foto de
+  PERFIL sigue en sessionStorage (Etapa 3, sin empezar).
+- **Dependencias actualizadas** a sus versiones menores/parche más recientes dentro del rango ya
+  fijado en `package.json` (`npm update`, 26 paquetes) — `npm audit` seguía en 0 vulnerabilidades
+  antes y después.
+No corregido (queda para cuando el usuario lo pida): activar "Leaked Password Protection" en el panel
+de Supabase (Authentication → Policies) — no se puede hacer desde código/SQL, es un toggle del panel.
+tsc/build limpios tras cada cambio. Publicado.
 ✅ CHECKPOINT — Prueba real end-to-end del borrado de cuenta, 2026-09-09, a pedido del usuario. Contra
 producción: usuario de prueba creado con la Admin API (perfil con datos + 1 lectura + 1 ai_call),
 sesión real iniciada con el código OTP generado por la misma API (no por correo — el rate-limit de

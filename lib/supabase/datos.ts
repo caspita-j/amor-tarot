@@ -2,8 +2,11 @@
 
 // Capa de datos REAL de la app interna (Etapa 2 de Supabase — ver ESTADO.md).
 // Reemplaza el sessionStorage de lib/estado-app.ts para perfil/racha/lecturas.
-// Las fotos (perfil y de lecturas) siguen en sessionStorage por ahora — eso
-// es la Etapa 3 (Supabase Storage), a propósito no incluida acá.
+// La foto de PERFIL sigue en sessionStorage por ahora (Etapa 3, Supabase
+// Storage, a propósito no incluida acá). Las fotos de una LECTURA sí se
+// guardan ya en la base de datos (columna lecturas.fotos, como texto/base64
+// — con límite de tamaño y cantidad puesto a nivel de base de datos), a la
+// espera de moverse a Storage más adelante.
 
 import { createClient } from '@/lib/supabase/client';
 
