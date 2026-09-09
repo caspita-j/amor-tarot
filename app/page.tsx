@@ -33,6 +33,7 @@ import { Faq } from '@/components/landing/Faq';
 import { CtaFinal } from '@/components/landing/CtaFinal';
 import { FooterLegal } from '@/components/landing/FooterLegal';
 import { StickyCtaMobile } from '@/components/landing/ui';
+import { ExitIntentPopup } from '@/components/landing/ExitIntentPopup';
 
 const CTA_HREF = '/onboarding';
 const CTA_LABEL = 'Sacar mis 3 cartas';
@@ -266,6 +267,7 @@ export default function LandingPage() {
       />
 
       <StickyCtaMobile labelComercial={CTA_LABEL} href={CTA_HREF} />
+      <ExitIntentPopup ctaHref={CTA_HREF} />
     </div>
   );
 }

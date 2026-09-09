@@ -1,5 +1,24 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin en progreso)
+Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing)
+
+✅ CHECKPOINT — Pop-up de intención de salida (exit-intent) en la landing, 2026-09-09, a pedido del
+usuario, siguiendo su propio brief paso a paso. Identificación previa (Paso 0): la razón #1 de duda no
+es el precio, es la desconfianza al cobro (ya era la primera pregunta del FAQ de la landing). Mensaje
+final elegido por el usuario tras 2 rondas de opciones — pérdida emocional dura, sin inventar ningún
+descuento/bono (no confirmado): "En una semana vas a seguir despierta/o a la 1am, dándole vueltas a lo
+mismo." / "O puedes sacar tus 3 cartas ahora mismo, gratis, y por fin tener una respuesta clara." /
+botón "Sacar mis 3 cartas gratis".
+Nuevo `components/landing/ExitIntentPopup.tsx`, conectado en `app/page.tsx`. 3 señales de salida: (1)
+desktop — `mouseleave` en `document` con `clientY<=0` (el mouse sale por arriba de la ventana); (2)
+mobile — scroll rápido hacia arriba (>120px en <400ms) tras haber bajado >40% de una pantalla; (3)
+mobile — botón de atrás, interceptado con `history.pushState` + `popstate` UNA sola vez (si lo
+presionan de nuevo tras ver el pop-up, se van de verdad — nunca queda atrapado). No se activa antes de
+15s ni antes de scroll. Máximo una vez por visita vía `sessionStorage`. Cierra con el botón X, tocando
+fuera, o Escape; bloquea el scroll del fondo SOLO mientras está abierto (se libera al cerrar).
+Verificado en vivo (Playwright, esperando los 15s reales, no simulado): las 3 señales disparan
+correctamente, no se dispara antes de tiempo, no reaparece tras cerrarlo, y el botón de atrás no
+atrapa a la persona. tsc/build limpios. El usuario vio capturas de escritorio y celular y confirmó
+antes de publicar (siguiendo su propio Paso 5 — nunca se publicó sin su OK explícito).
 
 🔧 EN PROGRESO — Panel de administración (`/admin`), a pedido explícito del usuario, siguiendo el skill
 `backoffice` (`PROMPT-BACKOFFICE.txt` + 21-BACKOFFICE/09-SEGURIDAD/26-AUTH-MODERNO/40-UNIT-ECONOMICS/
