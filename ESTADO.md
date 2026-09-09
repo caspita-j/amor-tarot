@@ -1,5 +1,32 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-08 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados)
+Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, nueva sección Bienestar)
+
+✅ CHECKPOINT — Nueva sección "Bienestar" agregada 2026-09-09, a partir de un prompt externo que el
+usuario pegó (pedía una sección "Rituales" con prácticas de amor/dinero/descanso/limpieza energética).
+⚠️ Se detectó y se resolvió ANTES de construir un choque real con una decisión ya aprobada: la promesa
+central dice explícitamente "sin ofrecer rituales o amarres" y `FICHA-AVATAR.md` prohíbe "lenguaje de
+amarres/rituales" — el contenido original (baños para atraer el amor, velas de atracción, vaso de la
+prosperidad) es justo eso. Se lo planteé al usuario con las 3 opciones (cambiar la promesa / no
+agregarlo / reformular) y eligió **reformular**: mismo espíritu casero (agua, miel, canela, laurel,
+velas, hierbas) pero el PORQUÉ de cada práctica es autocuidado propio — nunca atraer/retener a otra
+persona ni causalidad mágica sobre dinero/energía. Se quitó la única práctica sin lectura de autocuidado
+razonable ("sal en las esquinas de la casa") y se reemplazó por un hábito real ("10 minutos de orden").
+Categorías reencuadradas: Amor→"Para tu corazón", Dinero→"Para tu enfoque con el dinero", Descanso→"Para
+dormir mejor" (casi sin cambios, ya era neutral), Limpieza energética→"Para despejar tu espacio".
+Detalle técnico: contenido en `lib/bienestar-data.ts` como dato ESTÁTICO (no tabla de Supabase) —
+consistente con cómo vive el resto del contenido de tarot (`lib/tarot-data.ts`); es contenido fijo y
+global, nadie lo crea/edita desde la app, así que una tabla habría sido complejidad sin beneficio. Nueva
+pantalla `app/app/bienestar/page.tsx` (mismo patrón de estado local que `lecturas/page.tsx`: categorías
+→ prácticas → detalle, sin rutas anidadas). NO se agregó como 5ta pestaña del nav inferior (ese nav
+tiene un límite de 4 documentado a propósito en `BottomNav.tsx` — "5 tabs no cabe cómodo en 375px");
+en vez de eso se agregó como 3ra fila en "Tu momento" del home, mismo patrón ya usado para
+Compatibilidad. Sin color de acento nuevo (la ficha de arte reserva accent-2/3/4 para
+lectura/compatibilidad/historial) — usa `--surface` neutro + `--accent` en los íconos, coherente con el
+tono más calmado de la sección. Sin función de favoritos (se revisó y no existe ese patrón en ningún
+otro lado de la app — no se inventó uno nuevo). Aviso legal fijo una sola vez en la pantalla de
+categorías ("no sustituyen atención médica ni profesional"). Verificado: tsc/build limpios, probado en
+vivo (categorías → detalle de una práctica con nota de seguridad visible en recuadro propio, y la
+entrada desde Inicio). Sin pasada de `revisor-visual` (pantalla secundaria, no es de las 4 del dinero).
 
 ✅ CHECKPOINT — GitHub + Vercel conectados, APP PUBLICADA EN INTERNET: 2026-09-08. Repo en
 github.com/caspita-j/amor-tarot (privado/público según el usuario), conectado con push por SSH (llave
@@ -24,6 +51,16 @@ desarrollo local — nunca se actualizó al pasar a producción. Corregido por e
 Site URL → `https://amor-tarot.vercel.app`, Redirect URLs → `https://amor-tarot.vercel.app/**`. Si en el
 futuro se agrega un dominio propio, este es el lugar donde también hay que actualizarlo (y agregar el
 nuevo dominio a Redirect URLs sin borrar el de vercel.app, por si acaso).
+⚠️ BLOQUEANTE conocido — el correo por defecto de Supabase (sin SMTP propio) tiene un límite de envíos
+por hora muy bajo; ya se agotó probando el login en producción 2026-09-08 ("No pudimos enviarte el
+correo"). Se decidió CON el usuario posponerlo: se resuelve junto con conectar dominio propio + Resend
+(SMTP real) — no antes. Hasta entonces, el login por correo en producción puede fallar de forma
+intermitente; no es un bug de código, es infraestructura de correo pendiente. Cuenta de prueba
+`jonathancaspita@gmail.com` (id `92af52a2-7956-427e-a034-98ee277a3739`) quedó con una contraseña de
+prueba puesta a mano en la base de datos (para un intento de login alterno que no se usó al final,
+porque la app solo tiene UI de enlace mágico/código, sin campo de contraseña) — no representa un riesgo
+real (es la cuenta de prueba del propio usuario) pero se puede limpiar (quitar `encrypted_password`)
+cuando se conecte Resend y el login por correo vuelva a ser confiable.
 
 ⏸️ CHECKPOINT — Arte real de Canva integrado: LOS 22 ARCANOS MAYORES COMPLETOS. El usuario conectó
 Canva a Claude (MCP), se generaron ilustraciones con simbología fiel al tarot Rider-Waite-Smith

@@ -11,7 +11,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { ArrowRight, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronRight, Leaf, Sparkles } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { AroMedidor } from '@/components/app/AroMedidor';
 import { BolaDeCristal } from '@/components/app/BolaDeCristal';
@@ -188,6 +188,21 @@ export default function InicioPage() {
             </span>
           </span>
           <ChevronRight size={16} strokeWidth={2} color="var(--text-primary)" aria-hidden="true" className="shrink-0" />
+        </Link>
+        <Link
+          href="/app/bienestar"
+          className="flex items-center gap-3 rounded-[var(--radius-card)] bg-[var(--surface)] px-3.5 py-3 transition-transform active:scale-[0.98]"
+        >
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--accent)_14%,transparent)]">
+            <Leaf size={16} strokeWidth={2} color="var(--accent)" aria-hidden="true" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-bold [font-family:var(--font-display)]">Bienestar</span>
+            <span className="block truncate text-xs text-[var(--text-secondary)]">
+              Prácticas caseras para tu día a día
+            </span>
+          </span>
+          <ChevronRight size={16} strokeWidth={2} color="var(--text-secondary)" aria-hidden="true" className="shrink-0" />
         </Link>
       </motion.div>
     </motion.div>
