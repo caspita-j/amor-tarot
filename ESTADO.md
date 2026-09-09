@@ -27,6 +27,18 @@ otro lado de la app — no se inventó uno nuevo). Aviso legal fijo una sola vez
 categorías ("no sustituyen atención médica ni profesional"). Verificado: tsc/build limpios, probado en
 vivo (categorías → detalle de una práctica con nota de seguridad visible en recuadro propio, y la
 entrada desde Inicio). Sin pasada de `revisor-visual` (pantalla secundaria, no es de las 4 del dinero).
+Ajuste de craft el mismo día, a pedido del usuario ("se ve muy plano"): las 4 tarjetas de categoría
+pasaron de `--surface` neutro a color sólido, una por cada acento YA existente de la app (sin inventar
+tonos — corazón→accent-4, dinero→accent-2, descanso→accent-3, espacio→accent), con íconos más
+específicos del contenido (Flame/vela, Wallet, Moon, Wind) en un chip blanco. BUG REAL encontrado y
+corregido en el mismo cambio: el texto y los números de paso sobre esos colores sólidos usaban un
+color fijo (texto oscuro por defecto / blanco fijo) sin considerar que accent-2 y accent-3 son pasteles
+claros (necesitan texto oscuro) y accent-4 necesita su tono AA propio (`--accent-4-ink`) — con blanco
+fijo, "Para despejar tu espacio" (fondo lila oscuro) habría quedado con texto oscuro sobre oscuro, y
+los números de paso en rosa/naranja/celeste habrían sido casi ilegibles. Se agregó un mapa
+`INK_CATEGORIA` con el color de texto correcto por categoría. Verificado en vivo mirando el detalle de
+una práctica en accent-4 (rosa, números oscuros legibles) y en accent (lila oscuro, números blancos
+legibles).
 
 ✅ CHECKPOINT — GitHub + Vercel conectados, APP PUBLICADA EN INTERNET: 2026-09-08. Repo en
 github.com/caspita-j/amor-tarot (privado/público según el usuario), conectado con push por SSH (llave

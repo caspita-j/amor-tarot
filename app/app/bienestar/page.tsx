@@ -7,7 +7,7 @@
 // "atraer/retener" — FICHA-AVATAR.md prohíbe lenguaje de amarres/rituales).
 
 import { useState } from 'react';
-import { Clock, Heart, Moon, Sparkles, Wallet, TriangleAlert } from 'lucide-react';
+import { Clock, Flame, Moon, Wallet, Wind, TriangleAlert } from 'lucide-react';
 import { BotonPrincipal } from '@/components/onboarding/ui';
 import {
   CATEGORIAS_BIENESTAR,
@@ -16,11 +16,34 @@ import {
   type PracticaBienestar,
 } from '@/lib/bienestar-data';
 
-const ICONO_CATEGORIA: Record<string, typeof Heart> = {
-  corazon: Heart,
+// Un color de marca ya existente por categoría (sin inventar tonos nuevos —
+// FICHA-ARTE.md reserva la paleta) para que la sección se sienta viva, a
+// pedido del usuario ("se ve muy plano"). Íconos más específicos del
+// contenido real: vela, billetera, luna, viento.
+const ICONO_CATEGORIA: Record<string, typeof Flame> = {
+  corazon: Flame,
   dinero: Wallet,
   descanso: Moon,
-  espacio: Sparkles,
+  espacio: Wind,
+};
+
+const COLOR_CATEGORIA: Record<string, string> = {
+  corazon: 'var(--accent-4)',
+  dinero: 'var(--accent-2)',
+  descanso: 'var(--accent-3)',
+  espacio: 'var(--accent)',
+};
+
+// Color de texto/número LEGIBLE sobre el color sólido de cada categoría —
+// accent-2/3 son pasteles claros (necesitan texto oscuro, igual que las
+// tarjetas de categoría del home), accent-4 tiene su propio tono AA
+// (--accent-4-ink, definido en tokens.css), y --accent es el lila oscuro
+// (necesita texto claro).
+const INK_CATEGORIA: Record<string, string> = {
+  corazon: 'var(--accent-4-ink)',
+  dinero: 'var(--text-primary)',
+  descanso: 'var(--text-primary)',
+  espacio: 'var(--bg)',
 };
 
 type Modo = 'categorias' | 'practicas' | 'detalle';
@@ -49,23 +72,26 @@ export default function BienestarPage() {
           Prácticas caseras y sencillas para tu día a día, con cosas que ya tienes en casa.
         </p>
 
-        <div className="mt-5 flex flex-col gap-2.5">
+        <div className="mt-5 grid grid-cols-2 gap-2.5">
           {CATEGORIAS_BIENESTAR.map((c) => {
-            const Icono = ICONO_CATEGORIA[c.id] ?? Sparkles;
+            const Icono = ICONO_CATEGORIA[c.id] ?? Flame;
+            const color = COLOR_CATEGORIA[c.id] ?? 'var(--accent)';
+            const ink = INK_CATEGORIA[c.id] ?? 'var(--text-primary)';
             const total = practicasDeCategoria(c.id).length;
             return (
               <button
                 key={c.id}
                 type="button"
                 onClick={() => abrirCategoria(c)}
-                className="flex items-center gap-3.5 rounded-[var(--radius-card)] bg-[var(--surface)] p-4 text-left transition-transform active:scale-[0.98]"
+                className="flex min-h-36 flex-col justify-between rounded-[var(--radius-card)] p-4 text-left transition-transform active:scale-[0.97]"
+                style={{ backgroundColor: color, boxShadow: `0 10px 22px -12px ${color}`, color: ink }}
               >
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--accent)_14%,transparent)]">
-                  <Icono size={20} color="var(--accent)" aria-hidden="true" />
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--bg)]">
+                  <Icono size={20} color={color} aria-hidden="true" />
                 </span>
-                <span className="min-w-0 flex-1">
+                <span>
                   <span className="block text-base font-bold [font-family:var(--font-display)]">{c.label}</span>
-                  <span className="mt-0.5 block text-xs text-[var(--text-secondary)]">
+                  <span className="mt-1 block text-xs leading-snug opacity-70">
                     {c.descripcion} · {total} {total === 1 ? 'práctica' : 'prácticas'}
                   </span>
                 </span>
@@ -85,6 +111,8 @@ export default function BienestarPage() {
   // ── Prácticas de una categoría ────────────────────────────────────
   if (modo === 'practicas' && categoriaActiva) {
     const practicas = practicasDeCategoria(categoriaActiva.id);
+    const Icono = ICONO_CATEGORIA[categoriaActiva.id] ?? Flame;
+    const color = COLOR_CATEGORIA[categoriaActiva.id] ?? 'var(--accent)';
     return (
       <div className="px-4 pt-4">
         <button
@@ -94,8 +122,18 @@ export default function BienestarPage() {
         >
           ← Volver
         </button>
-        <h1 className="mt-4 text-2xl font-bold [font-family:var(--font-display)]">{categoriaActiva.label}</h1>
-        <p className="mt-1 text-sm text-[var(--text-secondary)]">{categoriaActiva.descripcion}</p>
+        <div className="mt-4 flex items-center gap-3">
+          <span
+            className="flex size-11 shrink-0 items-center justify-center rounded-full"
+            style={{ backgroundColor: `color-mix(in oklab, ${color} 16%, transparent)` }}
+          >
+            <Icono size={20} color={color} aria-hidden="true" />
+          </span>
+          <div>
+            <h1 className="text-xl font-bold [font-family:var(--font-display)]">{categoriaActiva.label}</h1>
+            <p className="text-sm text-[var(--text-secondary)]">{categoriaActiva.descripcion}</p>
+          </div>
+        </div>
 
         <div className="mt-5 flex flex-col gap-2.5">
           {practicas.map((p) => (
@@ -120,6 +158,8 @@ export default function BienestarPage() {
 
   // ── Detalle de una práctica ────────────────────────────────────────
   if (modo === 'detalle' && practicaActiva) {
+    const colorDetalle = COLOR_CATEGORIA[practicaActiva.categoriaId] ?? 'var(--accent)';
+    const inkDetalle = INK_CATEGORIA[practicaActiva.categoriaId] ?? 'var(--bg)';
     return (
       <div className="px-4 pt-4">
         <button
@@ -143,7 +183,11 @@ export default function BienestarPage() {
         <ul className="mt-2 flex flex-col gap-1.5">
           {practicaActiva.materiales.map((m, i) => (
             <li key={i} className="flex items-start gap-2 text-sm text-[var(--text-primary)]">
-              <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[var(--accent)]" aria-hidden="true" />
+              <span
+                className="mt-2 size-1.5 shrink-0 rounded-full"
+                style={{ backgroundColor: colorDetalle }}
+                aria-hidden="true"
+              />
               {m}
             </li>
           ))}
@@ -153,7 +197,10 @@ export default function BienestarPage() {
         <ol className="mt-2 flex flex-col gap-3">
           {practicaActiva.pasos.map((paso, i) => (
             <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-[var(--text-primary)]">
-              <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[var(--surface)] text-xs font-bold text-[var(--text-secondary)]">
+              <span
+                className="flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                style={{ backgroundColor: colorDetalle, color: inkDetalle }}
+              >
                 {i + 1}
               </span>
               <span className="pt-0.5">{paso}</span>
