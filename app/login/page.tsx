@@ -6,9 +6,9 @@
 // correo se abre en otra app/dispositivo). Google como mejora secundaria.
 // Conectado a Supabase Auth real (Sesión 6, Etapa 1).
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Mail } from 'lucide-react';
+import { Loader2, Mail } from 'lucide-react';
 import { BotonPrincipal } from '@/components/onboarding/ui';
 import { createClient } from '@/lib/supabase/client';
 
@@ -22,6 +22,40 @@ export default function LoginPage() {
   const [verificando, setVerificando] = useState(false);
   const [error, setError] = useState('');
   const [autoriza, setAutoriza] = useState(false);
+  // Algunos enlaces de acceso (los que genera el panel de admin para "agregar
+  // usuario a mano") no traen `?code=` sino los tokens directo en el
+  // `#fragmento` de la URL — porque quien los abre nunca inició el pedido
+  // desde su propio navegador, así que Supabase no puede usar el flujo con
+  // code_verifier que sí usa /auth/callback. El fragmento nunca llega al
+  // servidor, así que solo un componente de cliente puede leerlo y crear la
+  // sesión a mano con setSession(). Sin esto, esos enlaces dejaban a la
+  // persona en /login sin poder entrar aunque el enlace fuera válido.
+  const [entrandoConEnlace, setEntrandoConEnlace] = useState(
+    () => typeof window !== 'undefined' && window.location.hash.includes('access_token')
+  );
+
+  useEffect(() => {
+    if (!window.location.hash.includes('access_token')) return;
+    const parametros = new URLSearchParams(window.location.hash.slice(1));
+    const access_token = parametros.get('access_token');
+    const refresh_token = parametros.get('refresh_token');
+    // Limpia el fragmento de la URL cuanto antes — son credenciales de un
+    // solo uso, no deben quedar visibles ni reutilizables en el historial.
+    window.history.replaceState(null, '', window.location.pathname);
+    if (!access_token || !refresh_token) {
+      setEntrandoConEnlace(false);
+      return;
+    }
+    supabase.auth.setSession({ access_token, refresh_token }).then(({ error: err }) => {
+      if (err) {
+        setEntrandoConEnlace(false);
+        setError('Ese enlace ya venció o no es válido. Pide uno nuevo.');
+        return;
+      }
+      router.push('/app');
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const emailValido = /\S+@\S+\.\S+/.test(email);
 
@@ -73,7 +107,12 @@ export default function LoginPage() {
           <span className="text-base font-bold [font-family:var(--font-display)]">Amor & Tarot</span>
         </div>
 
-        {!enviado ? (
+        {entrandoConEnlace ? (
+          <div className="mt-8 flex flex-col items-center gap-3 text-center">
+            <Loader2 size={28} color="var(--accent)" className="animate-spin" aria-hidden="true" />
+            <p className="text-sm font-semibold text-[var(--text-secondary)]">Entrando con tu enlace…</p>
+          </div>
+        ) : !enviado ? (
           <>
             <h1 className="mt-8 text-balance text-center text-2xl font-bold leading-tight [font-family:var(--font-display)]">
               Guarda tu lectura
