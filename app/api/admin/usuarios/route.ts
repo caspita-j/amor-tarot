@@ -76,9 +76,15 @@ export async function POST(req: Request) {
     );
   }
 
+  // redirectTo tiene que apuntar a /auth/callback (la ruta que intercambia el
+  // código por una sesión real) — sin esto, Supabase manda a la persona a la
+  // página principal con un `?code=` que nadie procesa, y nunca queda con
+  // sesión iniciada de verdad (bug real encontrado al probar el enlace).
+  const origen = new URL(req.url).origin;
   const { data: enlace, error: errorEnlace } = await admin.auth.admin.generateLink({
     type: 'magiclink',
     email: cuerpo.email,
+    options: { redirectTo: `${origen}/auth/callback` },
   });
 
   if (errorEnlace || !enlace?.properties?.action_link) {

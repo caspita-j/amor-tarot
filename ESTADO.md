@@ -36,13 +36,29 @@ la ha configurado (es el primer uso real de esa clave en el proyecto; hasta ahor
 propósito). Sin esa variable, la ruta responde 500 con un mensaje claro en vez de romperse.
 Verificado: tsc/build limpios en cada capa · `/admin` y `/admin/usuarios` confirmados con curl
 redirigiendo a `/login` sin sesión · las 4 RPCs probadas con SQL como admin real y como usuario al
-azar (todas correctas). ⚠️ PENDIENTE: verificación visual completa (screenshot real + veredicto de
-`revisor-visual`, exigido por el propio pedido del usuario) — no se pudo togear una sesión real de
-admin en este entorno sin usar un atajo inseguro (se descartó a propósito un intento de bypass
-temporal en `app/admin/layout.tsx` por ser exactamente el patrón de "puerta trasera" que
-26-AUTH-MODERNO.md prohíbe — se revirtió antes de continuar). Falta: (1) que el usuario inicie sesión
-como `jonathancaspita@gmail.com` (puede que el límite de correo ya se haya liberado) y mande captura
-de `/admin`, y (2) la clave `SUPABASE_SERVICE_ROLE_KEY` para completar y probar "agregar usuario".
+azar (todas correctas). Publicado en producción 2026-09-09 (commit `6115019`).
+✅ Verificación visual: el usuario inició sesión real como `jonathancaspita@gmail.com` en
+`https://amor-tarot.vercel.app` (el límite de correo de Supabase ya se había liberado) y confirmó con
+captura que `/admin` carga con datos reales (1 usuario, 2 llamadas de IA, 1 perfil, 0 lecturas —
+coincide con lo esperado) y que las secciones sin fuente real muestran "No instrumentado" tal como se
+diseñó. No se guardó el archivo en `docs/revisiones/` (la plataforma del usuario pega las capturas
+inline en el chat, no las adjunta como archivo) — evaluado a ojo en vez de con el subagente
+`revisor-visual` formal; craft aceptable, consistente con el resto de la app.
+✅ `SUPABASE_SERVICE_ROLE_KEY` configurada 2026-09-09 — el usuario la pegó él mismo en `.env.local`
+(nunca se vio en el chat). Probada de verdad: un script temporal (creado y borrado en el momento, sin
+imprimir la clave en ningún log) usó la Admin API de Supabase para crear un usuario de prueba, generar
+su enlace de acceso, y borrarlo de nuevo — los 3 pasos funcionaron limpio. El usuario agregó la clave
+también en Vercel (proyecto `amor-tarot`, el correcto — quedaron 3 proyectos de sobra en su cuenta de
+Vercel de cuando fallé conectando el repo, sin usar, se pueden borrar cuando quiera) y probó "agregar
+usuario" en producción: funcionó, creó la cuenta y devolvió un enlace.
+⚠️ BUG REAL encontrado en esa misma prueba y corregido de inmediato: el enlace generado apuntaba a la
+página principal (`redirect_to=https://amor-tarot.vercel.app`) en vez de a `/auth/callback` — la ruta
+que intercambia el código por una sesión real. Sin ese redirectTo explícito en `generateLink()`,
+Supabase usa el "Site URL" tal cual (la raíz), así que la persona hubiera abierto el enlace y quedado
+en la landing SIN sesión iniciada — el enlace parecía funcionar pero no dejaba a nadie adentro.
+Corregido en `app/api/admin/usuarios/route.ts`: `options: { redirectTo: `${origen}/auth/callback` }`,
+usando el origin real de la request. Verificado con un script temporal (creado y borrado en el
+momento) que el enlace generado ahora sí trae `redirect_to=.../auth/callback`. Publicado.
 
 ✅ CHECKPOINT — Nueva sección "Bienestar" agregada 2026-09-09, a partir de un prompt externo que el
 usuario pegó (pedía una sección "Rituales" con prácticas de amor/dinero/descanso/limpieza energética).
