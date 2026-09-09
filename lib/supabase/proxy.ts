@@ -15,6 +15,7 @@ const PUBLIC_PATHS = [
   '/auth',
   '/terminos',
   '/privacidad',
+  '/reembolsos',
   '/aviso',
 ];
 

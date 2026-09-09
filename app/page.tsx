@@ -258,11 +258,12 @@ export default function LandingPage() {
       {/* 10. FOOTER LEGAL */}
       <FooterLegal
         appName="Amor & Tarot"
-        soporteEmail="hola@amorytarot.app"
+        soporteEmail="jonathanrd198@gmail.com"
         enlaces={[
           { label: 'Privacidad', href: '/privacidad' },
           { label: 'Términos y Condiciones', href: '/terminos' },
-          { label: 'Aviso de uso', href: '/aviso' },
+          { label: 'Reembolsos', href: '/reembolsos' },
+          { label: 'Aviso de IA', href: '/aviso' },
         ]}
       />
 

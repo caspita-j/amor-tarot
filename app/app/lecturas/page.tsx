@@ -354,6 +354,11 @@ export default function LecturasPage() {
             </p>
           </div>
         )}
+        {!errorLectura && resumenListo && (
+          <p className="mt-2.5 text-xs leading-relaxed text-[var(--text-tertiary)]">
+            Generado por IA — puede no ser exacto. No sustituye consejo profesional.
+          </p>
+        )}
         {fotos.length > 0 && (
           <div className="mt-5 flex gap-2.5">
             {fotos.map((foto, i) => (

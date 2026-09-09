@@ -21,11 +21,12 @@ export default function LoginPage() {
   const [enviando, setEnviando] = useState(false);
   const [verificando, setVerificando] = useState(false);
   const [error, setError] = useState('');
+  const [autoriza, setAutoriza] = useState(false);
 
   const emailValido = /\S+@\S+\.\S+/.test(email);
 
   const enviarEnlace = async () => {
-    if (!emailValido || enviando) return;
+    if (!emailValido || !autoriza || enviando) return;
     setEnviando(true);
     setError('');
     const { error: err } = await supabase.auth.signInWithOtp({
@@ -56,6 +57,7 @@ export default function LoginPage() {
   };
 
   const continuarConGoogle = async () => {
+    if (!autoriza) return;
     setError('');
     await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -94,7 +96,28 @@ export default function LoginPage() {
                 className="h-14 w-full rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] bg-[var(--bg)] px-5 text-base text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
               />
               {error && <p className="text-sm font-medium text-[var(--danger)]">{error}</p>}
-              <BotonPrincipal disabled={!emailValido} cargando={enviando} onClick={enviarEnlace}>
+
+              <label className="flex items-start gap-2.5 text-left">
+                <input
+                  type="checkbox"
+                  checked={autoriza}
+                  onChange={(e) => setAutoriza(e.target.checked)}
+                  className="mt-0.5 size-4 shrink-0 rounded-[4px] border border-[color-mix(in_oklab,var(--text-secondary)_40%,transparent)] accent-[var(--accent)]"
+                />
+                <span className="text-xs leading-relaxed text-[var(--text-secondary)]">
+                  Autorizo el tratamiento de mis datos según la{' '}
+                  <a href="/privacidad" className="underline underline-offset-2">
+                    Política de Privacidad
+                  </a>{' '}
+                  y acepto los{' '}
+                  <a href="/terminos" className="underline underline-offset-2">
+                    Términos y Condiciones
+                  </a>
+                  .
+                </span>
+              </label>
+
+              <BotonPrincipal disabled={!emailValido || !autoriza} cargando={enviando} onClick={enviarEnlace}>
                 {enviando ? 'Enviando…' : 'Enviarme el enlace mágico'}
               </BotonPrincipal>
             </div>
@@ -106,22 +129,11 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={continuarConGoogle}
-              className="flex h-14 w-full items-center justify-center gap-2 rounded-[var(--radius-button)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] text-base font-semibold text-[var(--text-primary)]"
+              disabled={!autoriza}
+              className="flex h-14 w-full items-center justify-center gap-2 rounded-[var(--radius-button)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] text-base font-semibold text-[var(--text-primary)] disabled:opacity-40"
             >
               Continuar con Google
             </button>
-
-            <p className="mt-6 text-center text-xs leading-relaxed text-[var(--text-secondary)]">
-              Al continuar aceptas los{' '}
-              <a href="/terminos" className="underline underline-offset-2">
-                Términos
-              </a>{' '}
-              y la{' '}
-              <a href="/privacidad" className="underline underline-offset-2">
-                Privacidad
-              </a>
-              .
-            </p>
           </>
         ) : (
           <div className="mt-8 flex flex-col items-center text-center">

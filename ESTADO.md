@@ -1,5 +1,47 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing)
+Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal)
+
+✅ CHECKPOINT — Auditoría legal completa, 2026-09-09, siguiendo `docs/sistema/47-LEGAL-FISCAL-Y-PRIVACIDAD.md`
+al pie de la letra (skill `legal`, a pedido explícito del usuario). Responsable declarado: Jonathan,
+persona natural, Colombia. Contacto legal: `jonathanrd198@gmail.com` (temporal — el usuario compró
+dominio propio pendiente; cambiar el contacto en las 4 páginas + footer + perfil cuando eso pase).
+Inventario real (antes de escribir nada): sin borrado de cuenta, sin analytics/cookies/píxeles, sin
+Hotmart conectado, sin checkbox de consentimiento, `/privacidad` y `/terminos` eran placeholders.
+Hecho: `components/legal/LegalLayout.tsx` (chrome compartido) + reescritas `app/privacidad/page.tsx`
+y `app/terminos/page.tsx` + nueva `app/reembolsos/page.tsx` (Garantía de los 7 Días, PROVISIONAL —
+ver Problemas conocidos) + `app/aviso/page.tsx` reforzada ("puede generar información incorrecta") +
+disclaimer contextual de 1 línea en el resultado de la lectura (`app/app/lecturas/page.tsx`, junto al
+texto de la IA, no solo en la página legal) + checkbox de consentimiento NO pre-marcado en
+`app/login/page.tsx` (gatea el botón de enviar enlace Y el de Google — Ley 1581 de 2012 exige
+autorización previa expresa, no un texto implícito) + borrado de cuenta real: `app/api/cuenta/eliminar/route.ts`
+(verifica sesión propia, usa `admin.auth.admin.deleteUser()` con `SUPABASE_SERVICE_ROLE_KEY`, depende
+de los `on delete cascade` ya existentes de `profiles`/`lecturas`/`ai_calls`) + UI de 2 pasos en
+`app/app/perfil/page.tsx` (botón → escribir "ELIMINAR" para confirmar → cierra sesión y redirige a `/`).
+⚠️ BUG REAL encontrado y corregido en el camino: `/reembolsos` (página nueva) no estaba en
+`PUBLIC_PATHS` de `lib/supabase/proxy.ts` — redirigía a `/login` incluso siendo una página legal
+pública. Corregido. Footer de la landing (`app/page.tsx`) y el box de enlaces del perfil actualizados
+con el 4to enlace a Reembolsos; `soporteEmail` del footer corregido de `hola@amorytarot.app` (dominio
+no conectado, bandeja inexistente) a `jonathanrd198@gmail.com` (coherencia con el resto de la capa legal).
+Verificado: tsc/build limpios · las 4 páginas legales + el login con checkbox funcionando (gate
+verificado con clic real, no solo `.checked`) + la pantalla de confirmación de borrado de cuenta,
+revisadas en vivo a 375px con la técnica ya usada esta sesión (ruta agregada a `PUBLIC_PATHS` solo
+mientras se miraba, revertida de inmediato, confirmado con curl que `/app/perfil` vuelve a redirigir).
+NO se ejecutó un borrado real (el proyecto de Supabase es el mismo de producción — se verificó la
+lógica y la UI, no se disparó `admin.auth.admin.deleteUser()` contra una cuenta real). Sin pasada de
+`revisor-visual` (páginas legales/secundarias, mismo criterio que perfil/ajustes).
+A pedido del usuario, se agregó una advertencia visible en la zona de eliminar cuenta
+(`app/app/perfil/page.tsx`, visible tanto antes como durante la confirmación): borrar la cuenta NO
+cancela la suscripción de Hotmart — es un sistema aparte — así que si sigue activa, hay que
+cancelarla primero o el cobro automático sigue llegando sin que la persona pueda usar la app. Enlaza
+a `/reembolsos` (ahí están los pasos para cancelar). Verificado en vivo a 375px + tsc/build limpios.
+⚠️ Pendiente que solo un humano puede resolver: la Garantía de los 7 Días en `/reembolsos` sigue
+PROVISIONAL — cuando se conecte Hotmart, confirmar que su panel realmente permite reembolso a ≥7 días
+corridos desde el cobro (ver FICHA-MERCADO.md §4); si el plazo real es menor, hay que ajustar el
+número ahí y en la landing/paywall ANTES de vender. Si en algún momento la app supera unos pocos
+cientos de dólares al mes de facturación real, o empieza a manejar datos de salud/menores de edad,
+esta auditoría (de completitud, no de asesoría legal colegiada) debe complementarse con un abogado
+local — Colombia (Ley 1581) y el mercado hispano de EE.UU. tienen reglas propias que un review de
+producto no reemplaza.
 
 ✅ CHECKPOINT — Pop-up de intención de salida (exit-intent) en la landing, 2026-09-09, a pedido del
 usuario, siguiendo su propio brief paso a paso. Identificación previa (Paso 0): la razón #1 de duda no
