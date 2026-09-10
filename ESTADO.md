@@ -941,8 +941,10 @@ conectar Hotmart, no tenga que volver a revisar toda la sesión buscando qué qu
   Providers → Email) — no se puede hacer por código, y puede pedir plan Pro de Supabase (de pago).
   Baja prioridad: el login real de la app es sin contraseña.
 - [ ] Correo de contacto legal: hoy usa `jonathanrd198@gmail.com` (personal) en Privacidad,
-  Términos, Reembolsos, footer y perfil — cambiar a un correo del dominio propio cuando lo compren
-  (acordado explícitamente con el usuario, no es un olvido).
+  Términos, Reembolsos, footer y perfil. El dominio propio ya se compró y se conectó
+  (`amorytarot.app`, 2026-09-10) — falta crear el correo real sobre ese dominio (el usuario decidió
+  empezar con reenvío gratis a su Gmail, guía ya dada, pospuesto explícitamente "para después") y
+  recién ahí cambiar estas 5 páginas de `jonathanrd198@gmail.com` a `hola@amorytarot.app`.
 
 ## Decisiones del usuario (ya resueltas, no volver a preguntar)
 - Logo/isotipo del usuario: CONFIRMADO — queda SOLO como favicon + ícono de app (app/icon.png,
