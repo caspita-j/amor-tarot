@@ -1,6 +1,19 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo)
+Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo)
 
+✅ CHECKPOINT — Copy de win-back escrito y guardado (plan de retención, punto 4), 2026-09-09 — SIN
+automatizar todavía, a propósito. Antes de escribir nada se le avisó al usuario que este punto
+depende de 2 piezas que el proyecto no tiene hoy: el webhook de Hotmart (es lo único que avisa quién
+canceló y cuándo — sin eso no hay fecha desde la cual contar los días) y Resend/dominio propio (el
+correo de Supabase es solo para el enlace mágico, con límite de envíos bajo, no sirve para esto). El
+usuario eligió dejar el copy listo en vez de esperar. Escrito siguiendo la doctrina exacta de
+`docs/sistema/58-RETENCION-DE-INGRESOS.md` (sección WIN-BACK): secuencia de 3 correos a los días
+30/60/90, oferta = 3 días de prueba gratis (no descuento, más simple de operar sin cupones), sin
+insistir después del 3er correo (sin dark patterns, per la doctrina). Guardado en
+`docs/copy/winback.md`, con la regla de negocio y el enganche técnico exacto documentados arriba del
+copy mismo, para que conectarlo cuando existan Hotmart+Resend sea cableo, no decisión. El correo del
+día 60 aprovecha a propósito la ampliación de categorías de hoy ("ya no es solo para pareja").
+No se tocó código ni se armó ninguna automatización — es contenido guardado, nada más.
 ✅ CHECKPOINT — Check-in de ánimo diario (plan de retención, punto 3), 2026-09-09, a pedido del
 usuario. Objetivo: que el ritual diario deje de ser intercambiable con cualquier horóscopo y empiece
 a generar un dato propio de la persona, acumulado en un historial visual real (antes, `SemanaStrip`
