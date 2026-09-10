@@ -1,6 +1,34 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal)
 
+✅ CHECKPOINT — "Tu semana en resumen" (informe semanal con IA), 2026-09-10, a pedido explícito del
+usuario. Nace de una conversación honesta sobre el negocio: el usuario preguntó si yo, como usuario,
+pagaría mes a mes — la respuesta fue que el valor pago (lecturas puntuales) no da una razón mensual
+de seguir pagando, a diferencia del ritual diario gratis (check-in de ánimo) que sí genera hábito.
+Esta feature es el puente: un reflejo semanal generado con IA que usa el ánimo + las lecturas reales
+de la persona, pensado para que el valor pago se sienta ACUMULATIVO (se afina mientras más semanas
+sigue suscrita) en vez de puntual — mismo principio que "Spotify Wrapped" o los resúmenes anuales de
+apps de journaling.
+Implementado: tabla `informes_semanales` (Postgres, RLS solo select+insert propio — nunca update,
+el informe de un día no se reescribe) — clave primaria `user_id+fecha` que limita a 1 generación por
+persona por día (control de costo de IA, no hace falta contador aparte). `app/api/informe-semanal/
+route.ts`: si ya existe el de hoy lo devuelve tal cual (sin llamar a la IA); si no, exige un mínimo
+de 2 datos reales esa semana (ánimos + lecturas combinados) — si no hay suficientes, responde vacío
+sin gastar ninguna llamada; el prompt tiene la misma regla anti-alucinación que el resto de la app
+("basa todo en los datos reales, nunca inventes un patrón que no esté"). Mostrado en
+`app/app/historial/page.tsx`, arriba de todo, con su propio esqueleto de carga — y si no hay
+suficientes datos, la tarjeta simplemente no aparece (nunca un hueco vacío forzado).
+Verificado en vivo con 2 usuarios de prueba reales: (1) uno con 4 días de ánimo + 2 lecturas —
+el informe generado conectó de verdad el ánimo (2 días de ansiedad → calma → esperanza) con el
+contenido real de ambas lecturas (un ascenso que no se confirma, un mensaje que no llega), con una
+idea de cierre genuina y no genérica; recargar la página devolvió el mismo texto en 454ms (cache
+funcionando, no se regeneró); confirmado con SQL que quedó exactamente 1 fila guardada. (2) uno sin
+ningún dato esta semana — la tarjeta no apareció, cayó limpio al estado vacío ya existente de
+Historial. Usuarios y datos de prueba borrados al terminar (la base volvió a 0 lecturas/ánimos/
+informes). tsc/build limpios. Publicado.
+Con esto, los 3 puntos "productivos" de la conversación sobre monetización quedan resueltos en
+código (retención vía hábito diario + categorías ampliadas + informe acumulativo) — lo único que
+falta para que el negocio se valide de verdad sigue siendo Hotmart (ver "Pendientes del usuario").
 ⚠️ BUG REAL encontrado y corregido, 2026-09-10 — a pedido del usuario ("revisa que el onboarding y el
 paywall sigan funcionando") tras los cambios de la auditoría de seguridad. Onboarding y paywall en sí
 compilan y se ven bien (probado de punta a punta con clics reales), pero el arreglo de ayer que
