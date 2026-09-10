@@ -1,6 +1,27 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado)
 
+✅ CHECKPOINT — Dominio propio conectado: **https://www.amorytarot.app**, 2026-09-10. El usuario
+compró `amorytarot.app` (tras una lluvia de ideas de nombres — se quedó con el mismo nombre de marca,
+solo TLD `.app` en vez de `.com`, que no estaba disponible). Guiado paso a paso por el chat (sin ver
+ninguna clave — solo valores públicos de DNS):
+- Vercel → Domains → se agregó `amorytarot.app` como dominio existente (no comprado ahí).
+- El registro DNS del registrador tenía un registro A viejo apuntando a la IP de estacionamiento del
+  propio registrador (`2.57.91.91`) — se corrigió (no se agregó uno nuevo, que hubiera creado
+  conflicto) al valor real de Vercel (`216.198.79.1`). El CNAME de `www` ya apuntaba bien al dominio
+  raíz desde antes, no necesitó cambio — al arreglar el A, ambos quedaron válidos en Vercel a la vez.
+  Vercel dejó `www.amorytarot.app` como el dominio de Producción real, con `amorytarot.app` (sin www)
+  redirigiendo (308) hacia él — así que el dominio "canónico" de la app de ahora en más es CON www.
+- Supabase Auth → Site URL cambiada a `https://www.amorytarot.app`, agregada
+  `https://www.amorytarot.app/**` a Redirect URLs (se dejó también la de `amor-tarot.vercel.app` por
+  ahora, se puede quitar más adelante una vez todo esté estable).
+Verificado en vivo con un usuario de prueba real: la landing carga con HTTPS en el dominio nuevo, y el
+login completo (enlace mágico → `/auth/callback` → sesión real → `/app`) funciona de punta a punta en
+`https://www.amorytarot.app`. Usuario de prueba borrado al terminar.
+⚠️ Pendiente, no urgente: `amor-tarot.vercel.app` sigue funcionando en paralelo (documentado más
+arriba, en "Pendientes del usuario" — se puede seguir usando temporalmente, y el correo de contacto
+legal sigue siendo el Gmail personal hasta que se configure un correo real sobre este dominio nuevo,
+ver esa misma sección).
 ✅ CHECKPOINT — Arreglo de voseo + "Tu avance en [categoría]", 2026-09-10, a pedido explícito del
 usuario.
 **Voseo**: al mostrarle un ejemplo real del informe semanal, el usuario notó que se colaron 2 verbos
