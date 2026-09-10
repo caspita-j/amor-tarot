@@ -1,6 +1,24 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo)
 
+⚠️ BUG REAL encontrado y corregido, 2026-09-10 — a pedido del usuario ("revisa que el onboarding y el
+paywall sigan funcionando") tras los cambios de la auditoría de seguridad. Onboarding y paywall en sí
+compilan y se ven bien (probado de punta a punta con clics reales), pero el arreglo de ayer que
+bloqueó la edición directa de `racha_dias`/`racha_ultima_fecha` (quitó UPDATE general de `profiles`
+y lo devolvió solo a las columnas editables desde la app) rompió, sin quererlo, la sincronización del
+onboarding: `sincronizarOnboardingSiHaceFalta()` hace un `upsert()`, y el `ON CONFLICT (id) DO UPDATE`
+que genera Supabase/PostgREST incluye `id = excluded.id` en el SET aunque el valor no cambie — como
+`id` no estaba en la lista de columnas con permiso, ese upsert fallaba en silencio (la función no
+revisa el error) y el nombre/signo/otra persona del onboarding nunca llegaban al perfil real: el
+usuario nuevo veía "Hola, ahí" en vez de su nombre. Corregido con
+`grant update (id) on public.profiles to authenticated` — es seguro porque la política `update_own`
+ya exige `auth.uid() = id` en el WITH CHECK, así que nadie puede cambiar su id al de otra persona,
+solo "actualizarlo" a sí mismo (que es lo único que hace el upsert). Verificado con un usuario de
+prueba real de punta a punta: onboarding completo (5 preguntas + reconocimiento citando la respuesta
+real + resultado con nombre/cartas correctos) → paywall (precio, plan, fecha de cobro real) → login →
+`/app` mostrando "Hola, Prueba Flujo" correctamente, Y confirmado que `racha_dias`/`racha_ultima_fecha`
+siguen bloqueadas para edición directa (la protección de la auditoría de seguridad sigue intacta).
+Usuario y datos de prueba borrados al terminar. tsc/build limpios. Publicado.
 ✅ CHECKPOINT — Copy de win-back escrito y guardado (plan de retención, punto 4), 2026-09-09 — SIN
 automatizar todavía, a propósito. Antes de escribir nada se le avisó al usuario que este punto
 depende de 2 piezas que el proyecto no tiene hoy: el webhook de Hotmart (es lo único que avisa quién
