@@ -12,10 +12,23 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Sparkles, TrendingUp } from 'lucide-react';
+import { Route, Sparkles, TrendingUp } from 'lucide-react';
 import { BotonPrincipal } from '@/components/onboarding/ui';
 import { leerLecturasReales, type LecturaGuardada } from '@/lib/supabase/datos';
-import { labelCategoria } from '@/lib/categorias';
+import { labelCategoria, type Categoria } from '@/lib/categorias';
+
+const MINIMO_AVANCE = 3;
+
+/** La categoría con más historia (3+ lecturas) — solo esa tiene un arco real
+ * que reflejar. Si dos empatan, gana la que tiene la lectura más reciente. */
+function categoriaConMasHistoria(lecturas: LecturaGuardada[]): Categoria | null {
+  const conteo = new Map<Categoria, number>();
+  for (const l of lecturas) conteo.set(l.categoria, (conteo.get(l.categoria) ?? 0) + 1);
+  const candidatas = [...conteo.entries()].filter(([, n]) => n >= MINIMO_AVANCE);
+  if (candidatas.length === 0) return null;
+  candidatas.sort((a, b) => b[1] - a[1]);
+  return candidatas[0][0];
+}
 
 function formatearFecha(iso: string): string {
   const d = new Date(iso);
@@ -75,6 +88,54 @@ function InformeSemanal() {
   );
 }
 
+function AvanceCategoria({ categoria }: { categoria: Categoria }) {
+  const [estado, setEstado] = useState<'cargando' | 'listo' | 'vacio'>('cargando');
+  const [texto, setTexto] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await fetch('/api/avance-categoria', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ categoria }),
+        });
+        const data = (await resp.json()) as { texto?: string; error?: string };
+        if (data.texto) {
+          setTexto(data.texto);
+          setEstado('listo');
+        } else {
+          setEstado('vacio');
+        }
+      } catch {
+        setEstado('vacio');
+      }
+    })();
+  }, [categoria]);
+
+  if (estado === 'vacio') return null;
+
+  return (
+    <div className="mt-3 rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
+      <div className="flex items-center gap-2">
+        <Route size={16} color="var(--accent)" aria-hidden="true" />
+        <p className="text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
+          Tu avance en {labelCategoria(categoria).toLowerCase()}
+        </p>
+      </div>
+      {estado === 'cargando' ? (
+        <div className="mt-2.5 flex flex-col gap-2">
+          <div className="h-3 w-full animate-pulse rounded-full bg-[var(--surface-2)]" />
+          <div className="h-3 w-4/5 animate-pulse rounded-full bg-[var(--surface-2)]" />
+          <div className="h-3 w-3/5 animate-pulse rounded-full bg-[var(--surface-2)]" />
+        </div>
+      ) : (
+        <p className="mt-2.5 text-sm leading-relaxed text-[var(--text-primary)]">{texto}</p>
+      )}
+    </div>
+  );
+}
+
 export default function HistorialPage() {
   const [lecturas, setLecturas] = useState<LecturaGuardada[] | null>(null);
 
@@ -95,6 +156,7 @@ export default function HistorialPage() {
       <h1 className="text-2xl font-bold [font-family:var(--font-display)]">Historial</h1>
 
       <InformeSemanal />
+      {categoriaConMasHistoria(lecturas) && <AvanceCategoria categoria={categoriaConMasHistoria(lecturas)!} />}
 
       {lecturas.length === 0 ? (
         <div className="mt-8 flex flex-col items-center gap-3 rounded-[var(--radius-card)] bg-[var(--surface)] px-6 py-10 text-center">

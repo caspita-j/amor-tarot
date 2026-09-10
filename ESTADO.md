@@ -1,6 +1,31 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado)
 
+✅ CHECKPOINT — Arreglo de voseo + "Tu avance en [categoría]", 2026-09-10, a pedido explícito del
+usuario.
+**Voseo**: al mostrarle un ejemplo real del informe semanal, el usuario notó que se colaron 2 verbos
+en voseo ("mirá", "cruzás") a pesar de que el prompt ya decía "NUNCA voseo". Reforzado en LOS DOS
+endpoints que generan texto con IA (`app/api/lectura/route.ts` y `app/api/informe-semanal/route.ts`)
+con ejemplos explícitos de lo prohibido y su forma correcta ("mirá"→"mira", "cruzás"→"cruzas",
+"tenés"→"tienes", etc.) + la instrucción de revisar cada verbo antes de terminar. Probado con 2
+informes semanales nuevos, con usuarios distintos: ningún voseo en ninguno de los dos.
+**"Tu avance en [categoría]"**: nueva sección en Historial (debajo de "Tu semana en resumen") — mira
+TODAS las lecturas de la categoría con más historia (3+, la que tenga más) en orden cronológico y
+refleja cómo se movió esa situación real. Regla más importante, pedida explícitamente por el
+usuario: JAMÁS decir "estás mejorando" porque sí — si la situación sigue igual, empeoró, o cambió sin
+resolverse, eso es lo que se dice, con calidez pero sin maquillar (para que la persona nunca sienta
+que le están mintiendo). Tabla nueva `avances_categoria` (RLS select+insert propio, sin update — el
+avance de un día no se reescribe), mismo patrón de "máximo 1 generación por día" que el informe
+semanal (clave primaria `user_id+categoria+fecha`).
+Verificado en vivo con 2 escenarios reales opuestos, a propósito, para confirmar que no se volvió ni
+falsamente positivo ni sistemáticamente pesimista: (1) 3 lecturas de pareja a lo largo de 3 semanas
+donde la situación NO mejora (silencio → respuesta cortante → misma pelea de siempre) — el informe
+dijo explícitamente "esto no es una mejora disfrazada... nada de esto se ha resuelto todavía, y
+decírtelo así, sin adornarlo, es más honesto que prometerte que ya viene la calma"; (2) 3 lecturas de
+trabajo con mejora real y verificable (miedo a preguntar → preguntó → consiguió el ascenso) — el
+informe reconoció el avance real citando sus propias palabras ("hice bien en no quedarme callada"),
+sin prometer que todo seguirá así. Ambos sin voseo. Usuarios y datos de las 4 pruebas de esta ronda
+borrados al terminar (la base volvió a 0 en las 4 tablas nuevas). tsc/build limpios. Publicado.
 ✅ CHECKPOINT — "Tu semana en resumen" (informe semanal con IA), 2026-09-10, a pedido explícito del
 usuario. Nace de una conversación honesta sobre el negocio: el usuario preguntó si yo, como usuario,
 pagaría mes a mes — la respuesta fue que el valor pago (lecturas puntuales) no da una razón mensual
