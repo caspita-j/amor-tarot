@@ -1,5 +1,49 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad)
+Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda)
+
+✅ CHECKPOINT — DECISIÓN DE PRODUCTO: el mecanismo de lecturas ya NO es solo de pareja, 2026-09-09,
+a pedido explícito del usuario (plan de retención, punto 1+2: "extender la app a problemas de día a
+día... que la persona sienta que la app es un hombro en el cual puede desahogarse... guardando
+historial y contexto de sus lecturas anteriores crea un vínculo más fuerte"). Diagnóstico previo que
+motivó el cambio: el dolor real que resuelve la app (duda de pareja) tiende a RESOLVERSE solo en
+semanas, así que apostar a retención mensual indefinida sobre ese único caso de uso no es realista;
+la salida es que la app siga siendo útil cuando esa duda puntual ya se resolvió.
+⚠️ IMPORTANTE: la PROMESA PÚBLICA (landing, onboarding, paywall, FICHA-AVATAR.md) se deja
+EXPLÍCITAMENTE IGUAL por ahora ("duda o crisis de pareja") — decisión del usuario ("deja la promesa
+como está por ahora"). Lo que cambió es el alcance PUERTAS ADENTRO de la app ya registrada. Si más
+adelante se decide anunciarlo también afuera, hay que actualizar FICHA-AVATAR.md (hoy dice
+literalmente "duda de pareja") y el copy de venta — no se tocó nada de eso hoy.
+Implementado:
+- `lib/categorias.ts` (nuevo): 6 categorías (Pareja, Trabajo, Familia, Amistad, Una decisión, Otro),
+  con quién pide "otra persona" y las etiquetas de la carta 2/3 por categoría — "La Dinámica" se
+  conserva tal cual para pareja/familia/amistad (es el nombre de marca del mecanismo, ya está en la
+  landing: "Tú, La Otra Persona, La Dinámica"); trabajo/decisión/otro usan "El Camino".
+- `lecturas` (Postgres): columna `categoria` nueva (default `'pareja'`, con CHECK de los 6 valores —
+  las lecturas viejas quedan clasificadas como pareja automáticamente, sin migración de datos manual).
+- `app/app/lecturas/page.tsx`: nuevo paso de "¿de qué se trata tu duda?" (grid de 6 categorías con
+  ícono) ANTES del formulario de situación; el campo "¿con quién es tu situación?" solo aparece para
+  categorías relacionales, y es opcional (si no se da nombre, la carta 2 se llama "La Situación").
+  Menú y tarjeta de Inicio (`app/app/page.tsx`) renombrados de "Tu lectura de pareja" a "Cuéntame tu
+  situación" para reflejar el alcance nuevo — sigue siendo el mismo mecanismo de 3 cartas.
+- `app/api/lectura/route.ts`: el `SYSTEM_PROMPT` ya no asume pareja, es agnóstico de categoría;
+  además trae del lado del SERVIDOR (nunca confiando en lo que mande el cliente) las últimas 2
+  lecturas de la misma persona y se las pasa a la IA como contexto, con la instrucción explícita de
+  usarlas SOLO si hay una conexión real con lo de hoy, nunca forzarla — probado en vivo: una lectura
+  de trabajo seguida de una de pareja sin relación real NO generó ninguna conexión inventada (la IA
+  respetó la regla).
+- `app/app/historial/page.tsx`: cada lectura muestra su categoría; si ≥3 de las últimas 5 comparten
+  categoría, aparece un aviso ("3 de tus últimas 5 lecturas fueron sobre trabajo") — umbral puesto a
+  propósito para no inventar un patrón con pocos datos.
+Verificado de punta a punta con usuarios de prueba reales (creados y borrados en la sesión, service
+role nunca expuesto): (1) categoría "Trabajo" — sin campo de "otra persona", título e íconos
+correctos, lectura generada 100% sobre el tema de trabajo con las cartas rotuladas "Tú / La Situación
+/ El Camino"; (2) categoría "Pareja" a continuación — la IA NO mezcló el contexto de la lectura de
+trabajo anterior (correcto, no había conexión real); (3) Historial mostrando ambas con su categoría
+correcta; (4) aviso de patrón probado por separado con datos sembrados a propósito (3 de 5 en
+"trabajo") — apareció el texto exacto esperado. tsc/build limpios. Publicado.
+Siguiente paso sugerido (no iniciado): el resto del plan de retención (puntos 3-5 — ritual diario con
+check-in real, y win-back automatizado para cuando la duda de la persona se resuelva) sigue pendiente
+de que el usuario decida si avanzar.
 
 ✅ CHECKPOINT — Auditoría de seguridad completa (10 puntos, formato pedido por el usuario), 2026-09-09.
 Hallazgo 🔴 CRÍTICO, sin corregir a propósito (decisión del usuario — "lo de Hotmart ya en el siguiente

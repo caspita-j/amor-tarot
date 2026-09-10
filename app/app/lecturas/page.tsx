@@ -1,11 +1,12 @@
 'use client';
 
-// Lecturas — el flujo central del producto: sacar una lectura de pareja
-// (situación libre → 3 cartas que citan tus palabras) o ver compatibilidad
-// de signos. Protagonista único: SACAR una lectura, no navegar una lista.
+// Lecturas — el flujo central del producto: sacar una lectura de CUALQUIER
+// duda del día a día (no solo pareja — pedido explícito del usuario para que
+// la app se sienta como un hombro donde desahogarse) o ver compatibilidad de
+// signos. Protagonista único: SACAR una lectura, no navegar una lista.
 
 import { useEffect, useRef, useState } from 'react';
-import { Heart, HeartHandshake, ImagePlus, MessageCircleHeart, X } from 'lucide-react';
+import { Briefcase, Heart, HeartHandshake, ImagePlus, MessageCircleHeart, Scale, Sparkles, Users, X } from 'lucide-react';
 import { AnimacionCartas } from '@/components/app/AnimacionCartas';
 import { BotonPrincipal, ChipGrid, TarjetaTarot } from '@/components/onboarding/ui';
 import {
@@ -18,6 +19,7 @@ import {
   sortearCartas,
   type CartaSalida,
 } from '@/lib/tarot-data';
+import { CATEGORIAS, etiquetaCarta2, etiquetaCarta3, pideOtraPersona, type Categoria } from '@/lib/categorias';
 import { leerOnboarding, type RespuestasOnboarding } from '@/lib/estado-app';
 import { guardarLecturaReal, registrarDia } from '@/lib/supabase/datos';
 import { comprimirProporcional } from '@/lib/imagen';
@@ -29,11 +31,40 @@ const SIGNOS = [
   'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis',
 ];
 
-type Modo = 'menu' | 'pareja-form' | 'pareja-cargando' | 'pareja-resultado' | 'pareja-crisis' | 'compat-form' | 'compat-resultado';
+const ICONO_CATEGORIA: Record<Categoria, typeof Heart> = {
+  pareja: Heart,
+  trabajo: Briefcase,
+  familia: Users,
+  amistad: HeartHandshake,
+  decision: Scale,
+  otro: Sparkles,
+};
+
+function tituloSituacion(categoria: Categoria, nombreOtra: string): string {
+  if (pideOtraPersona(categoria) && nombreOtra.trim()) return `¿Qué está pasando con ${nombreOtra.trim()}?`;
+  switch (categoria) {
+    case 'pareja':
+      return '¿Qué está pasando en tu relación?';
+    case 'trabajo':
+      return '¿Qué está pasando en el trabajo?';
+    case 'familia':
+      return '¿Qué está pasando en tu familia?';
+    case 'amistad':
+      return '¿Qué está pasando con esa amistad?';
+    case 'decision':
+      return '¿Qué decisión tienes que tomar?';
+    default:
+      return 'Cuéntame qué está pasando';
+  }
+}
+
+type Modo = 'menu' | 'categoria' | 'situacion-form' | 'cargando' | 'resultado' | 'crisis' | 'compat-form' | 'compat-resultado';
 
 export default function LecturasPage() {
   const [modo, setModo] = useState<Modo>('menu');
   const [onboarding, setOnboarding] = useState<RespuestasOnboarding>({});
+  const [categoria, setCategoria] = useState<Categoria>('pareja');
+  const [nombreOtraInput, setNombreOtraInput] = useState('');
   const [situacion, setSituacion] = useState('');
   const [cartas, setCartas] = useState<[CartaSalida, CartaSalida, CartaSalida] | null>(null);
   const [resumen, setResumen] = useState('');
@@ -51,7 +82,6 @@ export default function LecturasPage() {
   useEffect(() => {
     const r = leerOnboarding();
     setOnboarding(r);
-    setSituacion(r.detalle ?? '');
     setSignoA(r.signo ?? '');
     setSignoB(r.otraPersonaSigno ?? '');
     if (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('ir') === 'compatibilidad') {
@@ -59,12 +89,24 @@ export default function LecturasPage() {
     }
   }, []);
 
-  const nombreOtra = onboarding.otraPersonaNombre?.trim() || 'la otra persona';
+  const nombreOtra = etiquetaCarta2(categoria, nombreOtraInput);
+  const carta3 = etiquetaCarta3(categoria);
+
+  const elegirCategoria = (c: Categoria) => {
+    setCategoria(c);
+    if (c === 'pareja') {
+      setNombreOtraInput(onboarding.otraPersonaNombre ?? '');
+      if (!situacion.trim()) setSituacion(onboarding.detalle ?? '');
+    } else {
+      setNombreOtraInput('');
+    }
+    setModo('situacion-form');
+  };
 
   const sacarLectura = async () => {
     if (!situacion.trim()) return;
     if (esSituacionDeCrisis(situacion)) {
-      setModo('pareja-crisis');
+      setModo('crisis');
       return;
     }
     const situacionTexto = situacion.trim();
@@ -74,7 +116,7 @@ export default function LecturasPage() {
     setResumenListo(false);
     setErrorLectura(null);
     setGuardada(false);
-    setModo('pareja-cargando');
+    setModo('cargando');
 
     try {
       const resp = await fetch('/api/lectura', {
@@ -82,6 +124,7 @@ export default function LecturasPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           situacion: situacionTexto,
+          categoria,
           nombreOtra,
           cartas: nuevasCartas.map((c) => ({
             nombre: c.carta.nombre,
@@ -93,7 +136,7 @@ export default function LecturasPage() {
       });
 
       if (resp.status === 422) {
-        setModo('pareja-crisis');
+        setModo('crisis');
         return;
       }
       if (resp.status === 401) {
@@ -109,11 +152,11 @@ export default function LecturasPage() {
           // La respuesta no traía JSON (ej. error de red) — se usa el mensaje genérico.
         }
         setErrorLectura(mensaje);
-        setModo('pareja-resultado');
+        setModo('resultado');
         return;
       }
 
-      setModo('pareja-resultado');
+      setModo('resultado');
       const lector = resp.body.getReader();
       const decodificador = new TextDecoder();
       let acumulado = '';
@@ -126,7 +169,7 @@ export default function LecturasPage() {
       setResumenListo(true);
     } catch {
       setErrorLectura('No pudimos escribir tu lectura esta vez. Tus cartas ya salieron — puedes intentar de nuevo.');
-      setModo('pareja-resultado');
+      setModo('resultado');
     }
   };
 
@@ -143,6 +186,7 @@ export default function LecturasPage() {
         ],
         resumen,
         fotos: fotos.length > 0 ? fotos : undefined,
+        categoria,
       });
       await registrarDia();
       setGuardada(true);
@@ -171,6 +215,7 @@ export default function LecturasPage() {
 
   const volverAlMenu = () => {
     setModo('menu');
+    setSituacion('');
     setFotos([]);
   };
 
@@ -189,16 +234,16 @@ export default function LecturasPage() {
 
         <button
           type="button"
-          onClick={() => setModo('pareja-form')}
+          onClick={() => setModo('categoria')}
           className="mt-5 flex w-full items-start gap-3.5 rounded-[var(--radius-card)] bg-[var(--accent-2)] p-4 text-left"
         >
           <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--bg)_55%,transparent)]">
             <MessageCircleHeart size={20} color="var(--text-primary)" />
           </span>
           <span>
-            <span className="block text-base font-bold [font-family:var(--font-display)]">Tu lectura de pareja</span>
+            <span className="block text-base font-bold [font-family:var(--font-display)]">Cuéntame tu situación</span>
             <span className="mt-1 block text-sm text-[color-mix(in_oklab,var(--text-primary)_65%,transparent)]">
-              Cuéntale tu situación y recibe 3 cartas: Tú, {nombreOtra}, la Dinámica.
+              De pareja, trabajo, familia o lo que sea — recibe 3 cartas y un paso concreto.
             </span>
           </span>
         </button>
@@ -222,15 +267,66 @@ export default function LecturasPage() {
     );
   }
 
-  // ── Pareja: formulario ─────────────────────────────────────────────
-  if (modo === 'pareja-form') {
+  // ── Elegir categoría ───────────────────────────────────────────────
+  if (modo === 'categoria') {
     return (
-      <div className="flex min-h-[70dvh] flex-col px-4 pt-4">
-        <button type="button" onClick={volverAlMenu} className="w-fit text-sm font-semibold text-[var(--text-secondary)]">
+      <div className="px-4 pt-4">
+        <button type="button" onClick={() => setModo('menu')} className="w-fit text-sm font-semibold text-[var(--text-secondary)]">
           ← Volver
         </button>
         <h1 className="mt-4 text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
-          ¿Qué está pasando con {nombreOtra}?
+          ¿De qué se trata tu duda?
+        </h1>
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">Elige lo que más se le parezca.</p>
+
+        <div className="mt-5 grid grid-cols-2 gap-2.5">
+          {CATEGORIAS.map(({ id, label }) => {
+            const Icono = ICONO_CATEGORIA[id];
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => elegirCategoria(id)}
+                className="flex flex-col items-start gap-2.5 rounded-[var(--radius-card)] bg-[var(--surface)] p-4 text-left"
+              >
+                <span className="flex size-9 items-center justify-center rounded-full bg-[var(--chip-bg)]">
+                  <Icono size={17} color="var(--accent)" aria-hidden="true" />
+                </span>
+                <span className="text-sm font-bold [font-family:var(--font-display)]">{label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Situación: formulario ────────────────────────────────────────────
+  if (modo === 'situacion-form') {
+    return (
+      <div className="flex min-h-[70dvh] flex-col px-4 pt-4">
+        <button type="button" onClick={() => setModo('categoria')} className="w-fit text-sm font-semibold text-[var(--text-secondary)]">
+          ← Volver
+        </button>
+
+        {pideOtraPersona(categoria) && (
+          <div className="mt-4">
+            <label className="text-sm font-bold text-[var(--text-secondary)]" htmlFor="nombre-otra">
+              ¿Con quién es tu situación? (opcional)
+            </label>
+            <input
+              id="nombre-otra"
+              type="text"
+              value={nombreOtraInput}
+              onChange={(e) => setNombreOtraInput(e.target.value)}
+              placeholder="Su nombre"
+              className="mt-2 h-12 w-full rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] bg-[var(--bg)] px-4 text-base text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
+            />
+          </div>
+        )}
+
+        <h1 className="mt-4 text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
+          {tituloSituacion(categoria, nombreOtraInput)}
         </h1>
         <p className="mt-2 text-sm text-[var(--text-secondary)]">
           Escribe con tus propias palabras — entre más real, más precisa la lectura.
@@ -239,14 +335,14 @@ export default function LecturasPage() {
           autoFocus
           value={situacion}
           onChange={(e) => setSituacion(e.target.value)}
-          placeholder="Ej: llevamos dos días sin hablar y no sé si escribirle o esperar…"
+          placeholder="Cuéntame qué está pasando…"
           rows={5}
           className="mt-5 w-full resize-none rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] bg-[var(--bg)] p-4 text-base text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
         />
 
         <p className="mt-5 text-sm font-bold text-[var(--text-secondary)]">Fotos (opcional)</p>
         <p className="mt-0.5 text-xs text-[var(--text-secondary)]">
-          Una foto de {nombreOtra} o una captura de la conversación, para tener todo junto.
+          Una foto o una captura que ayude a explicar tu situación, para tener todo junto.
         </p>
         <div className="mt-2.5 flex gap-2.5">
           {fotos.map((foto, i) => (
@@ -286,20 +382,20 @@ export default function LecturasPage() {
     );
   }
 
-  // ── Pareja: cargando ───────────────────────────────────────────────
-  if (modo === 'pareja-cargando') {
+  // ── Cargando ───────────────────────────────────────────────────────
+  if (modo === 'cargando') {
     return (
       <div className="flex min-h-[70dvh] flex-col items-center justify-center gap-2 px-4 text-center">
         <AnimacionCartas />
         <p className="text-base font-semibold text-[var(--text-secondary)]">
-          Barajando tus 3 cartas: Tú, {nombreOtra}, la Dinámica…
+          Barajando tus 3 cartas: Tú, {nombreOtra}, {carta3}…
         </p>
       </div>
     );
   }
 
-  // ── Pareja: crisis — no se saca lectura, se prioriza el cuidado ─────
-  if (modo === 'pareja-crisis') {
+  // ── Crisis — no se saca lectura, se prioriza el cuidado ─────────────
+  if (modo === 'crisis') {
     return (
       <div className="flex min-h-[70dvh] flex-col px-4 pt-4">
         <button type="button" onClick={volverAlMenu} className="w-fit text-sm font-semibold text-[var(--text-secondary)]">
@@ -315,8 +411,8 @@ export default function LecturasPage() {
     );
   }
 
-  // ── Pareja: resultado ──────────────────────────────────────────────
-  if (modo === 'pareja-resultado' && cartas) {
+  // ── Resultado ────────────────────────────────────────────────────────
+  if (modo === 'resultado' && cartas) {
     return (
       <div className="px-4 pt-4">
         <button type="button" onClick={volverAlMenu} className="w-fit text-sm font-semibold text-[var(--text-secondary)]">
@@ -335,7 +431,7 @@ export default function LecturasPage() {
             revelada
             invertida={cartas[2].invertida}
             nombreCarta={cartas[2].carta.nombre}
-            etiqueta="La Dinámica"
+            etiqueta={carta3}
             tamano="md"
           />
         </div>

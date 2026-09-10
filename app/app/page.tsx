@@ -168,9 +168,9 @@ export default function InicioPage() {
             <ArrowRight size={18} strokeWidth={2.5} color="var(--text-primary)" aria-hidden="true" />
           </div>
           <span>
-            <span className="block text-base font-bold [font-family:var(--font-display)]">Tu lectura de pareja</span>
+            <span className="block text-base font-bold [font-family:var(--font-display)]">Cuéntame tu situación</span>
             <span className="mt-0.5 block text-xs text-[color-mix(in_oklab,var(--text-primary)_60%,transparent)]">
-              3 cartas · Tú, La Otra Persona, la Dinámica
+              3 cartas · pareja, trabajo, familia o lo que sea
             </span>
           </span>
         </Link>

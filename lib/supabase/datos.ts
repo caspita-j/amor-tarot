@@ -9,6 +9,7 @@
 // espera de moverse a Storage más adelante.
 
 import { createClient } from '@/lib/supabase/client';
+import type { Categoria } from '@/lib/categorias';
 
 export type Perfil = {
   nombre: string | null;
@@ -112,6 +113,7 @@ export type LecturaGuardada = {
   cartas: [string, string, string];
   resumen: string;
   fotos?: string[];
+  categoria: Categoria;
 };
 
 export async function guardarLecturaReal(lectura: {
@@ -119,6 +121,7 @@ export async function guardarLecturaReal(lectura: {
   cartas: [string, string, string];
   resumen: string;
   fotos?: string[];
+  categoria: Categoria;
 }): Promise<void> {
   const supabase = createClient();
   const {
@@ -132,6 +135,7 @@ export async function guardarLecturaReal(lectura: {
     cartas: lectura.cartas,
     resumen: lectura.resumen,
     fotos: lectura.fotos ?? null,
+    categoria: lectura.categoria,
   });
 }
 
@@ -144,7 +148,7 @@ export async function leerLecturasReales(): Promise<LecturaGuardada[]> {
 
   const { data, error } = await supabase
     .from('lecturas')
-    .select('id, situacion, cartas, resumen, fotos, created_at')
+    .select('id, situacion, cartas, resumen, fotos, created_at, categoria')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
   if (error || !data) return [];
@@ -156,5 +160,6 @@ export async function leerLecturasReales(): Promise<LecturaGuardada[]> {
     cartas: fila.cartas as [string, string, string],
     resumen: fila.resumen,
     fotos: fila.fotos ?? undefined,
+    categoria: (fila.categoria ?? 'pareja') as Categoria,
   }));
 }
