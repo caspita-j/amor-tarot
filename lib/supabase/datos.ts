@@ -10,6 +10,7 @@
 
 import { createClient } from '@/lib/supabase/client';
 import type { Categoria } from '@/lib/categorias';
+import type { Estado } from '@/lib/animo';
 
 export type Perfil = {
   nombre: string | null;
@@ -104,6 +105,40 @@ export async function registrarDia(): Promise<{ dias: number; ultimaFecha: strin
   if (error || !data || data.length === 0) return { dias: 0, ultimaFecha: null };
   const fila = data[0] as { dias: number; ultima_fecha: string | null };
   return { dias: fila.dias, ultimaFecha: fila.ultima_fecha };
+}
+
+/** Guarda (o reemplaza) el estado de ánimo del día indicado — un toque, un
+ * registro por día (upsert por la clave primaria user_id+fecha). */
+export async function guardarEstadoAnimo(fecha: string, estado: Estado): Promise<void> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  await supabase.from('estados_animo').upsert({ user_id: user.id, fecha, estado });
+}
+
+/** Estados de ánimo entre dos fechas (incluidas), como mapa fecha→estado —
+ * pensado para pintar la tira "Esta semana" con datos reales. */
+export async function leerEstadosAnimoRango(desde: string, hasta: string): Promise<Record<string, Estado>> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return {};
+
+  const { data, error } = await supabase
+    .from('estados_animo')
+    .select('fecha, estado')
+    .eq('user_id', user.id)
+    .gte('fecha', desde)
+    .lte('fecha', hasta);
+  if (error || !data) return {};
+
+  const mapa: Record<string, Estado> = {};
+  for (const fila of data) mapa[fila.fecha as string] = fila.estado as Estado;
+  return mapa;
 }
 
 export type LecturaGuardada = {

@@ -11,7 +11,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { ArrowRight, ChevronRight, Leaf, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronRight, CloudRain, Feather, Leaf, Sparkles, Sunrise, Waves } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { AroMedidor } from '@/components/app/AroMedidor';
 import { BolaDeCristal } from '@/components/app/BolaDeCristal';
@@ -20,8 +20,31 @@ import { SemanaStrip } from '@/components/app/SemanaStrip';
 import { VideoCartaDelDia } from '@/components/app/VideoCartaDelDia';
 import { TarjetaTarot } from '@/components/onboarding/ui';
 import { cartaDelDia, hoyISO, tituloFecha } from '@/lib/tarot-data';
+import { ESTADOS, colorEstado, labelEstado, type Estado } from '@/lib/animo';
 import { leerFotoPerfil, leerOnboarding } from '@/lib/estado-app';
-import { leerPerfil, registrarDia, sincronizarOnboardingSiHaceFalta } from '@/lib/supabase/datos';
+import {
+  guardarEstadoAnimo,
+  leerEstadosAnimoRango,
+  leerPerfil,
+  registrarDia,
+  sincronizarOnboardingSiHaceFalta,
+} from '@/lib/supabase/datos';
+
+const ICONO_ESTADO: Record<Estado, typeof Feather> = {
+  tranquila: Feather,
+  esperanzada: Sunrise,
+  ansiosa: Waves,
+  triste: CloudRain,
+};
+
+function inicioFinSemana(): { inicio: string; fin: string } {
+  const hoy = new Date();
+  const ini = new Date(hoy);
+  ini.setDate(hoy.getDate() - hoy.getDay());
+  const fin = new Date(ini);
+  fin.setDate(ini.getDate() + 6);
+  return { inicio: ini.toISOString().slice(0, 10), fin: fin.toISOString().slice(0, 10) };
+}
 
 export default function InicioPage() {
   const [listo, setListo] = useState(false);
@@ -30,6 +53,8 @@ export default function InicioPage() {
   const [racha, setRacha] = useState<{ dias: number; ultimaFecha: string | null }>({ dias: 0, ultimaFecha: null });
   const [cartaRevelada, setCartaRevelada] = useState(false);
   const [aroRevelado, setAroRevelado] = useState(false);
+  const [estadosSemana, setEstadosSemana] = useState<Record<string, Estado>>({});
+  const [guardandoEstado, setGuardandoEstado] = useState(false);
   const reduce = useReducedMotion();
   const hoy = hoyISO();
   const carta = cartaDelDia(hoy);
@@ -41,9 +66,24 @@ export default function InicioPage() {
       setNombre(perfil.nombre?.trim() || 'ahí');
       setFoto(leerFotoPerfil());
       setRacha({ dias: perfil.rachaDias, ultimaFecha: perfil.rachaUltimaFecha });
+      const { inicio, fin } = inicioFinSemana();
+      setEstadosSemana(await leerEstadosAnimoRango(inicio, fin));
       setListo(true);
     })();
   }, []);
+
+  const estadoHoy = estadosSemana[hoy];
+
+  const elegirEstado = async (estado: Estado) => {
+    if (guardandoEstado) return;
+    setGuardandoEstado(true);
+    setEstadosSemana((prev) => ({ ...prev, [hoy]: estado }));
+    try {
+      await guardarEstadoAnimo(hoy, estado);
+    } finally {
+      setGuardandoEstado(false);
+    }
+  };
 
   const registradoHoy = racha.ultimaFecha === hoy;
 
@@ -147,7 +187,48 @@ export default function InicioPage() {
         </p>
       </motion.div>
 
-      <SemanaStrip />
+      {registradoHoy && cartaRevelada && (
+        <motion.div variants={item} className="mx-4 mt-3.5 rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
+          {estadoHoy ? (
+            <p className="text-sm font-semibold text-[var(--text-secondary)]">
+              Hoy te sentiste{' '}
+              <span className="font-bold" style={{ color: colorEstado(estadoHoy) }}>
+                {labelEstado(estadoHoy)}
+              </span>
+            </p>
+          ) : (
+            <>
+              <p className="text-sm font-bold [font-family:var(--font-display)]">¿Cómo te sientes hoy?</p>
+              <div className="mt-3 grid grid-cols-4 gap-2">
+                {ESTADOS.map(({ id, label, color }) => {
+                  const Icono = ICONO_ESTADO[id];
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => elegirEstado(id)}
+                      disabled={guardandoEstado}
+                      className="flex flex-col items-center gap-1.5 rounded-[var(--radius-button)] py-1.5 outline-none disabled:opacity-50"
+                    >
+                      <span
+                        className="flex size-9 items-center justify-center rounded-full"
+                        style={{ backgroundColor: `color-mix(in oklab, ${color} 16%, transparent)` }}
+                      >
+                        <Icono size={16} color={color} aria-hidden="true" />
+                      </span>
+                      <span className="text-center text-xs font-semibold leading-tight text-[var(--text-secondary)]">
+                        {label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </motion.div>
+      )}
+
+      <SemanaStrip estados={estadosSemana} />
 
       <RachaBanner dias={racha.dias} registradoHoy={registradoHoy} onRegistrar={revelarYRegistrar} />
 

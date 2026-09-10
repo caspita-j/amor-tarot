@@ -1,5 +1,27 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda)
+Última actualización: 2026-09-09 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo)
+
+✅ CHECKPOINT — Check-in de ánimo diario (plan de retención, punto 3), 2026-09-09, a pedido del
+usuario. Objetivo: que el ritual diario deje de ser intercambiable con cualquier horóscopo y empiece
+a generar un dato propio de la persona, acumulado en un historial visual real (antes, `SemanaStrip`
+era "puramente decorativa a propósito" según su propio comentario, porque no existía ningún dato real
+por día que mostrar — ahora sí existe).
+Implementado: tabla nueva `estados_animo` (Postgres, RLS select/insert/update_own, una fila por
+persona por día — upsert por clave primaria `user_id+fecha`) con 4 estados (tranquila, esperanzada,
+ansiosa, triste), cada uno mapeado 1:1 a un acento YA existente de la app (lila/naranja/celeste/rosa
+— sin paleta nueva). `lib/animo.ts` (tipo + labels + colores, mismo patrón que `lib/categorias.ts`).
+`lib/supabase/datos.ts`: `guardarEstadoAnimo()` y `leerEstadosAnimoRango()`. En `app/app/page.tsx`:
+justo después de revelar la carta del día (mismo tap de siempre, sin pasos extra), aparece "¿Cómo te
+sientes hoy?" con 4 chips de ícono+color; un toque guarda y muestra "Hoy te sentiste: X" en su lugar
+(no vuelve a preguntar ese día). `components/app/SemanaStrip.tsx` ahora recibe los estados de la
+semana y pinta cada día con su color real en vez de solo el número — el "historial visual" que pedía
+el plan de retención.
+Verificado en vivo con un usuario de prueba real (creado y borrado en la sesión): reveló la carta,
+apareció el check-in, tocó "Con esperanza", se guardó ("Hoy te sentiste Con esperanza"), el día de
+hoy en la tira semanal pintó naranja, y recargando la página el estado siguió ahí (confirma que lee
+de la base de datos, no solo memoria local). tsc/build limpios. Publicado.
+Quedan del plan de retención: punto 4 (win-back automatizado cuando la duda se resuelve y la persona
+cancela) y punto 5 (precio/plan) — pendientes de que el usuario decida si seguir.
 
 ✅ CHECKPOINT — DECISIÓN DE PRODUCTO: el mecanismo de lecturas ya NO es solo de pareja, 2026-09-09,
 a pedido explícito del usuario (plan de retención, punto 1+2: "extender la app a problemas de día a

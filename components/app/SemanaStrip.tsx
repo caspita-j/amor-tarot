@@ -1,15 +1,21 @@
-// Tira de "esta semana" bajo la carta del día — contexto de calendario en un
-// vistazo, PURAMENTE decorativa a propósito: no inventa qué días se registró
-// leyendo (el mock de racha no guarda ese historial por día — ver
-// lib/estado-app.ts) y no navega a semanas pasadas (no hay una vista de
-// calendario real que mostrar todavía — el Historial guarda lecturas de
-// pareja, no el ritual diario). Por eso lleva su propio rótulo "Esta semana"
-// y NINGÚN día tiene apariencia de botón salvo el de hoy — así no promete una
-// interacción que no existe (Regla de UX 11). Domingo a sábado, semana actual.
+// Tira de "esta semana" bajo la carta del día — antes era puramente
+// decorativa (no había datos reales por día que mostrar). Desde el check-in
+// de ánimo (plan de retención, punto 3) cada día con registro pinta el color
+// de ese estado — ahí nace el historial visual real. Los días sin check-in
+// siguen mostrando solo la fecha, tal como antes; y sigue sin navegar a
+// semanas pasadas (mismo motivo documentado desde el inicio: no hay una
+// vista de calendario real que enlazar todavía).
+
+import type { Estado } from '@/lib/animo';
+import { colorEstado } from '@/lib/animo';
 
 const DIAS = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
 
-export function SemanaStrip() {
+function fechaISO(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+
+export function SemanaStrip({ estados = {} }: { estados?: Record<string, Estado> }) {
   const hoy = new Date();
   const inicioSemana = new Date(hoy);
   inicioSemana.setDate(hoy.getDate() - hoy.getDay());
@@ -28,6 +34,7 @@ export function SemanaStrip() {
       <div className="grid grid-cols-7 gap-1.5">
         {semana.map((fecha, i) => {
           const esHoy = fecha.toDateString() === hoy.toDateString();
+          const estado = estados[fechaISO(fecha)];
           return (
             <div key={i} className="flex flex-col items-center gap-1">
               <span
@@ -39,8 +46,13 @@ export function SemanaStrip() {
               </span>
               <span
                 className={`flex size-8 items-center justify-center rounded-full text-sm tabular-nums ${
-                  esHoy ? 'bg-[var(--text-primary)] font-bold text-[var(--bg)]' : 'font-normal text-[var(--text-tertiary)]'
+                  estado
+                    ? 'font-bold text-[var(--bg)]'
+                    : esHoy
+                      ? 'bg-[var(--text-primary)] font-bold text-[var(--bg)]'
+                      : 'font-normal text-[var(--text-tertiary)]'
                 }`}
+                style={estado ? { backgroundColor: colorEstado(estado) } : undefined}
               >
                 {fecha.getDate()}
               </span>
