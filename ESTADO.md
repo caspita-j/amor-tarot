@@ -842,6 +842,25 @@ conectar Hotmart, no tenga que volver a revisar toda la sesión buscando qué qu
   (poder mandarlo). El copy y la regla de negocio ya están decididos, falta el cableado técnico.
 - [ ] Cuando exista un plan anual vendiéndose de verdad: armar los avisos pre-renovación del mes 12
   (30 días y 7 días antes del cobro) — doctrina `58-RETENCION-DE-INGRESOS.md`, no arrancado todavía.
+- [ ] El webhook de Hotmart, cuando se construya, necesita verificar la firma (HOTTOK) sobre el
+  cuerpo crudo de la petición ANTES de confiar en nada que llegue — sin eso, cualquiera podría
+  mandar un aviso falso de "compra exitosa" y darse acceso gratis (era la pregunta #4 del pedido de
+  auditoría de seguridad original del usuario, sin responder todavía porque Hotmart no existe).
+  También necesita ser idempotente (que reenviar el mismo aviso dos veces no active el acceso dos
+  veces) — patrón ya usado en este proyecto en `registrar_lectura_ia()`, reusar la misma idea.
+- [ ] **Panel de admin → pestaña "Negocio" (`app/admin/negocio/page.tsx`) — completamente vacía,
+  sus 4 secciones dependen de piezas que no existen todavía**, y NO son todas "conectar Hotmart":
+  - Conversión (landing → onboarding → pago): necesita un `event_log` nuevo — una tabla que no
+    existe hoy, para guardar cada paso del recorrido. Esto NO llega solo con Hotmart.
+  - Prueba gratis (trial): necesita ese mismo `event_log` + Hotmart (para saber cuándo empieza
+    cada prueba).
+  - Ventas: necesita Hotmart (ingresos, cancelaciones, reembolsos llegan por su webhook).
+  - Ganancia real: necesita Hotmart (ingresos) + Resend (costo de email) + confirmar la tarifa de
+    infraestructura — el costo real de IA ya se calcula bien, es lo único que sí funciona ahí.
+  - LTV/CAC por canal: necesita una columna nueva `profiles.source` (de dónde vino cada usuario,
+    no existe hoy) + el gasto de adquisición por canal (dato que solo el usuario tiene).
+  - El resumen general del admin (`app/admin/page.tsx`) tiene el mismo aviso: no genera alertas
+    automáticas de negocio todavía por la misma falta de datos.
 
 **Sueltos, sin relación con Hotmart:**
 - [ ] Activar "Leaked Password Protection" en el panel de Supabase (Authentication → Sign In /
