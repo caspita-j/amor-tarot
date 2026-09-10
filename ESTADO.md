@@ -1,6 +1,18 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial)
 
+✅ CHECKPOINT — Nota de bienvenida en Historial ("Así funciona tu Historial"), 2026-09-10, a pedido
+del usuario. Aparece SOLO la primera vez que la persona entra a Historial: explica en 3 líneas que
+ahí quedan sus lecturas, que cada semana arma "Tu semana en resumen", y que con 3+ lecturas de la
+misma categoría aparece "Tu avance" — mencionando de paso que ese avance es honesto (nunca "todo
+mejora" porque sí), para que no le sorprenda si algún día le dice que algo no avanzó.
+Se recuerda "para siempre" en `localStorage` (a propósito, no `sessionStorage` — si no, reaparecería
+cada vez que cierre el navegador) vía `vioIntroHistorial()`/`marcarIntroHistorialVista()` nuevas en
+`lib/estado-app.ts`, mismo archivo que ya centraliza este tipo de preferencia de cliente. Se cierra
+con la X o el botón "Entendido", cualquiera de los dos.
+Verificado en vivo con un usuario de prueba real: aparece en la primera visita, se cierra, y al
+recargar la página ya no vuelve a aparecer (confirmado leyendo el flag real de localStorage, no solo
+mirando la pantalla). Usuario de prueba borrado al terminar. tsc/build limpios. Publicado.
 ✅ CHECKPOINT — Dominio propio conectado: **https://www.amorytarot.app**, 2026-09-10. El usuario
 compró `amorytarot.app` (tras una lluvia de ideas de nombres — se quedó con el mismo nombre de marca,
 solo TLD `.app` en vez de `.com`, que no estaba disponible). Guiado paso a paso por el chat (sin ver

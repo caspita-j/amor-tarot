@@ -47,3 +47,26 @@ export function guardarFotoPerfil(dataUrl: string): void {
     // pero la sesión actual sigue funcionando con lo que ya está en memoria.
   }
 }
+
+const CLAVE_VIO_INTRO_HISTORIAL = 'amor-tarot:vio-intro-historial';
+
+/** A propósito en localStorage (no sessionStorage): tiene que recordarse
+ * "para siempre", no solo durante la sesión del navegador — si no, la nota
+ * de bienvenida reaparecería cada vez que la persona vuelva a abrir la app. */
+export function vioIntroHistorial(): boolean {
+  if (typeof window === 'undefined') return true;
+  try {
+    return localStorage.getItem(CLAVE_VIO_INTRO_HISTORIAL) === '1';
+  } catch {
+    return true; // localStorage bloqueado: mejor no insistir con la nota.
+  }
+}
+
+export function marcarIntroHistorialVista(): void {
+  try {
+    localStorage.setItem(CLAVE_VIO_INTRO_HISTORIAL, '1');
+  } catch {
+    // Bloqueado (Safari privado, etc.) — no es crítico, la nota podría
+    // reaparecer en la próxima visita, pero nada se rompe.
+  }
+}

@@ -12,10 +12,11 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Route, Sparkles, TrendingUp } from 'lucide-react';
+import { Route, Sparkles, TrendingUp, X } from 'lucide-react';
 import { BotonPrincipal } from '@/components/onboarding/ui';
 import { leerLecturasReales, type LecturaGuardada } from '@/lib/supabase/datos';
 import { labelCategoria, type Categoria } from '@/lib/categorias';
+import { marcarIntroHistorialVista, vioIntroHistorial } from '@/lib/estado-app';
 
 const MINIMO_AVANCE = 3;
 
@@ -45,6 +46,40 @@ function patronReciente(lecturas: LecturaGuardada[]): string | null {
   const [categoriaTop, veces] = [...conteo.entries()].sort((a, b) => b[1] - a[1])[0];
   if (veces < 3) return null;
   return `${veces} de tus últimas ${ultimas.length} lecturas fueron sobre ${labelCategoria(categoriaTop as Parameters<typeof labelCategoria>[0]).toLowerCase()}.`;
+}
+
+function IntroHistorial({ onCerrar }: { onCerrar: () => void }) {
+  return (
+    <div className="mt-5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--accent)_30%,transparent)] bg-[var(--chip-bg)] p-4">
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-sm font-bold [font-family:var(--font-display)]">Así funciona tu Historial</p>
+        <button
+          type="button"
+          onClick={onCerrar}
+          aria-label="Cerrar"
+          className="shrink-0 text-[var(--text-secondary)]"
+        >
+          <X size={16} aria-hidden="true" />
+        </button>
+      </div>
+      <ul className="mt-2.5 flex flex-col gap-2 text-sm leading-relaxed text-[var(--text-secondary)]">
+        <li>Acá va quedando cada lectura que guardes, con su fecha y su categoría.</li>
+        <li>
+          Cada semana armamos{' '}
+          <strong className="font-bold text-[var(--text-primary)]">Tu semana en resumen</strong>, con
+          tu ánimo y tus lecturas juntos.
+        </li>
+        <li>
+          Si tienes 3 o más lecturas sobre lo mismo, va a aparecer{' '}
+          <strong className="font-bold text-[var(--text-primary)]">Tu avance</strong> — te muestra
+          cómo se movió esa situación real, con honestidad (nunca "todo mejora" porque sí).
+        </li>
+      </ul>
+      <button type="button" onClick={onCerrar} className="mt-3 text-sm font-bold text-[var(--accent)]">
+        Entendido
+      </button>
+    </div>
+  );
 }
 
 function InformeSemanal() {
@@ -138,10 +173,17 @@ function AvanceCategoria({ categoria }: { categoria: Categoria }) {
 
 export default function HistorialPage() {
   const [lecturas, setLecturas] = useState<LecturaGuardada[] | null>(null);
+  const [mostrarIntro, setMostrarIntro] = useState(false);
 
   useEffect(() => {
     leerLecturasReales().then(setLecturas);
+    setMostrarIntro(!vioIntroHistorial());
   }, []);
+
+  const cerrarIntro = () => {
+    marcarIntroHistorialVista();
+    setMostrarIntro(false);
+  };
 
   if (lecturas === null) {
     return (
@@ -154,6 +196,8 @@ export default function HistorialPage() {
   return (
     <div className="px-4 pt-4">
       <h1 className="text-2xl font-bold [font-family:var(--font-display)]">Historial</h1>
+
+      {mostrarIntro && <IntroHistorial onCerrar={cerrarIntro} />}
 
       <InformeSemanal />
       {categoriaConMasHistoria(lecturas) && <AvanceCategoria categoria={categoriaConMasHistoria(lecturas)!} />}
