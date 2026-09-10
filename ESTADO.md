@@ -1,6 +1,38 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad)
 
+✅ CHECKPOINT — Pulido visual de Compatibilidad + profundidad en Login, 2026-09-10, a pedido del
+usuario ("se ve muy plana, opaca"). Partió de 3 imágenes de referencia (apps de tarot/horóscopo con
+estética oscura y dorada) — se le explicó el choque real con decisiones ya cerradas (paleta clara
+aprobada, promesa "sin rituales ni amarres") y se acordó: MANTENER la paleta clara, pero sí probar un
+toque puntual de lenguaje de "magia" en un solo lugar (experimental, a evaluar).
+**12 símbolos zodiacales ilustrados** (`public/zodiaco/*.png`, generados con Canva — mismo mecanismo
+usado para las 78 cartas de tarot): estilo 3D tipo mascota glossy (pedido explícito del usuario tras
+ver la primera muestra pintada/plana), cada uno en insignia de color usando SOLO los 4 acentos ya
+aprobados (repartidos 3 por color, nunca paleta nueva). Aprobado por el usuario viendo un artifact
+comparativo antes de generar los 12. Reemplazan los chips de solo texto en el selector de
+Compatibilidad (`lib/zodiaco.ts` + `SignoChip` en `app/app/lecturas/page.tsx`).
+**Medidor animado de compatibilidad** (`components/app/AnilloCompatibilidad.tsx`): reutiliza la misma
+técnica visual del aro de "Carta del día" (`AroMedidor`) — aro que se rellena + número que cuenta —
+en vez del número plano que había antes en el resultado de Compatibilidad.
+**Toque de magia experimental**: el botón "Ver compatibilidad" pasó a "Activar el hechizo de
+claridad" — único lugar donde se probó, a propósito, para evaluarlo antes de extenderlo. No se tocó
+ninguna promesa de resultados ni se mencionó ningún ritual/amarre real.
+**Profundidad de fondo**: `/login` ahora usa el mismo degradé radial sutil (`--accent` al 14%) que ya
+existía en el layout de `/app` — antes tenía fondo plano. Lecturas/Historial ya heredaban ese mismo
+degradé del layout de `/app`, no hacía falta tocarlos.
+⚠️ BUG REAL encontrado y corregido en el camino (mío, no del usuario): al generar las imágenes de
+Canva, descargarlas con `curl` directo devolvía la página web de Canva en vez del PNG real (las URLs
+de thumbnail no son estáticas, necesitan sesión de navegador) — se resolvió navegando con el
+navegador real y extrayendo la URL firmada de S3 desde las peticiones de red, que sí es descargable
+directo. Ya documentado por si hace falta bajar más assets de Canva en el futuro.
+Verificado en vivo con un usuario de prueba real: los 12 símbolos se ven correctos en el selector,
+la selección de signo marca con anillo del acento, el resultado muestra las 2 imágenes + el anillo
+animado contando hasta el % real, y el botón de compatibilidad es alcanzable con scroll (se midió con
+`getBoundingClientRect()`, no es un bug — el formulario es más largo que un viewport de 375×812,
+comportamiento normal). Usuario de prueba borrado al terminar. tsc/build limpios. Publicado.
+Pendiente, si el usuario lo pide más adelante: extender el toque de "magia" a más lugares si el
+experimento le gusta, o revertirlo a "Ver compatibilidad" si no. Por ahora queda solo ahí.
 ✅ CHECKPOINT — Nota de bienvenida en Historial ("Así funciona tu Historial"), 2026-09-10, a pedido
 del usuario. Aparece SOLO la primera vez que la persona entra a Historial: explica en 3 líneas que
 ahí quedan sus lecturas, que cada semana arma "Tu semana en resumen", y que con 3+ lecturas de la

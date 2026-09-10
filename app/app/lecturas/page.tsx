@@ -8,7 +8,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Briefcase, Heart, HeartHandshake, ImagePlus, MessageCircleHeart, Scale, Sparkles, Users, X } from 'lucide-react';
 import { AnimacionCartas } from '@/components/app/AnimacionCartas';
-import { BotonPrincipal, ChipGrid, TarjetaTarot } from '@/components/onboarding/ui';
+import { AnilloCompatibilidad } from '@/components/app/AnilloCompatibilidad';
+import { BotonPrincipal, TarjetaTarot } from '@/components/onboarding/ui';
 import {
   compatibilidad,
   esenciaDe,
@@ -20,16 +21,12 @@ import {
   type CartaSalida,
 } from '@/lib/tarot-data';
 import { CATEGORIAS, etiquetaCarta2, etiquetaCarta3, pideOtraPersona, type Categoria } from '@/lib/categorias';
+import { SIGNOS, imagenSigno } from '@/lib/zodiaco';
 import { leerOnboarding, type RespuestasOnboarding } from '@/lib/estado-app';
 import { guardarLecturaReal, registrarDia } from '@/lib/supabase/datos';
 import { comprimirProporcional } from '@/lib/imagen';
 
 const MAX_FOTOS = 3;
-
-const SIGNOS = [
-  'Aries', 'Tauro', 'Géminis', 'Cáncer', 'Leo', 'Virgo',
-  'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis',
-];
 
 const ICONO_CATEGORIA: Record<Categoria, typeof Heart> = {
   pareja: Heart,
@@ -56,6 +53,34 @@ function tituloSituacion(categoria: Categoria, nombreOtra: string): string {
     default:
       return 'Cuéntame qué está pasando';
   }
+}
+
+function SignoChip({ signo, seleccionado, onClick }: { signo: string; seleccionado: boolean; onClick: () => void }) {
+  const imagen = imagenSigno(signo);
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={seleccionado}
+      className="flex flex-col items-center gap-1.5"
+    >
+      <span
+        className={`flex size-14 items-center justify-center overflow-hidden rounded-full outline-none transition-transform ${
+          seleccionado ? 'scale-105 ring-2 ring-[var(--accent)]' : 'ring-1 ring-[color-mix(in_oklab,var(--text-secondary)_18%,transparent)]'
+        }`}
+      >
+        {imagen ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={imagen} alt="" className="size-full object-cover" />
+        ) : (
+          <span className="flex size-full items-center justify-center bg-[var(--surface)] text-xs font-bold">
+            {signo.slice(0, 2)}
+          </span>
+        )}
+      </span>
+      <span className="text-xs font-semibold text-[var(--text-secondary)]">{signo}</span>
+    </button>
+  );
 }
 
 type Modo = 'menu' | 'categoria' | 'situacion-form' | 'cargando' | 'resultado' | 'crisis' | 'compat-form' | 'compat-resultado';
@@ -484,26 +509,22 @@ export default function LecturasPage() {
         <h1 className="mt-4 text-2xl font-bold [font-family:var(--font-display)]">Compatibilidad</h1>
 
         <p className="mt-5 text-sm font-bold text-[var(--text-secondary)]">Tu signo</p>
-        <div className="mt-2 grid grid-cols-3 gap-2">
+        <div className="mt-2 grid grid-cols-4 gap-2.5">
           {SIGNOS.map((s) => (
-            <ChipGrid key={s} seleccionado={signoA === s} onClick={() => setSignoA(s)}>
-              {s}
-            </ChipGrid>
+            <SignoChip key={s} signo={s} seleccionado={signoA === s} onClick={() => setSignoA(s)} />
           ))}
         </div>
 
         <p className="mt-5 text-sm font-bold text-[var(--text-secondary)]">Su signo</p>
-        <div className="mt-2 grid grid-cols-3 gap-2">
+        <div className="mt-2 grid grid-cols-4 gap-2.5">
           {SIGNOS.map((s) => (
-            <ChipGrid key={s} seleccionado={signoB === s} onClick={() => setSignoB(s)}>
-              {s}
-            </ChipGrid>
+            <SignoChip key={s} signo={s} seleccionado={signoB === s} onClick={() => setSignoB(s)} />
           ))}
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 mb-8">
           <BotonPrincipal disabled={!signoA || !signoB} onClick={verCompatibilidad}>
-            Ver compatibilidad
+            Activar el hechizo de claridad
           </BotonPrincipal>
         </div>
       </div>
@@ -517,11 +538,22 @@ export default function LecturasPage() {
         <button type="button" onClick={() => setModo('compat-form')} className="w-fit text-sm font-semibold text-[var(--text-secondary)]">
           ← Volver
         </button>
-        <div className="mt-5 rounded-[var(--radius-card)] bg-[var(--accent)] p-6 text-center shadow-[var(--shadow-2)]">
-          <p className="text-sm font-bold text-[color-mix(in_oklab,var(--bg)_75%,transparent)]">
+        <div className="mt-5 rounded-[var(--radius-card)] bg-[var(--surface)] p-6 shadow-[var(--shadow-2)]">
+          <div className="flex items-center justify-center gap-4">
+            {imagenSigno(signoA) && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={imagenSigno(signoA)} alt={signoA} className="size-14 rounded-full" />
+            )}
+            <span className="text-sm font-bold text-[var(--text-secondary)]">+</span>
+            {imagenSigno(signoB) && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={imagenSigno(signoB)} alt={signoB} className="size-14 rounded-full" />
+            )}
+          </div>
+          <p className="mt-2 text-center text-sm font-bold text-[var(--text-secondary)]">
             {signoA} + {signoB}
           </p>
-          <p className="mt-2 text-5xl font-bold text-[var(--bg)] [font-family:var(--font-display)]">{compat.puntaje}%</p>
+          <AnilloCompatibilidad porcentaje={compat.puntaje} />
         </div>
         <div className="mt-5 rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
           <p className="text-sm leading-relaxed text-[var(--text-primary)]">

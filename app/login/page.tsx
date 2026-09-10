@@ -100,7 +100,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center bg-[var(--bg)] px-6 py-10 text-[var(--text-primary)] [font-family:var(--font-body)]">
+    <main className="flex min-h-dvh flex-col items-center justify-center bg-[radial-gradient(ellipse_140%_50%_at_50%_-8%,color-mix(in_oklab,var(--accent)_14%,var(--bg))_0%,var(--bg)_55%)] px-6 py-10 text-[var(--text-primary)] [font-family:var(--font-body)]">
       <div className="w-full max-w-sm">
         <div className="flex items-center justify-center gap-2">
           <span className="size-8 shrink-0 rounded-xl bg-[var(--accent)]" aria-hidden="true" />
