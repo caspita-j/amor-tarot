@@ -811,8 +811,45 @@ presionar ni asustar."
   viven en sessionStorage: se reinician si el usuario cierra el navegador, hasta que haya cuenta real.
 
 ## Pendientes del usuario (acciones que el usuario debe hacer)
-- [ ] Ninguna cuenta todavía — se avisará cuando lleguemos a crear cuentas (Supabase, Vercel,
-  pasarela de pago, dominio)
+Actualizado 2026-09-10 — pedido explícito del usuario: mantener esta lista al día para que, al
+conectar Hotmart, no tenga que volver a revisar toda la sesión buscando qué quedó suelto.
+
+**Servicios externos por conectar (lo grande):**
+- [ ] Hotmart — sin esto, nada de lo de abajo se puede activar. Es el "siguiente módulo del curso"
+  del usuario, no se toca hasta que él lo traiga.
+- [ ] Resend + dominio propio — el correo de Supabase (login) tiene límite de envíos bajo y solo
+  sirve para el enlace mágico; ningún otro correo del negocio (win-back, recibos, avisos) puede
+  mandarse sin esto.
+
+**En cuanto Hotmart esté conectado, queda pendiente (ninguno se puede hacer antes):**
+- [ ] 🔴 Hacer cumplir el pago de verdad: hoy `/app` solo revisa "¿inició sesión?", nunca "¿pagó o
+  sigue en prueba?" — cualquiera con cualquier correo tiene acceso gratis e ilimitado (hallazgo
+  crítico de la auditoría de seguridad). Falta: guardar el estado de suscripción que manda el
+  webhook de Hotmart, y que `/app` (toda la app interna, no solo las lecturas) lo revise.
+- [ ] Decidir qué queda detrás del pago una vez exista ese control: el paywall YA promete "El
+  Espejo de las 3 Cartas sin límite, Compatibilidad de signos y tu Carta del día" como parte de lo
+  pago — o sea, el ritual diario completo (Carta del día + check-in de ánimo + Compatibilidad),
+  no solo las lecturas nuevas. Falta hacerlo cumplir con código cuando el trial se acabe sin pago.
+- [ ] Actualizar el copy del paywall para mencionar el check-in de ánimo / historial de patrones
+  (features nuevas de esta sesión, no existían cuando se escribió ese texto) — decisión explícita
+  del usuario: dejarlo para cuando se toque esta pantalla de una sola vez junto con Hotmart.
+- [ ] Verificar la Garantía de los 7 Días contra el panel real de Hotmart (FICHA-MERCADO.md ya lo
+  marca como PROVISIONAL desde antes de esta sesión): confirmar que admite reembolso a ≥7 días
+  corridos desde el cobro. Si el plazo real es menor, bajar el número en `/reembolsos`, landing y
+  paywall ANTES de vender.
+- [ ] Conectar la secuencia de win-back (correos de los días 30/60/90, ya escritos en
+  `docs/copy/winback.md`) — necesita el webhook de Hotmart (saber quién canceló y cuándo) + Resend
+  (poder mandarlo). El copy y la regla de negocio ya están decididos, falta el cableado técnico.
+- [ ] Cuando exista un plan anual vendiéndose de verdad: armar los avisos pre-renovación del mes 12
+  (30 días y 7 días antes del cobro) — doctrina `58-RETENCION-DE-INGRESOS.md`, no arrancado todavía.
+
+**Sueltos, sin relación con Hotmart:**
+- [ ] Activar "Leaked Password Protection" en el panel de Supabase (Authentication → Sign In /
+  Providers → Email) — no se puede hacer por código, y puede pedir plan Pro de Supabase (de pago).
+  Baja prioridad: el login real de la app es sin contraseña.
+- [ ] Correo de contacto legal: hoy usa `jonathanrd198@gmail.com` (personal) en Privacidad,
+  Términos, Reembolsos, footer y perfil — cambiar a un correo del dominio propio cuando lo compren
+  (acordado explícitamente con el usuario, no es un olvido).
 
 ## Decisiones del usuario (ya resueltas, no volver a preguntar)
 - Logo/isotipo del usuario: CONFIRMADO — queda SOLO como favicon + ícono de app (app/icon.png,
