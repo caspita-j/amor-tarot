@@ -400,7 +400,7 @@ export default function LecturasPage() {
 
         <div className="mt-auto pt-8">
           <BotonPrincipal disabled={!situacion.trim()} onClick={sacarLectura}>
-            Sacar mis 3 cartas
+            Activar el hechizo de mis 3 cartas
           </BotonPrincipal>
         </div>
       </div>

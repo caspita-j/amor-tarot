@@ -1,5 +1,14 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas)
+
+✅ CHECKPOINT — Extensión del toque de "magia" a Lecturas, 2026-09-10. El usuario confirmó que le
+gustó el experimento del botón de Compatibilidad ("lo veo bien me gusta") y pidió llevarlo a más
+lugares. Se cambió el CTA principal de la lectura de 3 cartas (`app/app/lecturas/page.tsx`), de
+"Sacar mis 3 cartas" a **"Activar el hechizo de mis 3 cartas"** — mismo patrón de copy, sin tocar
+ninguna promesa de resultados. Verificado con un usuario de prueba real a 375px: el texto entra en
+una sola línea sin desbordarse. tsc/build limpios. Usuario de prueba borrado al terminar.
+Sigue sin tocarse el resto del copy de la app (p. ej. "Toca el aro..." en Inicio) — el experimento
+se extiende de a un lugar por vez, no de golpe a toda la app.
 
 ✅ CHECKPOINT — Pulido visual de Compatibilidad + profundidad en Login, 2026-09-10, a pedido del
 usuario ("se ve muy plana, opaca"). Partió de 3 imágenes de referencia (apps de tarot/horóscopo con
