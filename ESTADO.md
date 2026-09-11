@@ -1,5 +1,22 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal)
+
+✅ CHECKPOINT — Fondo blanco eliminado del ícono de la bola de cristal (Inicio), 2026-09-10. El
+usuario notó que el ícono junto a "Hola, [nombre]" se veía con una caja blanca de fondo, chocando
+contra el tema oscuro — el asset (`public/animaciones/bola-de-cristal.gif` y su versión estática
+`bola-de-cristal-estatica.png`) tenía el blanco HORNEADO en los píxeles (no era transparencia real:
+confirmado con Python/Pillow, esquinas en `(255,255,255,255)` sin canal alfa útil). Se procesaron
+ambos archivos con un script Python: cualquier píxel con los 3 canales ≥250 pasa a alfa 0, con una
+zona de transición suave entre 235-250 para no dejar un borde duro; el arte real del ícono (azul,
+lavanda, dorado, navy) tiene su canal más oscuro en ~147-166, muy lejos del umbral, así que no se
+tocó ningún color del dibujo. El GIF (46 cuadros) se re-codificó con transparencia de paleta
+(1 bit, índice reservado) porque el formato GIF no soporta alfa suave por cuadro — a los 28px que
+mide el ícono en pantalla no se nota el corte más duro. Los archivos originales quedaron respaldados
+en el scratchpad de la sesión antes de sobrescribirlos, por si hacía falta revertir.
+Verificado: (1) composición en Python contra un fondo del mismo tono que `--bg` del tema místico,
+sin caja ni halo blanco visible; (2) captura real en la app (Inicio, usuario de prueba) confirmando
+que el ícono ya se integra con el fondo oscuro. Único lugar donde se usa este asset. build limpio
+(cambio de solo-asset, no toca código).
 
 ✅ CHECKPOINT — Acabado 3D extendido al círculo activo del nav inferior, 2026-09-10. Última pieza
 del pedido del "switch" de referencia — el círculo blanco que marca la pestaña activa es, en forma,
