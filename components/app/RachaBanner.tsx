@@ -73,7 +73,7 @@ export function RachaBanner({
         whileTap={reduce ? undefined : { scale: 0.97 }}
         className="mt-3 flex h-11 w-full items-center justify-center rounded-[var(--radius-button)] bg-[var(--surface-2)] text-sm font-bold text-[var(--text-primary)]"
       >
-        Registrar mi día →
+        Activar el hechizo de hoy →
       </motion.button>
     </div>
   );

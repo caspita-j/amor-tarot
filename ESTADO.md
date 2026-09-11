@@ -1,5 +1,17 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio)
+
+✅ CHECKPOINT — Extensión del toque de "magia" a Inicio, 2026-09-10. El usuario pidió seguir con
+las peticiones de diseño ya en curso. Se llevó el mismo lenguaje a los 2 puntos de Inicio que
+disparan la misma acción (revelar la carta y registrar el día):
+`app/app/page.tsx` — "Toca el aro para saber qué energía trae hoy tu carta." → "Toca el aro para
+activar el hechizo de hoy."; `components/app/RachaBanner.tsx` — "Registrar mi día →" → "Activar el
+hechizo de hoy →". Verificado con un usuario de prueba real a 375px: ambos textos entran en su
+espacio sin desbordarse, y el flujo completo (tap → aro se llena → carta se revela → racha sube a 1
+día) sigue funcionando igual que antes. tsc/build limpios. Usuario de prueba borrado al terminar.
+Con esto el toque de "hechizo" ya cubre las 3 acciones principales de la app (Inicio, Lecturas,
+Compatibilidad) — el resto del copy (nombres de pantalla, textos informativos, legales) se queda
+igual a propósito.
 
 ✅ CHECKPOINT — Extensión del toque de "magia" a Lecturas, 2026-09-10. El usuario confirmó que le
 gustó el experimento del botón de Compatibilidad ("lo veo bien me gusta") y pidió llevarlo a más

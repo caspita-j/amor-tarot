@@ -183,7 +183,7 @@ export default function InicioPage() {
           </p>
         )}
         <p className="mt-2.5 text-xs leading-relaxed text-[var(--bg)]">
-          {registradoHoy ? carta.frase : 'Toca el aro para saber qué energía trae hoy tu carta.'}
+          {registradoHoy ? carta.frase : 'Toca el aro para activar el hechizo de hoy.'}
         </p>
       </motion.div>
 
