@@ -1,5 +1,13 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, botón principal con acabado 3D vidrio/cromo)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, botones principal y secundario con acabado 3D vidrio/cromo)
+
+✅ CHECKPOINT — Acabado 3D extendido al botón "Continuar con Google", 2026-09-10. Mismo mecanismo
+que el botón principal (checkpoint anterior), pero en tono oscuro (`--surface-2`) en vez de dorado
+—a propósito, para que no compita visualmente con el CTA principal (jerarquía primaria/secundaria).
+Clase `boton-secundario` agregada solo en `app/login/page.tsx` (único lugar donde existe este botón
+hoy) + regla `[data-tema='mistico'] .boton-secundario` en `components/landing/tokens.css` con el
+mismo patrón de degradé + brillo especular vía `::before`. Verificado con captura real en Login,
+habilitado y deshabilitado. tsc/build limpios.
 
 ✅ CHECKPOINT — Botón principal con acabado 3D "vidrio/cromo", 2026-09-10. El usuario mandó una
 imagen de referencia (un switch morado/azul con brillo especular tipo cristal) y pidió aplicar ESE

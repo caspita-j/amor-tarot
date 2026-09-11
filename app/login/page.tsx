@@ -172,7 +172,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={continuarConGoogle}
                 disabled={!autoriza}
-                className="flex h-14 w-full items-center justify-center gap-2 rounded-[var(--radius-button)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] text-base font-semibold text-[var(--text-primary)] disabled:opacity-40"
+                className="boton-secundario relative flex h-14 w-full items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-button)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] text-base font-semibold text-[var(--text-primary)] disabled:opacity-40"
               >
                 Continuar con Google
               </button>
