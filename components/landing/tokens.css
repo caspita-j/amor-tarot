@@ -78,6 +78,36 @@
 }
 ============================================================================ */
 
+/* ============================================================================
+   TEMA MÍSTICO — fondo oscuro/dorado, SOLO para pantallas de la app por
+   dentro (nunca landing/onboarding/paywall, que ya están certificadas con la
+   paleta clara de arriba — ver ESTADO.md). Pedido explícito del usuario a
+   partir de referencias de apps de tarot/horóscopo oscuras y ornamentadas,
+   2026-09-10. Se activa con el atributo [data-tema="mistico"] en un
+   contenedor — ver components/app/TemaMistico.tsx. Empieza en Lecturas
+   ("la sección de las cartas"); se extiende a Inicio/Perfil/Historial en
+   rondas siguientes.
+   ============================================================================ */
+[data-tema='mistico'] {
+  --bg: #0e0b17;
+  --surface: #1a1526;
+  --surface-2: #241d34;
+  --text-primary: #f4ecd8;
+  --text-secondary: #b3a8c9;
+  --text-tertiary: #8b8098;
+  --accent: #d8b25f; /* dorado cálido — CTA / mecanismo */
+  --accent-2: #4a2f18; /* ámbar oscuro — tarjeta "Cuéntame tu situación" */
+  --accent-3: #1f3a4a; /* azul-noche oscuro — tarjeta/medidor de Compatibilidad */
+  --accent-4: #3a2a42; /* ciruela oscuro — 4ª nota */
+  --accent-4-ink: #f4ecd8;
+  --accent-frio: #6fa3c7; /* segunda nota de brillo (resplandores/detalles) */
+  --danger: #e2867a;
+  --chip-bg: color-mix(in oklab, var(--accent) 18%, transparent);
+  --shadow-1: 0 2px 10px rgb(0 0 0 / 0.45);
+  --shadow-2: 0 18px 44px -16px rgb(216 178 95 / 0.35);
+  --font-display: var(--font-mistico), 'Baloo 2', serif;
+}
+
 /* Base mínima que el kit asume (no tematizar) */
 html {
   scroll-behavior: smooth;

@@ -48,4 +48,33 @@
 - Paleta derivada de: referencia del usuario (imagen subida en el chat) — tomada tal cual, no de un líder del nicho
 - Registro anti-repetición: paleta lila #8D7FEF + naranja/azul/pastel + par tipográfico Baloo 2/Mulish — VETADOS para el próximo proyecto de este SO
 
+## TEMA MÍSTICO — fondo oscuro/dorado (solo app por dentro, NO landing/onboarding/paywall)
+- Estado: APROBADA — 2026-09-10, a pedido explícito del usuario (2 rondas de referencias de apps de
+  tarot/horóscopo oscuras y ornamentadas). NO reemplaza la ficha de arriba: la paleta clara sigue
+  siendo la única aprobada para landing/onboarding/paywall (ya certificadas, 5 rondas de revisor
+  cada una — repintarlas ahora tiraría ese trabajo). Este tema es una SEGUNDA piel, exclusiva de
+  las pantallas de adentro (`/app/*` y `/login`), activada con `[data-tema="mistico"]`.
+- Referencia del usuario (CONTRATO): 6 imágenes — app alemana de compatibilidad (medidor tipo
+  símbolo de infinito con brillo dorado/azul), app de tarot "Sign In"/paywall/historial (mandala
+  dorado, cartas con marco dorado sobre fondo casi negro), spread "Mind Body Spirit" (fondo oscuro
+  difuminado + estrellas + cartas en fila), texto de interpretación con encabezados dorados.
+- Extracción: Fondo #0E0B17 (casi negro con tinte) · Superficie #1A1526 · Superficie 2 #241D34 ·
+  Texto 1º/2º/3º #F4ECD8 / #B3A8C9 / #8B8098 · Acento (dorado cálido) #D8B25F · Acento 2 (ámbar
+  oscuro, tarjeta "Cuéntame tu situación") #4A2F18 · Acento 3 (azul-noche, tarjeta/medidor de
+  Compatibilidad) #1F3A4A · Acento 4 (ciruela) #3A2A42 · Acento frío (segunda nota de brillo)
+  #6FA3C7 · Display: Cormorant Garamond (serif elegante, 500/600/700) reemplaza a Baloo 2 SOLO
+  dentro de este tema · Body: Mulish (sin cambio) · Radios/espaciado: sin cambio (mismo sistema).
+  Valores en `components/landing/tokens.css` bajo `[data-tema="mistico"]` — nunca redecidir a mano
+  en un componente.
+- Fondo decorativo (`components/app/TemaMistico.tsx`): 2 resplandores difusos (dorado arriba, azul
+  abajo) + textura de estrellas en mosaico repetido. Un solo diseño de fondo por ahora (Lecturas);
+  cuando se extienda a Inicio/Perfil/Historial, cada uno puede variar el motivo (más estrellas, más
+  mandala, etc.) pero SIN cambiar la paleta de colores de arriba.
+- Assets ya generados (78 cartas de tarot, 12 símbolos zodiacales) NO se regeneraron — ya
+  combinan bien tal cual: las cartas son ilustraciones color crema con marco (el marco dorado de
+  `TarjetaTarot` ya viene de `var(--accent)`, así que se ve dorado solo); los símbolos zodiacales
+  son insignias de color pastel que funcionan como acentos tipo "joya" sobre el fondo oscuro.
+- Pantallas con el tema aplicado: Lecturas (situación + compatibilidad) — 2026-09-10. Pendientes:
+  Inicio, Perfil, Historial, Login (cada una en su propia ronda, con su propio motivo de fondo).
+
 ## Idioma UI: español latino neutro · Fecha de cierre: 2026-08-27 · Aprobada por el usuario: SÍ

@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Briefcase, Heart, HeartHandshake, ImagePlus, MessageCircleHeart, Scale, Sparkles, Users, X } from 'lucide-react';
 import { AnimacionCartas } from '@/components/app/AnimacionCartas';
 import { AnilloCompatibilidad } from '@/components/app/AnilloCompatibilidad';
+import { TemaMistico } from '@/components/app/TemaMistico';
 import { BotonPrincipal, TarjetaTarot } from '@/components/onboarding/ui';
 import {
   compatibilidad,
@@ -86,6 +87,14 @@ function SignoChip({ signo, seleccionado, onClick }: { signo: string; selecciona
 type Modo = 'menu' | 'categoria' | 'situacion-form' | 'cargando' | 'resultado' | 'crisis' | 'compat-form' | 'compat-resultado';
 
 export default function LecturasPage() {
+  return (
+    <TemaMistico>
+      <LecturasContenido />
+    </TemaMistico>
+  );
+}
+
+function LecturasContenido() {
   const [modo, setModo] = useState<Modo>('menu');
   const [onboarding, setOnboarding] = useState<RespuestasOnboarding>({});
   const [categoria, setCategoria] = useState<Categoria>('pareja');
@@ -542,12 +551,20 @@ export default function LecturasPage() {
           <div className="flex items-center justify-center gap-4">
             {imagenSigno(signoA) && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={imagenSigno(signoA)} alt={signoA} className="size-14 rounded-full" />
+              <img
+                src={imagenSigno(signoA)}
+                alt={signoA}
+                className="size-14 rounded-full ring-2 ring-[color-mix(in_oklab,var(--accent)_45%,transparent)]"
+              />
             )}
             <span className="text-sm font-bold text-[var(--text-secondary)]">+</span>
             {imagenSigno(signoB) && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={imagenSigno(signoB)} alt={signoB} className="size-14 rounded-full" />
+              <img
+                src={imagenSigno(signoB)}
+                alt={signoB}
+                className="size-14 rounded-full ring-2 ring-[color-mix(in_oklab,var(--accent)_45%,transparent)]"
+              />
             )}
           </div>
           <p className="mt-2 text-center text-sm font-bold text-[var(--text-secondary)]">

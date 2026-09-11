@@ -1,5 +1,41 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, fondo "con aura" + logo real en Login, ícono zodiacal en Perfil)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, fondo "con aura" + logo real en Login, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en Lecturas)
+
+✅ CHECKPOINT — Tema místico (oscuro/dorado) en Lecturas, 2026-09-10. El usuario insistió (2ª ronda,
+con 6 imágenes de referencia nuevas) en que la app se sentía plana pese al aura/hechizo de la ronda
+anterior — esta vez pidió explícitamente pivotar a oscuro/dorado. Se le presentaron 3 alcances
+posibles (solo el momento de la carta / toda la app interna / seguir en claro con más textura) y
+eligió el intermedio-grande: TODA la app por dentro a oscuro/dorado, un motivo de fondo distinto por
+sección pero misma paleta — EXPLÍCITAMENTE dejando fuera landing/onboarding/paywall ("la página de
+ventas la dejaremos para después"), que se quedan con la paleta clara ya certificada (evita tirar 5
+rondas de revisor-visual por pantalla).
+**Arquitectura elegida** (para no arriesgar las pantallas del dinero): el tema oscuro vive en
+`components/landing/tokens.css` bajo el selector `[data-tema="mistico"]` (paleta nueva completa:
+fondo casi negro, dorado cálido de acento, azul-noche y ámbar oscuro de acentos secundarios,
+Cormorant Garamond como display) — NO se tocó `:root` (la paleta clara global sigue intacta para
+todo lo demás). Se activa envolviendo una pantalla completa con `<TemaMistico>` (nuevo componente,
+`components/app/TemaMistico.tsx`), que pone el atributo + dibuja el fondo (resplandor dorado/azul +
+textura de estrellas). Fuente nueva (Cormorant Garamond) cargada en `app/layout.tsx` vía next/font,
+pero solo se USA dentro del tema místico.
+**Primera pantalla migrada: Lecturas completa** (menú, categorías, formulario, resultado de 3
+cartas, compatibilidad y su resultado) — `app/app/lecturas/page.tsx` ahora envuelve su contenido en
+`<TemaMistico>`. Las 78 cartas de tarot y los 12 símbolos zodiacales YA GENERADOS no se tocaron —
+combinan bien tal cual (las cartas ya son crema con marco, que ahora sale dorado solo por heredar
+`var(--accent)`; los símbolos zodiacales se ven como insignias "joya" sobre el fondo oscuro).
+⚠️ BUG REAL encontrado y corregido en el camino: los textos SIN color explícito (heredan `color` del
+layout padre en vez de leer `var(--text-primary)` directamente) NO cambiaban de tono, porque `color`
+hereda el VALOR ya resuelto del ancestro, no la variable — se corrigió fijando
+`text-[var(--text-primary)]` en el propio contenedor de `TemaMistico`, así el color se re-resuelve
+ahí y cascada bien a los descendientes. Segundo bug: el fondo decorativo (`absolute inset-0`) no
+cubría el `pb-28` reservado para el nav inferior (quedaba una franja clara) — se cambió a
+`fixed inset-0`, que cubre todo el viewport sin depender de la altura del contenido.
+Verificado con un usuario de prueba real a 375px, flujo completo: menú → categoría → formulario →
+cartas reveladas (marco dorado) → interpretación real de IA → compatibilidad con selector de signos
+→ medidor con brillo dorado. Confirmado que landing (`/`) sigue intacta, paleta clara, sin ningún
+cambio. tsc/build limpios. Usuario de prueba borrado al terminar.
+Pendiente (rondas siguientes, a pedido del usuario cuando quiera seguir): aplicar el mismo tema a
+Inicio, Perfil e Historial — cada uno con su propio motivo de fondo (a definir) pero la misma
+paleta. Landing/onboarding/paywall quedan fuera hasta nueva instrucción explícita.
 
 ✅ CHECKPOINT — Cierre del pedido de diseño original (3 imágenes de referencia), 2026-09-10. El
 usuario pidió retomar explícitamente "las otras modificaciones de la app por dentro" del pedido de
