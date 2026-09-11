@@ -108,6 +108,32 @@
   --font-display: var(--font-mistico), 'Baloo 2', serif;
 }
 
+/* Botón principal con acabado "vidrio/cromo" 3D — a pedido del usuario a
+   partir de una referencia de un switch morado/azul con brillo especular;
+   se adapta al dorado de la app en vez de copiar esos colores literales.
+   Escopeado a .boton-principal (BotonPrincipal en components/onboarding/
+   ui.tsx) para no tocar landing/onboarding/paywall, que no llevan
+   [data-tema="mistico"]. */
+[data-tema='mistico'] .boton-principal {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklab, white 38%, var(--accent)) 0%,
+    var(--accent) 48%,
+    color-mix(in oklab, black 24%, var(--accent)) 100%
+  );
+  box-shadow:
+    inset 0 1px 1px color-mix(in oklab, white 55%, transparent),
+    inset 0 -3px 5px color-mix(in oklab, black 30%, transparent),
+    0 14px 28px -10px color-mix(in oklab, var(--accent) 55%, transparent);
+}
+[data-tema='mistico'] .boton-principal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(180deg, rgb(255 255 255 / 0.55) 0%, rgb(255 255 255 / 0.06) 45%, transparent 60%);
+  pointer-events: none;
+}
+
 /* Base mínima que el kit asume (no tematizar) */
 html {
   scroll-behavior: smooth;

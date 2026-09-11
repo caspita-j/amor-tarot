@@ -1,5 +1,27 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, botón principal con acabado 3D vidrio/cromo)
+
+✅ CHECKPOINT — Botón principal con acabado 3D "vidrio/cromo", 2026-09-10. El usuario mandó una
+imagen de referencia (un switch morado/azul con brillo especular tipo cristal) y pidió aplicar ESE
+ESTILO (no esos colores — aclaró explícitamente "adaptado a nuestra app") a los botones que más se
+le parecieran. El botón más afín en forma es `BotonPrincipal` (píldora, usado en todos los CTA:
+"Activar el hechizo...", "Enviarme el enlace mágico", "Guardar en mi historial", etc.).
+**Cómo se hizo sin tocar landing/onboarding/paywall**: `BotonPrincipal` (en
+`components/onboarding/ui.tsx`) es compartido por TODA la app, incluida la página de ventas. En vez
+de cambiar su estilo directamente (lo que se vería también en las pantallas claras que el usuario
+pidió no tocar), se le agregó solo una clase identificadora (`boton-principal`, sin ningún estilo
+propio) y el acabado 3D real se definió en `components/landing/tokens.css` bajo el selector
+`[data-tema='mistico'] .boton-principal` — un degradé vertical (dorado claro arriba → dorado
+oscuro abajo, usando `color-mix` con blanco/negro sobre `var(--accent)`, nunca hex nuevo) + un
+`::before` con un brillo especular translúcido arriba, simulando el reflejo de cristal de la
+referencia. Como el selector exige `[data-tema='mistico']` como ancestro, el efecto SOLO se activa
+dentro de las pantallas ya migradas al tema oscuro — la landing (sin ese atributo) sigue exactamente
+igual, verificado con captura real.
+Verificado con un usuario de prueba real a 375px en Login y Lecturas: el botón se ve con el
+degradé + brillo esperado, tanto habilitado como deshabilitado (opacity ya existente lo atenúa
+bien). tsc/build limpios. Usuario de prueba borrado al terminar.
+Pendiente si el usuario lo pide: extender el mismo acabado a botones secundarios (ej. "Continuar
+con Google") o al círculo activo del nav inferior, que también tiene forma de "perilla".
 
 ✅ CHECKPOINT — Tema místico completado en Bienestar (última pantalla pendiente), 2026-09-10. Mismo
 mecanismo que las 5 anteriores: las 3 vistas de `app/app/bienestar/page.tsx` (categorías, prácticas

@@ -276,7 +276,7 @@ export function BotonPrincipal({
       whileTap={disabled || cargando || reduce ? undefined : { scale: 0.97 }}
       onClick={onClick}
       disabled={disabled || cargando}
-      className="flex h-14 w-full items-center justify-center gap-2 rounded-[var(--radius-button)] bg-[var(--accent)] px-6 text-base font-semibold text-[var(--bg)] shadow-[0_10px_28px_color-mix(in_oklab,var(--accent)_35%,transparent)] outline-none transition-opacity focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)] disabled:cursor-not-allowed disabled:opacity-40"
+      className="boton-principal relative flex h-14 w-full items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-button)] bg-[var(--accent)] px-6 text-base font-semibold text-[var(--bg)] shadow-[0_10px_28px_color-mix(in_oklab,var(--accent)_35%,transparent)] outline-none transition-opacity focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)] disabled:cursor-not-allowed disabled:opacity-40"
     >
       {cargando && <Loader2 size={18} className="animate-spin" aria-hidden="true" />}
       {children}
