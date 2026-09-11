@@ -1,5 +1,25 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, fondo "con aura" + logo real en Login, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en Lecturas)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, fondo "con aura" + logo real en Login, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en Lecturas e Inicio)
+
+✅ CHECKPOINT — Tema místico extendido a Inicio, 2026-09-10. El usuario confirmó que le gustó el
+resultado en Lecturas ("me gusta") y pidió seguir con Inicio (la pantalla principal / ritual
+diario M0 — una de las 4 pantallas del dinero). Mismo mecanismo que Lecturas, sin piezas nuevas:
+`app/app/page.tsx` completo (header, hero "carta del día", check-in de ánimo, racha, video, accesos
+a Lecturas/Compatibilidad/Bienestar) envuelto en `<TemaMistico>` — incluido el spinner de carga, para
+que no haya flash de tema claro antes de montar. Ningún componente hijo necesitó cambios (AroMedidor,
+TarjetaTarot, RachaBanner, SemanaStrip, VideoCartaDelDia, ESTADOS de ánimo) porque todos ya leían
+colores de variables CSS, no valores fijos — el mismo fondo/paleta de Lecturas se heredó solo.
+Resultado visual: la tarjeta "CARTA DEL DÍA" (antes lila) ahora es un medallón dorado sólido — muy
+cercano al "sol" de la referencia de paywall del usuario.
+Se aprovechó para formatear `app/app/page.tsx` con Prettier tras envolver el JSX (evita indentación
+manual propensa a error en un archivo de 295 líneas).
+Verificado con un usuario de prueba real a 375px: el fondo cubre toda la pantalla sin franjas,
+tocar el aro revela la carta (crema con marco dorado) y sube la racha a 1 día, el selector de ánimo
+se ve con sus 4 colores de acento, y los 3 accesos de "Tu momento" se ven coherentes con Lecturas.
+Confirmado landing intacta. tsc/build limpios. Usuario de prueba borrado al terminar.
+Pendiente: Perfil, Historial y Login (mismo tema; motivo de fondo puede variar más adelante si el
+usuario lo pide, por ahora se repite el mismo fondo de estrellas + resplandor en las 3 pantallas ya
+migradas para no gastar tiempo en variantes que nadie pidió todavía).
 
 ✅ CHECKPOINT — Tema místico (oscuro/dorado) en Lecturas, 2026-09-10. El usuario insistió (2ª ronda,
 con 6 imágenes de referencia nuevas) en que la app se sentía plana pese al aura/hechizo de la ronda
