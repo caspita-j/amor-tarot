@@ -1,5 +1,19 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal)
+Última actualización: 2026-09-11 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida)
+
+✅ CHECKPOINT — Logo de Login reemplazado por una versión más nítida, 2026-09-11. El usuario mandó
+una nueva imagen del logo "Amor y Tarot" (mismo concepto — 3 cartas + monograma "AF" + texto — pero
+más limpio: líneas doradas más definidas, texto más legible, mejor terminado). Reemplaza
+`public/marca/logo-completo.png` (único lugar donde se usa, `app/login/page.tsx`) — mismo nombre de
+archivo, cero cambios de código. Confirmado con Python que el archivo nuevo trae transparencia real
+(no hubo que repetir el proceso de quitar fondo horneado de otros assets). El original que envió el
+usuario pesaba 2.1MB a 1235×1274 — se redujo a 700×722 (~772KB) con Pillow antes de guardarlo, ya
+que en pantalla se muestra a solo 96px de alto (h-24); sin herramientas de compresión de PNG
+instaladas en el entorno (`pngquant`/`cwebp`), así que el ahorro fue solo por resize, no por
+recompresión de paleta (se evitó cuantizar para no introducir bandas en los degradados dorados).
+El archivo original (antes del reemplazo) quedó respaldado en el scratchpad de la sesión.
+Verificado con captura real en `/login` a 375px: el logo se ve más nítido que el anterior y sigue
+combinando con el fondo del tema místico. build limpio (cambio de solo-asset).
 
 ✅ CHECKPOINT — Fondo blanco eliminado del ícono de la bola de cristal (Inicio), 2026-09-10. El
 usuario notó que el ícono junto a "Hola, [nombre]" se veía con una caja blanca de fondo, chocando
