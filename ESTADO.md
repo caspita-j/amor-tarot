@@ -1,5 +1,26 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, fondo "con aura" + logo real en Login, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en Lecturas e Inicio)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro — Inicio/Lecturas/Perfil/Historial/Login)
+
+✅ CHECKPOINT — Tema místico completado en Perfil, Historial y Login, 2026-09-10. El usuario pidió
+seguir con las 3 pantallas que faltaban tras aprobar Lecturas e Inicio. Mismo mecanismo
+(`<TemaMistico>` envolviendo el contenido) en `app/app/perfil/page.tsx` y `app/app/historial/page.tsx`
+— cero cambios en componentes hijos, todos ya usaban variables CSS. En `app/login/page.tsx` se
+REEMPLAZÓ el fondo claro anterior (`<FondoAura />`, agregado en un checkpoint previo de esta misma
+sesión) por `<TemaMistico>` — el logo real (`public/marca/logo-completo.png`) ahora combina mucho
+mejor con el fondo oscuro que con el claro (el logo es oscuro/dorado por diseño). Se formatearon los
+3 archivos con Prettier tras envolver el JSX (mismo criterio que Inicio).
+⚠️ Nota real (no bug, avisado por transparencia): durante la edición de `app/login/page.tsx` hubo un
+instante con la etiqueta `<TemaMistico>` sin cerrar — Next.js mostró un error de build momentáneo
+que el usuario alcanzó a ver en su propio navegador. Se corrigió en el siguiente paso (agregar el
+cierre) antes de que el usuario terminara de reportarlo; confirmado con `tsc` que no quedó rastro.
+Verificado con un usuario de prueba real a 375px: Login (formulario + logo sobre el fondo oscuro),
+Perfil (avatar, racha, zona de peligro) e Historial (intro, estado vacío, CTA dorado) — los tres se
+ven coherentes entre sí y con Inicio/Lecturas. tsc/build limpios. Usuario de prueba borrado.
+**Con esto, TODA la app por dentro (Inicio, Lecturas, Compatibilidad, Perfil, Historial, Login) usa
+el tema místico oscuro/dorado — excepto Bienestar (no fue parte del pedido, sigue con `FondoAura`
+claro vía el layout compartido) y, por decisión explícita del usuario, landing/onboarding/paywall
+(sin tocar, "para después").** Motivo de fondo: el mismo (resplandor + estrellas) en las 5 pantallas
+— variar el motivo por sección queda pendiente si el usuario lo pide más adelante.
 
 ✅ CHECKPOINT — Tema místico extendido a Inicio, 2026-09-10. El usuario confirmó que le gustó el
 resultado en Lecturas ("me gusta") y pidió seguir con Inicio (la pantalla principal / ritual

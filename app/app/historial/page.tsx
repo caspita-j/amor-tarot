@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Route, Sparkles, TrendingUp, X } from 'lucide-react';
 import { BotonPrincipal } from '@/components/onboarding/ui';
+import { TemaMistico } from '@/components/app/TemaMistico';
 import { leerLecturasReales, type LecturaGuardada } from '@/lib/supabase/datos';
 import { labelCategoria, type Categoria } from '@/lib/categorias';
 import { marcarIntroHistorialVista, vioIntroHistorial } from '@/lib/estado-app';
@@ -53,26 +54,20 @@ function IntroHistorial({ onCerrar }: { onCerrar: () => void }) {
     <div className="mt-5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--accent)_30%,transparent)] bg-[var(--chip-bg)] p-4">
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-bold [font-family:var(--font-display)]">Así funciona tu Historial</p>
-        <button
-          type="button"
-          onClick={onCerrar}
-          aria-label="Cerrar"
-          className="shrink-0 text-[var(--text-secondary)]"
-        >
+        <button type="button" onClick={onCerrar} aria-label="Cerrar" className="shrink-0 text-[var(--text-secondary)]">
           <X size={16} aria-hidden="true" />
         </button>
       </div>
       <ul className="mt-2.5 flex flex-col gap-2 text-sm leading-relaxed text-[var(--text-secondary)]">
         <li>Acá va quedando cada lectura que guardes, con su fecha y su categoría.</li>
         <li>
-          Cada semana armamos{' '}
-          <strong className="font-bold text-[var(--text-primary)]">Tu semana en resumen</strong>, con
-          tu ánimo y tus lecturas juntos.
+          Cada semana armamos <strong className="font-bold text-[var(--text-primary)]">Tu semana en resumen</strong>,
+          con tu ánimo y tus lecturas juntos.
         </li>
         <li>
           Si tienes 3 o más lecturas sobre lo mismo, va a aparecer{' '}
-          <strong className="font-bold text-[var(--text-primary)]">Tu avance</strong> — te muestra
-          cómo se movió esa situación real, con honestidad (nunca "todo mejora" porque sí).
+          <strong className="font-bold text-[var(--text-primary)]">Tu avance</strong> — te muestra cómo se movió esa
+          situación real, con honestidad (nunca "todo mejora" porque sí).
         </li>
       </ul>
       <button type="button" onClick={onCerrar} className="mt-3 text-sm font-bold text-[var(--accent)]">
@@ -187,67 +182,69 @@ export default function HistorialPage() {
 
   if (lecturas === null) {
     return (
-      <div className="flex h-64 items-center justify-center" role="status" aria-label="Cargando">
-        <div className="size-8 animate-spin rounded-full border-2 border-[var(--surface-2)] border-t-[var(--accent)]" />
-      </div>
+      <TemaMistico>
+        <div className="flex h-64 items-center justify-center" role="status" aria-label="Cargando">
+          <div className="size-8 animate-spin rounded-full border-2 border-[var(--surface-2)] border-t-[var(--accent)]" />
+        </div>
+      </TemaMistico>
     );
   }
 
   return (
-    <div className="px-4 pt-4">
-      <h1 className="text-2xl font-bold [font-family:var(--font-display)]">Historial</h1>
+    <TemaMistico>
+      <div className="px-4 pt-4">
+        <h1 className="text-2xl font-bold [font-family:var(--font-display)]">Historial</h1>
 
-      {mostrarIntro && <IntroHistorial onCerrar={cerrarIntro} />}
+        {mostrarIntro && <IntroHistorial onCerrar={cerrarIntro} />}
 
-      <InformeSemanal />
-      {categoriaConMasHistoria(lecturas) && <AvanceCategoria categoria={categoriaConMasHistoria(lecturas)!} />}
+        <InformeSemanal />
+        {categoriaConMasHistoria(lecturas) && <AvanceCategoria categoria={categoriaConMasHistoria(lecturas)!} />}
 
-      {lecturas.length === 0 ? (
-        <div className="mt-8 flex flex-col items-center gap-3 rounded-[var(--radius-card)] bg-[var(--surface)] px-6 py-10 text-center">
-          <Sparkles size={26} color="var(--accent)" aria-hidden="true" />
-          <p className="text-base font-bold [font-family:var(--font-display)]">Aún no tienes lecturas guardadas</p>
-          <p className="text-sm text-[var(--text-secondary)]">
-            Cuando saques una lectura y la guardes, va a quedar acá.
-          </p>
-          <Link href="/app/lecturas" className="mt-2 w-full">
-            <BotonPrincipal>Sacar mi primera lectura</BotonPrincipal>
-          </Link>
-        </div>
-      ) : (
-        <div className="mt-5 flex flex-col gap-3">
-          {patronReciente(lecturas) && (
-            <div className="flex items-start gap-2.5 rounded-[var(--radius-card)] bg-[var(--chip-bg)] p-3.5">
-              <TrendingUp size={16} color="var(--accent)" className="mt-0.5 shrink-0" aria-hidden="true" />
-              <p className="text-xs leading-relaxed text-[var(--text-primary)]">{patronReciente(lecturas)}</p>
-            </div>
-          )}
-          {lecturas.map((l) => (
-            <div key={l.id} className="rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
-              <div className="flex items-start gap-3">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <p className="text-xs font-bold text-[var(--text-secondary)]">{formatearFecha(l.fecha)}</p>
-                    <span className="text-[var(--text-tertiary)]" aria-hidden="true">·</span>
-                    <p className="text-xs font-bold text-[var(--accent)]">{labelCategoria(l.categoria)}</p>
-                  </div>
-                  <p className="mt-1.5 text-sm font-bold [font-family:var(--font-display)]">
-                    {l.cartas[0]} · {l.cartas[1]} · {l.cartas[2]}
-                  </p>
-                  <p className="mt-1.5 line-clamp-2 text-sm text-[var(--text-secondary)]">{l.resumen}</p>
-                </div>
-                {l.fotos && l.fotos.length > 0 && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={l.fotos[0]}
-                    alt=""
-                    className="size-14 shrink-0 rounded-2xl object-cover"
-                  />
-                )}
+        {lecturas.length === 0 ? (
+          <div className="mt-8 flex flex-col items-center gap-3 rounded-[var(--radius-card)] bg-[var(--surface)] px-6 py-10 text-center">
+            <Sparkles size={26} color="var(--accent)" aria-hidden="true" />
+            <p className="text-base font-bold [font-family:var(--font-display)]">Aún no tienes lecturas guardadas</p>
+            <p className="text-sm text-[var(--text-secondary)]">
+              Cuando saques una lectura y la guardes, va a quedar acá.
+            </p>
+            <Link href="/app/lecturas" className="mt-2 w-full">
+              <BotonPrincipal>Sacar mi primera lectura</BotonPrincipal>
+            </Link>
+          </div>
+        ) : (
+          <div className="mt-5 flex flex-col gap-3">
+            {patronReciente(lecturas) && (
+              <div className="flex items-start gap-2.5 rounded-[var(--radius-card)] bg-[var(--chip-bg)] p-3.5">
+                <TrendingUp size={16} color="var(--accent)" className="mt-0.5 shrink-0" aria-hidden="true" />
+                <p className="text-xs leading-relaxed text-[var(--text-primary)]">{patronReciente(lecturas)}</p>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            )}
+            {lecturas.map((l) => (
+              <div key={l.id} className="rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
+                <div className="flex items-start gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-xs font-bold text-[var(--text-secondary)]">{formatearFecha(l.fecha)}</p>
+                      <span className="text-[var(--text-tertiary)]" aria-hidden="true">
+                        ·
+                      </span>
+                      <p className="text-xs font-bold text-[var(--accent)]">{labelCategoria(l.categoria)}</p>
+                    </div>
+                    <p className="mt-1.5 text-sm font-bold [font-family:var(--font-display)]">
+                      {l.cartas[0]} · {l.cartas[1]} · {l.cartas[2]}
+                    </p>
+                    <p className="mt-1.5 line-clamp-2 text-sm text-[var(--text-secondary)]">{l.resumen}</p>
+                  </div>
+                  {l.fotos && l.fotos.length > 0 && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={l.fotos[0]} alt="" className="size-14 shrink-0 rounded-2xl object-cover" />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </TemaMistico>
   );
 }

@@ -74,8 +74,10 @@
   combinan bien tal cual: las cartas son ilustraciones color crema con marco (el marco dorado de
   `TarjetaTarot` ya viene de `var(--accent)`, así que se ve dorado solo); los símbolos zodiacales
   son insignias de color pastel que funcionan como acentos tipo "joya" sobre el fondo oscuro.
-- Pantallas con el tema aplicado: Lecturas (situación + compatibilidad) e Inicio (ritual diario
-  completo) — 2026-09-10, mismo fondo (resplandor + estrellas) en ambas, sin variar el motivo por
-  ahora. Pendientes: Perfil, Historial, Login (cada una en su propia ronda).
+- Pantallas con el tema aplicado: Lecturas, Inicio, Perfil, Historial y Login — 2026-09-10, todas
+  con el mismo fondo (resplandor + estrellas), sin variar el motivo por sección (nadie lo pidió
+  todavía). Única pantalla de `/app/*` que SIGUE en la paleta clara: Bienestar (no incluida en el
+  pedido del usuario) — sigue usando `FondoAura` (el fondo claro anterior) vía el layout compartido
+  `app/app/layout.tsx`.
 
 ## Idioma UI: español latino neutro · Fecha de cierre: 2026-08-27 · Aprobada por el usuario: SÍ
