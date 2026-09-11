@@ -1,5 +1,22 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, botones principal y secundario con acabado 3D vidrio/cromo)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav)
+
+✅ CHECKPOINT — Acabado 3D extendido al círculo activo del nav inferior, 2026-09-10. Última pieza
+del pedido del "switch" de referencia — el círculo blanco que marca la pestaña activa es, en forma,
+lo más parecido a la PERILLA (knob) del switch de la imagen. Se le agregó sombra tipo vidrio
+(`components/app/BottomNav.tsx`): brillo interior arriba, sombra interior tenue abajo (da volumen)
+y una sombra exterior que lo despega de la píldora oscura — la técnica real de las perillas de
+switch de iOS/Android (no un degradé fuerte, porque el círculo ya es blanco puro y no hay mucho
+margen para aclararlo más). Nota técnica: `BottomNav` vive FUERA del `<TemaMistico>` de cada
+pantalla (es un hermano en `app/app/layout.tsx`, no un hijo) — por eso su círculo activo usa
+siempre `var(--bg)` del `:root` global (blanco), nunca el oscuro del tema místico; esto es
+intencional y preexistente (mismo comportamiento que antes de esta sesión), no algo que haya que
+"corregir" — el brillo 3D nuevo se le agregó tal cual, sin tocar esa lógica de color.
+Verificado con un usuario de prueba real a 375px + `getComputedStyle` para confirmar que las 3
+capas de sombra se aplican. tsc/build limpios.
+**Con esto quedan los 3 lugares pedidos con el acabado de vidrio/cromo: botón principal (dorado),
+botón secundario (oscuro) y el círculo activo del nav (claro) — cierra el pedido de la referencia
+del switch morado/azul, adaptado a los 3 tonos que ya existen en la app.**
 
 ✅ CHECKPOINT — Acabado 3D extendido al botón "Continuar con Google", 2026-09-10. Mismo mecanismo
 que el botón principal (checkpoint anterior), pero en tono oscuro (`--surface-2`) en vez de dorado

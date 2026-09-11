@@ -39,7 +39,9 @@ export function BottomNav() {
               aria-label={label}
               aria-current={activo ? 'page' : undefined}
               className={`flex size-11 items-center justify-center rounded-full transition-colors ${
-                activo ? 'bg-[var(--bg)]' : 'bg-transparent'
+                activo
+                  ? 'bg-[var(--bg)] shadow-[inset_0_1px_1px_rgb(255_255_255/0.9),inset_0_-2px_3px_rgb(0_0_0/0.15),0_3px_8px_-2px_rgb(0_0_0/0.4)]'
+                  : 'bg-transparent'
               }`}
             >
               <span className="flex size-8 items-center justify-center">
