@@ -1,5 +1,25 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro — Inicio/Lecturas/Perfil/Historial/Login)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar)
+
+✅ CHECKPOINT — Tema místico completado en Bienestar (última pantalla pendiente), 2026-09-10. Mismo
+mecanismo que las 5 anteriores: las 3 vistas de `app/app/bienestar/page.tsx` (categorías, prácticas
+de una categoría, detalle de una práctica) envueltas en `<TemaMistico>`. Cero cambios en la lógica de
+colores por categoría (`COLOR_CATEGORIA`/`INK_CATEGORIA` en el mismo archivo) — ya estaban pensados
+por CONTRASTE (no por claro/oscuro), así que las 4 tarjetas de categoría (corazón/dinero/descanso/
+espacio) quedaron automáticamente como 4 piedras de color distinto (ciruela, ámbar, azul-noche,
+dorado) sin tocar una sola línea de esa lógica.
+**Limpieza de cierre**: con las 6 pantallas de `/app/*` envolviéndose cada una en su propio
+`<TemaMistico>`, el fondo claro que pintaba `app/app/layout.tsx` (vía `<FondoAura />`) quedó
+100% invisible/muerto para todas ellas. Se quitó `<FondoAura />` del layout compartido (que ahora
+solo da estructura: ancho máximo + nav) y se BORRÓ el componente `components/app/FondoAura.tsx`
+por completo (confirmado con grep que no quedaba ninguna referencia) — evita dejar código muerto.
+Verificado con un usuario de prueba real a 375px: las 4 categorías de Bienestar, la lista de
+prácticas y el detalle de una práctica se ven coherentes con el resto de la app; y por separado,
+Inicio se volvió a probar de punta a punta tras la limpieza del layout para confirmar que quitar
+FondoAura no rompió nada (sigue igual). tsc/build limpios en cada paso. Usuarios de prueba borrados.
+**Con esto queda cerrado el pedido completo de esta ronda: las 6 pantallas de la app por dentro
+(Inicio, Lecturas, Compatibilidad, Perfil, Historial, Bienestar) y Login comparten el tema
+místico oscuro/dorado. Landing/onboarding/paywall siguen sin tocar, a pedido explícito del usuario.**
 
 ✅ CHECKPOINT — Tema místico completado en Perfil, Historial y Login, 2026-09-10. El usuario pidió
 seguir con las 3 pantallas que faltaban tras aprobar Lecturas e Inicio. Mismo mecanismo
