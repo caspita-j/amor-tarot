@@ -1,5 +1,25 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, fondo "con aura" + logo real en Login)
+
+✅ CHECKPOINT — Fondo "con aura" (opción C) + logo real en Login, 2026-09-10. Se le mostró al
+usuario una comparativa A/B/C (artifact) de 3 niveles de profundidad de fondo para la portada,
+todos dentro de la paleta clara ya aprobada (sin pivotar a oscuro). Eligió la **C** ("con aura":
+3 manchas de color desenfocadas — `--accent`, `--accent-3`, `--accent-4` — detrás del contenido,
+el eco en modo claro del glow que le gustó de su imagen de referencia oscura) y pidió mostrar el
+**logo real** ("el que creamos anteriormente que te envié") en vez del punto+texto que había.
+**REVIERTE una decisión anterior**: el 2026-09-02 se había decidido que el logo NO se usa dentro
+de pantallas (solo favicon/ícono de app) por chocar con la paleta clara — el usuario pidió
+explícitamente lo contrario ahora para Login, así que se usa ahí.
+- `components/app/FondoAura.tsx` (NUEVO): 3 `<span>` circulares con `blur-3xl` + opacidad 25-30%,
+  reutilizable — reemplaza el degradé radial simple que había en Login y en `app/app/layout.tsx`
+  (por lo tanto ya aplica también a Inicio, Lecturas e Historial, que comparten ese layout).
+- `app/login/page.tsx`: el header ahora muestra `public/marca/logo-completo.png` (versión con
+  transparencia real, 1171×1017, a diferencia de `app/icon.png` que es solo el favicon 256×256) a
+  `h-24`, reemplazando el punto lila + texto "Amor & Tarot".
+Verificado con un usuario de prueba real a 375px: el logo carga a tamaño correcto y centrado, las
+3 manchas de color están presentes con el color/opacidad/blur esperados (confirmado por estilos
+computados), y el flujo completo de Inicio (tocar el aro → revelar carta → racha sube) sigue
+funcionando sin regresión visual. tsc/build limpios. Usuario de prueba borrado al terminar.
 
 ✅ CHECKPOINT — Extensión del toque de "magia" a Inicio, 2026-09-10. El usuario pidió seguir con
 las peticiones de diseño ya en curso. Se llevó el mismo lenguaje a los 2 puntos de Inicio que
@@ -1012,9 +1032,9 @@ conectar Hotmart, no tenga que volver a revisar toda la sesión buscando qué qu
   recién ahí cambiar estas 5 páginas de `jonathanrd198@gmail.com` a `hola@amorytarot.app`.
 
 ## Decisiones del usuario (ya resueltas, no volver a preguntar)
-- Logo/isotipo del usuario: CONFIRMADO — queda SOLO como favicon + ícono de app (app/icon.png,
-  app/apple-icon.png). NO se usa dentro de las pantallas (choca con la paleta clara de
-  FICHA-ARTE.md) — decisión del usuario 2026-09-02, no volver a proponerlo sin que lo pida.
+- Logo/isotipo del usuario: decisión 2026-09-02 (favicon/ícono de app SOLAMENTE) REVERTIDA
+  2026-09-10 a pedido explícito del usuario — ahora SÍ se usa dentro de pantallas, empezando por
+  Login (`public/marca/logo-completo.png`). Si se pide en más pantallas, usar el mismo asset.
 
 ## Notas para la próxima sesión
 - Regla de marca dura: JAMÁS usar la palabra "IA" / "inteligencia artificial" en copy visible al
