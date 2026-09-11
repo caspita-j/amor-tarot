@@ -1,5 +1,21 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, fondo "con aura" + logo real en Login)
+Última actualización: 2026-09-10 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, Bienestar, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, fondo "con aura" + logo real en Login, ícono zodiacal en Perfil)
+
+✅ CHECKPOINT — Cierre del pedido de diseño original (3 imágenes de referencia), 2026-09-10. El
+usuario pidió retomar explícitamente "las otras modificaciones de la app por dentro" del pedido de
+diseño original. Revisando las 3 pantallas internas que todavía no habían recibido ningún cambio
+esta ronda (Perfil, Bienestar, Historial): Bienestar e Historial ya estaban bien resueltas (colores
+por categoría, iconografía, datos reales) de rondas anteriores — no tenían nada plano pendiente.
+Perfil sí tenía un cabo suelto directo del pedido original ("agregando cada símbolo referente al
+signo zodiacal de la persona... agregarlo a nuestra app"): el signo propio del usuario se mostraba
+como texto plano, sin su símbolo — se agregó el ícono correspondiente (`imagenSigno()` de
+`lib/zodiaco.ts`, mismo asset ya usado en Compatibilidad) junto al nombre del signo en
+`app/app/perfil/page.tsx`. Verificado con un usuario de prueba real (signo asignado a mano vía SQL
+para forzar el caso) a 375px: el ícono aparece correcto, sin romper el layout de la tarjeta. tsc/build
+limpios. Usuario de prueba borrado al terminar.
+Con esto, las 3 imágenes de referencia originales (fondo de portada, medidor de compatibilidad,
+símbolos zodiacales) están reflejadas en TODAS las pantallas donde el signo de alguien aparece:
+Compatibilidad (selector) y ahora también Perfil (el signo propio).
 
 ✅ CHECKPOINT — Fondo "con aura" (opción C) + logo real en Login, 2026-09-10. Se le mostró al
 usuario una comparativa A/B/C (artifact) de 3 niveles de profundidad de fondo para la portada,

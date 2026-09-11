@@ -11,6 +11,7 @@ import { guardarFotoPerfil, leerFotoPerfil } from '@/lib/estado-app';
 import { leerPerfil, type Perfil } from '@/lib/supabase/datos';
 import { recortarCuadrado } from '@/lib/imagen';
 import { createClient } from '@/lib/supabase/client';
+import { imagenSigno } from '@/lib/zodiaco';
 
 export default function PerfilPage() {
   const router = useRouter();
@@ -80,7 +81,15 @@ export default function PerfilPage() {
         />
         <div>
           <p className="text-base font-bold [font-family:var(--font-display)]">{nombre}</p>
-          {perfil?.signo && <p className="text-sm text-[var(--text-secondary)]">{perfil.signo}</p>}
+          {perfil?.signo && (
+            <p className="mt-0.5 flex items-center gap-1.5 text-sm text-[var(--text-secondary)]">
+              {imagenSigno(perfil.signo) && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={imagenSigno(perfil.signo)} alt="" className="size-4 shrink-0 rounded-full" />
+              )}
+              {perfil.signo}
+            </p>
+          )}
         </div>
       </div>
 
