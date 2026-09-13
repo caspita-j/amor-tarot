@@ -1,5 +1,57 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-11 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida)
+Última actualización: 2026-09-12 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia)
+
+✅ CHECKPOINT — Resend conectado + correo de login con marca propia, 2026-09-12. Arrancó con el
+prompt/skill de EMAILS ("monta todos los correos del negocio"). Inventario real antes de proponer
+nada (Fase 1): ni Resend ni Hotmart existían (cero rastro en código/env) — el único correo que
+salía era el enlace mágico de Supabase, con su límite de envíos bajo ya documentado como poco
+confiable. Se le avisó al usuario que la mayoría de los correos pedidos (acceso post-compra,
+carrito, dunning) DEPENDEN del webhook de Hotmart, que hay una decisión previa de no tocar Hotmart
+hasta que el usuario lo traiga, y que aun así se podía (a) escribir todo el copy ya mismo y
+(b) conectar Resend ahora mismo para arreglar el correo de login (no depende de Hotmart). El
+usuario eligió hacer ambas cosas.
+**Copy escrito** (mismo formato que `docs/copy/winback.md` ya existente), guardado sin conectar
+todavía (esperando Hotmart): `docs/copy/acceso-post-compra.md` (el más crítico — incluye la
+decisión técnica de cómo se conecta cuando exista el webhook: `admin.auth.admin.generateLink()`,
+mismo mecanismo que ya usa `app/api/admin/usuarios/route.ts`), `recuperacion-acceso.md`,
+`carrito-abandonado.md` (2 correos), `dunning.md` (3 correos). `bienvenida-activacion.md` (D1/D3/D7)
+es la excepción: NO depende de Hotmart, solo de Resend — queda marcado como el más rápido de
+conectar después de esto. Nurturing de lead magnet: NO se escribió nada — hoy no existe ningún
+lead magnet ni lista de espera de donde partir, no se inventó contenido sin base real.
+**Resend conectado de verdad, guiado paso a paso sin ver ninguna clave** (solo valores públicos de
+DNS y confirmaciones del usuario):
+1. Cuenta creada en Resend + dominio `amorytarot.app` agregado. Los 4 registros DNS (TXT DKIM,
+   2 CNAME de SPF/tracking, TXT DMARC) se agregaron en el panel de Hostinger (mismo proveedor de
+   siempre) — el usuario los agregó, yo solo confirmé que los valores completos (pidió que
+   copiara el valor entero de Resend, no la versión truncada que muestra la tabla) quedaran bien
+   puestos. **Dominio verificado** en ~19 minutos.
+2. Clave de API creada en Resend (nunca vista en este chat, el usuario la pegó directo en
+   Supabase).
+3. **Supabase → Authentication → Emails → SMTP Settings**: Custom SMTP activado, apuntando a
+   `smtp.resend.com:465`, usuario `resend`, sender `hola@amorytarot.app` / "Amor & Tarot". Nota:
+   Supabase NO tiene campo de "Reply-To" en ningún lado de su panel (se buscó y se confirmó que no
+   existe) — se abandonó esa idea, no es esencial. `hola@amorytarot.app` no necesita ser un buzón
+   real para que el ENVÍO funcione (el dominio verificado ya autoriza mandar desde cualquier
+   dirección de ese dominio) — solo importa el día que alguien responda ese correo, que hoy se
+   perdería hasta que exista el reenvío a Gmail ya planeado en "Pendientes del usuario".
+4. **Plantilla del correo de login reescrita** en español con la voz de la app (Supabase →
+   Authentication → Emails → Templates → "Magic link or OTP") — antes era el genérico de Supabase
+   en inglés ("Your sign-in link"). Nueva plantilla: encabezado "Amor & Tarot", botón dorado
+   "Entrar a mi cuenta" (usa `{{ .ConfirmationURL }}`) + el código de 6 dígitos alternativo (usa
+   `{{ .Token }}`, ya que el login de esta app ofrece las dos formas de entrar) + línea de
+   tranquilidad si no lo pidió.
+⚠️ Nota real, no bug: el primer intento de probar la plantilla nueva siguió mandando el genérico en
+inglés a pesar de estar bien guardada (confirmado releyendo el editor: el HTML seguía ahí) — fue
+demora de propagación del lado de Supabase, no un error de configuración; el segundo intento (2
+minutos después) ya salió bien.
+Verificado de punta a punta con el correo real del usuario (`jonathanrd198@gmail.com`, cuenta ya
+existente): el correo llega a la bandeja principal (no a spam), en español, con la marca correcta,
+con el botón Y el código funcionando. No se tocó ningún archivo del proyecto — todo el cambio fue
+configuración externa (Resend + Supabase) más los 5 archivos de copy nuevos en `docs/copy/`.
+Pendiente para cuando el usuario decida seguir: (a) conectar `bienvenida-activacion.md` (no
+necesita Hotmart, solo un cron/trigger por fecha de registro), (b) todo lo demás en cuanto exista
+el webhook de Hotmart, (c) crear el buzón real de `hola@amorytarot.app` (ya documentado en
+"Pendientes del usuario", sin cambios en esta sesión).
 
 ✅ CHECKPOINT — Logo de Login reemplazado por una versión más nítida, 2026-09-11. El usuario mandó
 una nueva imagen del logo "Amor y Tarot" (mismo concepto — 3 cartas + monograma "AF" + texto — pero
