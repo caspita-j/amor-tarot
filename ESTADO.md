@@ -1,5 +1,5 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-12 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia)
+Última actualización: 2026-09-12 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo)
 
 ✅ CHECKPOINT — Resend conectado + correo de login con marca propia, 2026-09-12. Arrancó con el
 prompt/skill de EMAILS ("monta todos los correos del negocio"). Inventario real antes de proponer
@@ -55,8 +55,22 @@ esa dirección — no depende de BIMI/DNS (esa vía es más pesada: exige subir 
 gratis e inmediato). Se recortó un ícono cuadrado (512×512, `public/marca/avatar-correo.png`) desde
 el logo real de alta resolución — el monograma "A + corazón" solo, con la luna y el sol asomando en
 los bordes, en vez del logo completo (que a tamaño de avatar sería ilegible) — y se le mandó al
-usuario para que lo suba a Gravatar asociado a `hola@amorytarot.app`. Pendiente de que el usuario
-lo suba y probarlo en un correo real.
+usuario para que lo suba a Gravatar asociado a `hola@amorytarot.app`.
+**Cierre (mismo día)**: `hola@amorytarot.app` no tenía buzón real, así que Gravatar no podía
+verificarlo — se resolvió activando reenvío gratis con **ImprovMX** (cuenta creada, dominio
+agregado, alias comodín `*@amorytarot.app → jonathanrd198@gmail.com`, 2 registros MX agregados en
+Hostinger y verificados). Con el reenvío activo, la verificación de Gravatar sí llegó, se asignó el
+monograma a ese correo, y se confirmó DIRECTO contra la API pública de Gravatar
+(`gravatar.com/avatar/<md5 del correo>` pasó de 404 a 200, sin depender de capturas) — la imagen
+correcta se descargó y se comparó pixel a pixel con el original. Verificación externa completa vía
+`dig` de todos los registros DNS (MX de ImprovMX + DKIM/SPF-CNAME/DMARC de Resend conviven sin
+conflicto — uno controla el correo ENTRANTE, el otro el SALIENTE; `www` y la raíz del dominio,
+sin cambios, siguen en Vercel). Los 5 archivos de copy nuevos se revisaron contra las reglas del
+proyecto (sin voseo, sin lenguaje de rituales/amarres, precio y mecanismo consistentes).
+**Efecto secundario útil, no pedido pero ahora desbloqueado**: `hola@amorytarot.app` ya es un
+correo real (con reenvío) — el pendiente antiguo de "cambiar las 5 páginas legales de
+jonathanrd198@gmail.com a hola@amorytarot.app" ya no tiene nada bloqueándolo. Se le avisó al
+usuario; queda a su decisión cuándo hacerlo.
 Pendiente para cuando el usuario decida seguir: (a) conectar `bienvenida-activacion.md` (no
 necesita Hotmart, solo un cron/trigger por fecha de registro), (b) todo lo demás en cuanto exista
 el webhook de Hotmart, (c) crear el buzón real de `hola@amorytarot.app` (ya documentado en
@@ -1278,10 +1292,10 @@ conectar Hotmart, no tenga que volver a revisar toda la sesión buscando qué qu
   Providers → Email) — no se puede hacer por código, y puede pedir plan Pro de Supabase (de pago).
   Baja prioridad: el login real de la app es sin contraseña.
 - [ ] Correo de contacto legal: hoy usa `jonathanrd198@gmail.com` (personal) en Privacidad,
-  Términos, Reembolsos, footer y perfil. El dominio propio ya se compró y se conectó
-  (`amorytarot.app`, 2026-09-10) — falta crear el correo real sobre ese dominio (el usuario decidió
-  empezar con reenvío gratis a su Gmail, guía ya dada, pospuesto explícitamente "para después") y
-  recién ahí cambiar estas 5 páginas de `jonathanrd198@gmail.com` a `hola@amorytarot.app`.
+  Términos, Reembolsos, footer y perfil. **YA DESBLOQUEADO (2026-09-12)**: `hola@amorytarot.app`
+  ahora es un correo real (reenvío activo vía ImprovMX a `jonathanrd198@gmail.com`, ver checkpoint
+  de EMAILS) — solo falta que el usuario decida cuándo cambiar estas 5 páginas de
+  `jonathanrd198@gmail.com` a `hola@amorytarot.app`.
 
 ## Decisiones del usuario (ya resueltas, no volver a preguntar)
 - Logo/isotipo del usuario: decisión 2026-09-02 (favicon/ícono de app SOLAMENTE) REVERTIDA
