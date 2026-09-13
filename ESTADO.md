@@ -1,5 +1,35 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-12 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad)
+Última actualización: 2026-09-13 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo bloqueado por límite de Resend — EN CURSO)
+
+⚠️ CHECKPOINT — Prueba real de login: código corregido a 8 dígitos, pero el envío de correo está
+BLOQUEADO por Resend, 2026-09-13. El usuario pidió probar de punta a punta si podía entrar fácil a
+la app. Aparecieron 3 hallazgos:
+1. **Enlace mágico abierto desde OTRO dispositivo/navegador vuelve al login sin entrar** — no es un
+   bug, es el comportamiento esperado de Supabase (el código ya lo explica en su propio comentario):
+   el enlace solo puede completarse en el mismo navegador donde se pidió, por eso existe el código
+   numérico como alternativa. No se tocó nada de esto.
+2. **BUG REAL, YA CORREGIDO EN CÓDIGO, SIN COMMITEAR**: la app asumía un código de 6 dígitos (input,
+   validación y el texto que lo anuncia), pero Supabase (Authentication → Settings → "Email OTP
+   Length") está configurado en **8 dígitos** — confirmado con el código real que le llegó al usuario
+   ("23804265") y con una prueba directa contra Supabase. Esto significa que el código de repuesto
+   literalmente no se podía escribir completo — si a alguien le fallaba el enlace, tampoco podía
+   entrar con el código. Corregido en `app/login/page.tsx` (input, validación, botón, texto) y el
+   comentario de `app/auth/callback/route.ts`. Probado el código real del usuario directo contra
+   Supabase: entra sin problema. tsc/build limpios. **Falta: hacer commit** (los archivos quedaron
+   editados en el árbol de trabajo).
+3. **Justo al intentar probar el fix con la app real, dejaron de llegar correos**: Supabase devuelve
+   un error real de envío (no es el límite de "1 correo por minuto" que ya se había configurado antes
+   — se esperó de sobra y siguió fallando). La causa más probable es que la cuenta gratis de Resend
+   (100 correos/día) se agotó por la cantidad de pruebas de HOY. **No tengo acceso al panel de
+   Resend** — el usuario necesita entrar a resend.com → su cuenta → "Emails" y revisar si hay
+   rebotes/errores de cuota, o simplemente esperar a que se reinicie el límite diario.
+4. Reportado también que el avatar de Gravatar no se veía en un correo — contradice la verificación
+   de ayer (la imagen sí respondía bien desde la API pública de Gravatar). Puede ser solo caché de
+   Gmail o un correo de antes del arreglo. Sin confirmar todavía, queda pendiente revisar de nuevo
+   una vez el envío de correos vuelva a funcionar.
+**Próximo paso**: 1) que el usuario revise Resend o espere el reinicio de cuota, 2) commitear el
+arreglo de 6→8 dígitos, 3) volver a probar el login completo (enlace + código) con la app real ya
+funcionando, 4) revisar de nuevo el tema del avatar.
 
 ✅ CHECKPOINT — Correo de contacto legal actualizado, 2026-09-12. A pedido explícito del usuario,
 tras desbloquearse con lo de ImprovMX de este mismo día. Reemplazado `jonathanrd198@gmail.com` →

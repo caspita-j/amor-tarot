@@ -1,9 +1,12 @@
 'use client';
 
-// Login de Amor & Tarot — método PRIMARIO: enlace mágico / código de 6 dígitos
+// Login de Amor & Tarot — método PRIMARIO: enlace mágico / código de 8 dígitos
 // por correo (26-AUTH-MODERNO: passwordless, el combo enlace+código en el
 // mismo correo — el código existe porque el enlace solo puede fallar si el
 // correo se abre en otra app/dispositivo). Google como mejora secundaria.
+// El largo del código (8) lo define Supabase (Authentication → Settings →
+// "Email OTP Length") — si algún día se cambia ahí, hay que actualizar el
+// `maxLength`/`length !== 8` de este archivo para que coincidan.
 // Conectado a Supabase Auth real (Sesión 6, Etapa 1).
 
 import { useEffect, useState } from 'react';
@@ -79,7 +82,7 @@ export default function LoginPage() {
   };
 
   const verificarCodigo = async () => {
-    if (codigo.trim().length !== 6 || verificando) return;
+    if (codigo.trim().length !== 8 || verificando) return;
     setVerificando(true);
     setError('');
     const { error: err } = await supabase.auth.verifyOtp({ email, token: codigo.trim(), type: 'email' });
@@ -184,7 +187,7 @@ export default function LoginPage() {
               </span>
               <h1 className="mt-5 text-xl font-bold [font-family:var(--font-display)]">Revisa tu correo</h1>
               <p className="mt-2 text-sm leading-relaxed text-[var(--text-secondary)]">
-                Te mandamos un enlace y un código de 6 dígitos a <strong className="font-semibold">{email}</strong>.
+                Te mandamos un enlace y un código de 8 dígitos a <strong className="font-semibold">{email}</strong>.
                 Cualquiera de los dos te deja entrar.
               </p>
 
@@ -197,16 +200,16 @@ export default function LoginPage() {
                   type="text"
                   inputMode="numeric"
                   autoComplete="one-time-code"
-                  maxLength={6}
+                  maxLength={8}
                   value={codigo}
                   onChange={(e) => setCodigo(e.target.value.replace(/\D/g, ''))}
-                  placeholder="481 372"
+                  placeholder="4813 7205"
                   className="mt-2 h-14 w-full rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] bg-[var(--bg)] px-5 text-center text-lg tracking-[0.3em] text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
                 />
                 {error && <p className="mt-2 text-sm font-medium text-[var(--danger)]">{error}</p>}
                 <div className="mt-3">
                   <BotonPrincipal
-                    disabled={codigo.trim().length !== 6}
+                    disabled={codigo.trim().length !== 8}
                     cargando={verificando}
                     onClick={verificarCodigo}
                   >

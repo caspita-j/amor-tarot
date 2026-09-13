@@ -1,4 +1,4 @@
-// Adonde llega el ENLACE del correo de magic link (no el código de 6 dígitos,
+// Adonde llega el ENLACE del correo de magic link (no el código de 8 dígitos,
 // ese se verifica directo en /login). Intercambia el `code` de la URL por una
 // sesión real y cookies httpOnly — ver 26-AUTH-MODERNO.md.
 
