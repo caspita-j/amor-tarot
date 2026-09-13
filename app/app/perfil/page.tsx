@@ -143,7 +143,7 @@ function ZonaPeligro() {
     try {
       const resp = await fetch('/api/cuenta/eliminar', { method: 'POST' });
       if (!resp.ok) {
-        setError('No pudimos eliminar tu cuenta. Intenta de nuevo o escríbenos a jonathanrd198@gmail.com.');
+        setError('No pudimos eliminar tu cuenta. Intenta de nuevo o escríbenos a hola@amorytarot.app.');
         setEliminando(false);
         return;
       }
@@ -152,7 +152,7 @@ function ZonaPeligro() {
       sessionStorage.clear();
       router.push('/');
     } catch {
-      setError('No pudimos eliminar tu cuenta. Intenta de nuevo o escríbenos a jonathanrd198@gmail.com.');
+      setError('No pudimos eliminar tu cuenta. Intenta de nuevo o escríbenos a hola@amorytarot.app.');
       setEliminando(false);
     }
   };

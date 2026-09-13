@@ -24,8 +24,8 @@ export default function ReembolsosPage() {
       <LegalSeccion titulo="Cómo pedir tu reembolso">
         <p>
           Escríbenos a{' '}
-          <a href="mailto:jonathanrd198@gmail.com" className="underline underline-offset-2">
-            jonathanrd198@gmail.com
+          <a href="mailto:hola@amorytarot.app" className="underline underline-offset-2">
+            hola@amorytarot.app
           </a>{' '}
           diciendo que quieres tu reembolso. Te lo confirmamos y procesamos el dinero de vuelta al
           mismo método de pago con el que compraste.
@@ -52,8 +52,8 @@ export default function ReembolsosPage() {
       <LegalSeccion titulo="Contacto">
         <p>
           ¿Dudas sobre tu pago o tu reembolso? Escríbenos a{' '}
-          <a href="mailto:jonathanrd198@gmail.com" className="underline underline-offset-2">
-            jonathanrd198@gmail.com
+          <a href="mailto:hola@amorytarot.app" className="underline underline-offset-2">
+            hola@amorytarot.app
           </a>
           .
         </p>

@@ -7,8 +7,8 @@ export default function PrivacidadPage() {
         <p>
           Amor & Tarot es operada por Jonathan, como persona natural, desde Colombia. Puedes
           escribirle directamente a{' '}
-          <a href="mailto:jonathanrd198@gmail.com" className="underline underline-offset-2">
-            jonathanrd198@gmail.com
+          <a href="mailto:hola@amorytarot.app" className="underline underline-offset-2">
+            hola@amorytarot.app
           </a>{' '}
           para cualquier duda sobre tus datos.
         </p>
@@ -95,8 +95,8 @@ export default function PrivacidadPage() {
             'Puedes borrar tu cuenta y todos tus datos en cualquier momento desde Perfil → Eliminar mi cuenta, dentro de la app. Esto borra tu perfil, tus lecturas y tu historial de uso de la IA — no queda nada guardado.',
             <span key="contacto">
               También puedes escribirnos a{' '}
-              <a href="mailto:jonathanrd198@gmail.com" className="underline underline-offset-2">
-                jonathanrd198@gmail.com
+              <a href="mailto:hola@amorytarot.app" className="underline underline-offset-2">
+                hola@amorytarot.app
               </a>{' '}
               para pedir acceso, corrección o eliminación de tus datos.
             </span>,
@@ -129,8 +129,8 @@ export default function PrivacidadPage() {
       <LegalSeccion titulo="Contacto">
         <p>
           ¿Dudas sobre tus datos o esta política? Escríbenos a{' '}
-          <a href="mailto:jonathanrd198@gmail.com" className="underline underline-offset-2">
-            jonathanrd198@gmail.com
+          <a href="mailto:hola@amorytarot.app" className="underline underline-offset-2">
+            hola@amorytarot.app
           </a>
           .
         </p>

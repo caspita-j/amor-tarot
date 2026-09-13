@@ -100,8 +100,8 @@ export default function TerminosPage() {
       <LegalSeccion titulo="Contacto">
         <p>
           ¿Dudas sobre estos términos? Escríbenos a{' '}
-          <a href="mailto:jonathanrd198@gmail.com" className="underline underline-offset-2">
-            jonathanrd198@gmail.com
+          <a href="mailto:hola@amorytarot.app" className="underline underline-offset-2">
+            hola@amorytarot.app
           </a>
           .
         </p>
