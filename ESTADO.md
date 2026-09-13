@@ -1,5 +1,5 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-12 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas)
+Última actualización: 2026-09-12 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad)
 
 ✅ CHECKPOINT — Correo de contacto legal actualizado, 2026-09-12. A pedido explícito del usuario,
 tras desbloquearse con lo de ImprovMX de este mismo día. Reemplazado `jonathanrd198@gmail.com` →
@@ -12,12 +12,12 @@ del correo personal en el código. Verificado en vivo (no solo build): las 5 pá
 navegadas una por una (privacidad, reembolsos, términos, aviso, landing) muestran
 `hola@amorytarot.app` correcto en cada mailto; Perfil confirmado por código + build (no requiere
 usuario de prueba para un cambio de texto de error). tsc/build limpios.
-⚠️ Hallazgo real, NO corregido todavía (fuera del pedido de "cambiar el correo de contacto"): la
-sección "Con quién compartimos tus datos" de `/privacidad` describe a Supabase como quien "por ahora
-también envía los correos de acceso" — ya no es exacto, porque hoy Resend es el que de verdad
-entrega esos correos (Supabase solo los origina, Resend hace el envío SMTP real). Falta agregar
-Resend a la lista NOMBRADA de subprocesadores (regla de `47-LEGAL-FISCAL-Y-PRIVACIDAD.md`) y
-corregir esa frase. Se le avisó al usuario; queda pendiente de que decida si lo hago.
+✅ CORREGIDO el mismo día, a pedido del usuario: se quitó de la línea de Supabase en
+`app/privacidad/page.tsx` la frase de que "por ahora también envía los correos de acceso" (ya no es
+exacto — Resend es quien hace el envío SMTP real) y se agregó **Resend** como su propio ítem en la
+lista NOMBRADA de subprocesadores (regla de `47-LEGAL-FISCAL-Y-PRIVACIDAD.md`), con su función real
+("entrega el correo con tu enlace de acceso y otras comunicaciones de tu cuenta, nunca contenido de
+tus lecturas"). Verificado en vivo en `/privacidad`. tsc/build limpios.
 
 ✅ CHECKPOINT — Resend conectado + correo de login con marca propia, 2026-09-12. Arrancó con el
 prompt/skill de EMAILS ("monta todos los correos del negocio"). Inventario real antes de proponer

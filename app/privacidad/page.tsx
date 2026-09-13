@@ -53,7 +53,12 @@ export default function PrivacidadPage() {
           items={[
             <span key="supabase">
               <strong className="font-bold text-[var(--text-primary)]">Supabase</strong> — guarda tu
-              cuenta, tu perfil y tus lecturas, y por ahora también envía los correos de acceso.
+              cuenta, tu perfil y tus lecturas.
+            </span>,
+            <span key="resend">
+              <strong className="font-bold text-[var(--text-primary)]">Resend</strong> — entrega el
+              correo con tu enlace de acceso y otras comunicaciones de tu cuenta (nunca contenido de
+              tus lecturas).
             </span>,
             <span key="anthropic">
               <strong className="font-bold text-[var(--text-primary)]">Anthropic (el proveedor de la
