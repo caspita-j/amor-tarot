@@ -48,6 +48,15 @@ Verificado de punta a punta con el correo real del usuario (`jonathanrd198@gmail
 existente): el correo llega a la bandeja principal (no a spam), en español, con la marca correcta,
 con el botón Y el código funcionando. No se tocó ningún archivo del proyecto — todo el cambio fue
 configuración externa (Resend + Supabase) más los 5 archivos de copy nuevos en `docs/copy/`.
+**Avatar del remitente** (a pedido del usuario, mismo checkpoint): Gmail y varios clientes de
+correo muestran una foto junto al nombre del remitente si existe un perfil de Gravatar asociado a
+esa dirección — no depende de BIMI/DNS (esa vía es más pesada: exige subir el DMARC de `p=none` a
+`p=quarantine`/`reject` y a veces un certificado pago, así que se descartó a favor de Gravatar,
+gratis e inmediato). Se recortó un ícono cuadrado (512×512, `public/marca/avatar-correo.png`) desde
+el logo real de alta resolución — el monograma "A + corazón" solo, con la luna y el sol asomando en
+los bordes, en vez del logo completo (que a tamaño de avatar sería ilegible) — y se le mandó al
+usuario para que lo suba a Gravatar asociado a `hola@amorytarot.app`. Pendiente de que el usuario
+lo suba y probarlo en un correo real.
 Pendiente para cuando el usuario decida seguir: (a) conectar `bienvenida-activacion.md` (no
 necesita Hotmart, solo un cron/trigger por fecha de registro), (b) todo lo demás en cuanto exista
 el webhook de Hotmart, (c) crear el buzón real de `hola@amorytarot.app` (ya documentado en
