@@ -1,5 +1,24 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas)
+Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover)
+
+✅ CHECKPOINT — Color propio + acabado 3D + hover en las 6 tarjetas de categoría de Lecturas
+("¿De qué se trata tu duda?"), 2026-09-14, a pedido del usuario ("no se vean tan simples... cada
+una un color distinto... tipo 3D... que se sombree al pasar el mouse"). `COLOR_CATEGORIA` nuevo en
+`app/app/lecturas/page.tsx`: reutiliza los 5 acentos ya aprobados del tema místico (Pareja→
+accent-4, Trabajo→accent-2, Familia→accent-3, Amistad→accent-frio, Una decisión→accent; "Otro"
+combina 2 porque la paleta solo tiene 5 notas distintas para 6 categorías) — cero hex nuevos.
+Cada tarjeta: degradé propio (claro arriba → oscuro abajo, mismo lenguaje que los botones vidrio/
+cromo) + sombra tintada de su color (efecto "pop"/3D) + hover en escritorio (`hover:brightness-90
+hover:-translate-y-0.5`, confirmado con `matches(':hover')` que la clase se activa de verdad).
+⚠️ BUG REAL encontrado y corregido en el camino: el primer intento dejaba el círculo del ícono
+teñido del MISMO color que el fondo de la tarjeta (transparente sobre transparente) — el ícono casi
+desaparecía en la mayoría de las tarjetas. Corregido con el mismo patrón que ya usa Bienestar:
+círculo del ícono sólido y oscuro (`bg-[var(--bg)]`), ícono a color completo encima — así el
+contraste no depende de qué tan clara/oscura salga la tarjeta de fondo.
+Verificado con un usuario de prueba real: los 6 colores se distinguen claramente, los 6 íconos se
+leen bien sobre su círculo oscuro, y el hover se confirmó activo por código (no solo visual). tsc/
+build limpios. Usuario de prueba borrado al terminar. Sin revisor-visual (pantalla secundaria, ajuste
+visual de un elemento ya existente, no una pantalla nueva).
 
 ✅ CHECKPOINT — Botón "deslizar para activar" en "Activar el hechizo de mis 3 cartas", 2026-09-14,
 a pedido del usuario con referencia de un CTA de onboarding (perilla circular con flecha que se
