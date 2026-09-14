@@ -1,5 +1,33 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar)
+Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, piloto de "vidrio esmerilado" en la tarjeta "Cuéntame tu situación" — EN CURSO, esperando aprobación para extenderlo)
+
+✅ CHECKPOINT — Piloto de "vidrio esmerilado" (glassmorphism) en la tarjeta "Cuéntame tu
+situación", 2026-09-14, a pedido del usuario con una imagen de referencia (app de comida: paneles
+translúcidos sobre fondo difuminado, botones sólidos audaces). El usuario aclaró explícitamente que
+NO quiere copiar los colores/íconos de la referencia — solo 2 cosas: (a) el efecto "difuminado" y
+(b) el estilo de los botones. Se acordó probar primero en UNA tarjeta antes de decidir si se
+extiende al resto de la app.
+Implementado en `app/app/lecturas/page.tsx`: la tarjeta "Cuéntame tu situación" pasó de
+`bg-[var(--accent-2)]` (relleno sólido) a fondo semi-transparente (`color-mix` al 55%) +
+`backdrop-blur-xl` + borde sutil — deja ver el resplandor del fondo místico difuminado detrás,
+mismo efecto de la referencia pero con nuestros propios colores. El círculo del ícono también lleva
+un `backdrop-blur-sm` a juego. "Compatibilidad de signos" (la otra tarjeta del menú) se dejó
+intacta a propósito, para comparar lado a lado.
+⚠️ Nota real de depuración (no quedó ningún bug en el código, por transparencia): al verificar esto
+en el navegador automatizado, RECARGAR LA MISMA PESTAÑA varias veces seguidas (vía JS) hacía que el
+difuminado se "filtrara" a toda la pantalla en vez de quedarse solo detrás de la tarjeta — parecía un
+bug real de CSS. Se investigó a fondo (cambios de posición/z-index/aislamiento) antes de descubrir
+que el problema NUNCA estuvo en el código: era un artefacto de recargar la misma pestaña muchas veces
+en la herramienta de navegador automatizado. Verificado en pestañas nuevas y limpias (como entra un
+usuario real) que el código ORIGINAL (sin ninguno de esos cambios) funciona perfecto — no se necesitó
+ningún parche. `components/app/TemaMistico.tsx` quedó exactamente igual que antes de esta sesión
+(confirmado con `git diff`, cero cambios).
+Verificado en una pestaña nueva a 375px: el difuminado se ve correcto y contenido dentro de la
+tarjeta, con buen contraste de texto. tsc/build limpios. Usuario de prueba borrado al terminar.
+**Pendiente: mostrarle el resultado al usuario y, si aprueba, extenderlo a las demás tarjetas que
+pidió** (Bienestar, tarjeta de resultado de una lectura, "Compatibilidad de signos") **+ aplicar el
+estilo de botones de la referencia** (bold, sólido) — ninguna de las dos cosas se hizo todavía fuera
+de esta tarjeta piloto.
 
 ✅ CHECKPOINT — Píldora del nav inferior en ámbar oscuro (antes negro), 2026-09-14, a pedido del
 usuario, con una imagen de referencia (nav de una app de música: píldora oscura que SÍ se distingue
