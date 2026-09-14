@@ -35,6 +35,19 @@ const COLOR_CATEGORIA: Record<string, string> = {
   espacio: 'var(--accent)',
 };
 
+// Vidrio esmerilado (a pedido del usuario, con referencia de una app de
+// comida): las 3 categorías OSCURAS del tema místico se aclaran solas al
+// dejarse traslúcidas, así que aguantan mucha transparencia. "espacio" es
+// la excepción — es el dorado BRILLANTE (--accent), y su texto oscuro
+// (--bg) necesita que el color se mantenga bastante sólido para no perder
+// contraste, así que lleva mucha menos transparencia que las otras 3.
+const OPACIDAD_CATEGORIA: Record<string, number> = {
+  corazon: 38,
+  dinero: 38,
+  descanso: 38,
+  espacio: 68,
+};
+
 // Color de texto/número LEGIBLE sobre el color sólido de cada categoría —
 // accent-2/3 son pasteles claros (necesitan texto oscuro, igual que las
 // tarjetas de categoría del home), accent-4 tiene su propio tono AA
@@ -79,14 +92,19 @@ export default function BienestarPage() {
               const Icono = ICONO_CATEGORIA[c.id] ?? Flame;
               const color = COLOR_CATEGORIA[c.id] ?? 'var(--accent)';
               const ink = INK_CATEGORIA[c.id] ?? 'var(--text-primary)';
+              const opacidad = OPACIDAD_CATEGORIA[c.id] ?? 38;
               const total = practicasDeCategoria(c.id).length;
               return (
                 <button
                   key={c.id}
                   type="button"
                   onClick={() => abrirCategoria(c)}
-                  className="flex min-h-36 flex-col justify-between rounded-[var(--radius-card)] p-4 text-left transition-transform active:scale-[0.97]"
-                  style={{ backgroundColor: color, boxShadow: `0 10px 22px -12px ${color}`, color: ink }}
+                  className="flex min-h-36 flex-col justify-between rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_20%,transparent)] p-4 text-left backdrop-blur-xl transition-transform active:scale-[0.97]"
+                  style={{
+                    backgroundColor: `color-mix(in oklab, ${color} ${opacidad}%, transparent)`,
+                    boxShadow: `0 10px 22px -12px ${color}, inset 0 1px 0 rgb(255 255 255 / 0.3)`,
+                    color: ink,
+                  }}
                 >
                   <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--bg)]">
                     <Icono size={20} color={color} aria-hidden="true" />
@@ -145,7 +163,7 @@ export default function BienestarPage() {
                 key={p.id}
                 type="button"
                 onClick={() => abrirPractica(p)}
-                className="flex flex-col rounded-[var(--radius-card)] bg-[var(--surface)] p-4 text-left transition-transform active:scale-[0.98]"
+                className="flex flex-col rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_16%,transparent)] bg-[color-mix(in_oklab,var(--surface)_38%,transparent)] p-4 text-left shadow-[inset_0_1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl transition-transform active:scale-[0.98]"
               >
                 <span className="text-base font-bold [font-family:var(--font-display)]">{p.titulo}</span>
                 <span className="mt-1 text-sm text-[var(--text-secondary)]">{p.intencion}</span>

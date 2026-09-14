@@ -285,7 +285,7 @@ function LecturasContenido() {
         <button
           type="button"
           onClick={() => setModo('compat-form')}
-          className="mt-3 flex w-full items-start gap-3.5 rounded-[var(--radius-card)] bg-[var(--accent-3)] p-4 text-left"
+          className="mt-3 flex w-full items-start gap-3.5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_20%,transparent)] bg-[color-mix(in_oklab,var(--accent-3)_38%,transparent)] p-4 text-left shadow-[inset_0_1px_0_rgb(255_255_255/0.3)] backdrop-blur-xl"
         >
           <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--bg)_55%,transparent)]">
             <Heart size={20} color="var(--text-primary)" />
@@ -321,7 +321,7 @@ function LecturasContenido() {
                 key={id}
                 type="button"
                 onClick={() => elegirCategoria(id)}
-                className="flex flex-col items-start gap-2.5 rounded-[var(--radius-card)] bg-[var(--surface)] p-4 text-left"
+                className="flex flex-col items-start gap-2.5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_16%,transparent)] bg-[color-mix(in_oklab,var(--surface)_38%,transparent)] p-4 text-left shadow-[inset_0_1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl"
               >
                 <span className="flex size-9 items-center justify-center rounded-full bg-[var(--chip-bg)]">
                   <Icono size={17} color="var(--accent)" aria-hidden="true" />
@@ -470,14 +470,14 @@ function LecturasContenido() {
           />
         </div>
         {errorLectura ? (
-          <div className="mt-5 rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
+          <div className="mt-5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_16%,transparent)] bg-[color-mix(in_oklab,var(--surface)_38%,transparent)] p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl">
             <p className="text-sm leading-relaxed text-[var(--text-primary)]">{errorLectura}</p>
             <div className="mt-3">
               <BotonPrincipal onClick={sacarLectura}>Reintentar</BotonPrincipal>
             </div>
           </div>
         ) : (
-          <div className="mt-5 rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
+          <div className="mt-5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_16%,transparent)] bg-[color-mix(in_oklab,var(--surface)_38%,transparent)] p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl">
             <p className="text-sm leading-relaxed text-[var(--text-primary)]">
               {resumen}
               {!resumenListo && <span className="inline-block w-0.5 animate-pulse bg-[var(--text-primary)]">&nbsp;</span>}
@@ -547,7 +547,7 @@ function LecturasContenido() {
         <button type="button" onClick={() => setModo('compat-form')} className="w-fit text-sm font-semibold text-[var(--text-secondary)]">
           ← Volver
         </button>
-        <div className="mt-5 rounded-[var(--radius-card)] bg-[var(--surface)] p-6 shadow-[var(--shadow-2)]">
+        <div className="mt-5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_16%,transparent)] bg-[color-mix(in_oklab,var(--surface)_38%,transparent)] p-6 shadow-[var(--shadow-2),inset_0_1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl">
           <div className="flex items-center justify-center gap-4">
             {imagenSigno(signoA) && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -572,7 +572,7 @@ function LecturasContenido() {
           </p>
           <AnilloCompatibilidad porcentaje={compat.puntaje} />
         </div>
-        <div className="mt-5 rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
+        <div className="mt-5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_16%,transparent)] bg-[color-mix(in_oklab,var(--surface)_38%,transparent)] p-4 shadow-[inset_0_1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl">
           <p className="text-sm leading-relaxed text-[var(--text-primary)]">
             {signoA} y {signoB} tienen {compat.texto}.
           </p>
