@@ -1,5 +1,39 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, piloto de "vidrio esmerilado" en la tarjeta "Cuéntame tu situación" — EN CURSO, esperando aprobación para extenderlo)
+Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar)
+
+✅ CHECKPOINT — Vidrio esmerilado (glassmorphism) extendido a TODAS las tarjetas de Inicio,
+Lecturas y Bienestar, 2026-09-14, continuación aprobada del piloto anterior ("bien, ahora hazlo con
+las otras"). Mismo estilo en toda la app: fondo semi-transparente (`color-mix` con el color propio
+de cada tarjeta al 38%, o 68% para la única tarjeta dorada/brillante de Bienestar — "espacio" —
+donde bajar tanto la opacidad le quitaba contraste a su texto oscuro) + `backdrop-blur-xl` + borde
+sutil + un brillo fino arriba (`inset 0 1px 0 rgba(255,255,255,.2-.3)`), mismo lenguaje visual que
+ya usan los botones "vidrio/cromo".
+**Tocado**: Inicio (las 3 tarjetas de "Tu momento": Situación/Compatibilidad/Bienestar — ya venía del
+paso anterior, más la de "Cuéntame tu situación" de Lecturas). Lecturas: botón "Compatibilidad de
+signos" del menú, las 6 tarjetas de categoría ("¿De qué se trata tu duda?"), la tarjeta de resultado
+de una lectura (con y sin error), y las 2 tarjetas del resultado de compatibilidad. Bienestar: las 4
+categorías y la lista de prácticas de una categoría. NO se tocó: los botones CTA (`BotonPrincipal`,
+ya tienen su propio acabado de vidrio dorado de antes) ni la tarjeta de aviso de seguridad de
+Bienestar (se deja sólida a propósito, un aviso no debe suavizarse visualmente).
+⚠️ Nota real de depuración, por transparencia (no quedó ningún workaround ni bug en el código
+final): durante la verificación se topó dos veces con el mismo espejismo — recargar/navegar
+repetidamente a la fuerza la MISMA pestaña del navegador automatizado de prueba hacía que el
+difuminado se "filtrara" a toda la pantalla. Se investigó a fondo una segunda vez (con más tarjetas
+en juego esta vez, por si el número de tarjetas influía) probando `isolate`/`absolute`/z-index — nada
+de eso cambió el patrón real: en una pestaña NUEVA (como abre un usuario real) todo se ve perfecto
+SIEMPRE, sin importar cuántas tarjetas usen el efecto; y navegar DENTRO de la app (tocar un link o
+botón, sin recargar) nunca lo dispara — solo pasaba al forzar muchas cargas completas seguidas en la
+misma pestaña de prueba, algo que un usuario real no hace. Conclusión: es un artefacto de la
+herramienta de pruebas, no del código — `components/app/TemaMistico.tsx` terminó la sesión IDÉNTICO
+a como empezó (confirmado con `git diff`, cero cambios).
+Verificado de punta a punta en pestañas nuevas (nunca reusadas, para no toparse con el espejismo de
+arriba): Bienestar (4 categorías + lista de prácticas), Lecturas (menú, categorías, formulario →
+lectura completa con interpretación real de IA → tarjeta de resultado con el aviso de IA al pie,
+ambos con vidrio) — todo a 375px, buen contraste de texto en todas. tsc/build limpios. Usuarios de
+prueba borrados al terminar. Publicado.
+Pendiente si el usuario lo pide: el estilo de BOTONES de la referencia (sólidos/audaces, distinto del
+acabado vidrio/cromo actual) — se mencionó como parte del pedido original pero no se abordó todavía,
+solo el difuminado.
 
 ✅ CHECKPOINT — Piloto de "vidrio esmerilado" (glassmorphism) en la tarjeta "Cuéntame tu
 situación", 2026-09-14, a pedido del usuario con una imagen de referencia (app de comida: paneles
