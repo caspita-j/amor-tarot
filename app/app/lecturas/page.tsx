@@ -269,7 +269,7 @@ function LecturasContenido() {
         <button
           type="button"
           onClick={() => setModo('categoria')}
-          className="mt-5 flex w-full items-start gap-3.5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_14%,transparent)] bg-[color-mix(in_oklab,var(--accent-2)_55%,transparent)] p-4 text-left backdrop-blur-xl"
+          className="mt-5 flex w-full items-start gap-3.5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_20%,transparent)] bg-[color-mix(in_oklab,var(--accent-2)_38%,transparent)] p-4 text-left shadow-[inset_0_1px_0_rgb(255_255_255/0.3)] backdrop-blur-xl"
         >
           <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--bg)_55%,transparent)] backdrop-blur-sm">
             <MessageCircleHeart size={20} color="var(--text-primary)" />

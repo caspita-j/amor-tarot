@@ -244,7 +244,7 @@ export default function InicioPage() {
         <motion.div variants={item} className="mx-4 mt-2.5 flex flex-col gap-2.5">
           <Link
             href="/app/lecturas"
-            className="flex min-h-32 flex-col justify-between rounded-[var(--radius-card)] bg-[var(--accent-2)] p-4 shadow-[0_12px_26px_-12px_var(--accent-2)] transition-transform active:scale-[0.98]"
+            className="flex min-h-32 flex-col justify-between rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_20%,transparent)] bg-[color-mix(in_oklab,var(--accent-2)_38%,transparent)] p-4 shadow-[0_12px_26px_-12px_var(--accent-2),inset_0_1px_0_rgb(255_255_255/0.3)] backdrop-blur-xl transition-transform active:scale-[0.98]"
           >
             <div className="flex items-start justify-between gap-2">
               <span className="w-fit rounded-full bg-[var(--bg)] px-2 py-0.5 text-xs font-bold text-[var(--text-primary)]">
@@ -261,7 +261,7 @@ export default function InicioPage() {
           </Link>
           <Link
             href="/app/lecturas?ir=compatibilidad"
-            className="flex items-center gap-3 rounded-[var(--radius-card)] bg-[var(--accent-3)] px-3.5 py-3 shadow-[0_8px_18px_-12px_var(--accent-3)] transition-transform active:scale-[0.98]"
+            className="flex items-center gap-3 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_20%,transparent)] bg-[color-mix(in_oklab,var(--accent-3)_38%,transparent)] px-3.5 py-3 shadow-[0_8px_18px_-12px_var(--accent-3),inset_0_1px_0_rgb(255_255_255/0.3)] backdrop-blur-xl transition-transform active:scale-[0.98]"
           >
             <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--bg)]">
               <Sparkles size={16} strokeWidth={2} color="var(--text-primary)" aria-hidden="true" />
@@ -282,7 +282,7 @@ export default function InicioPage() {
           </Link>
           <Link
             href="/app/bienestar"
-            className="flex items-center gap-3 rounded-[var(--radius-card)] bg-[var(--surface)] px-3.5 py-3 transition-transform active:scale-[0.98]"
+            className="flex items-center gap-3 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_16%,transparent)] bg-[color-mix(in_oklab,var(--surface)_38%,transparent)] px-3.5 py-3 shadow-[inset_0_1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl transition-transform active:scale-[0.98]"
           >
             <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_oklab,var(--accent)_14%,transparent)]">
               <Leaf size={16} strokeWidth={2} color="var(--accent)" aria-hidden="true" />
