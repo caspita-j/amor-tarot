@@ -1,9 +1,23 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-13 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo bloqueado por límite de Resend — EN CURSO)
+Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta)
 
-⚠️ CHECKPOINT — Prueba real de login: código corregido a 8 dígitos, pero el envío de correo está
-BLOQUEADO por Resend, 2026-09-13. El usuario pidió probar de punta a punta si podía entrar fácil a
-la app. Aparecieron 3 hallazgos:
+✅ CHECKPOINT — Aviso de IA en Lecturas movido dentro de la tarjeta, 2026-09-14, a pedido del
+usuario ("¿este mensaje lo podemos obviar?", refiriéndose a "Generado por IA — puede no ser exacto.
+No sustituye consejo profesional."). Se le explicó que es el disclaimer legal obligatorio (doctrina
+`47-LEGAL-FISCAL-Y-PRIVACIDAD.md`) y que quitarlo del todo es un riesgo real — el usuario eligió
+"hacerlo más discreto" en vez de eliminarlo. `app/app/lecturas/page.tsx`: el aviso pasó de ser un
+párrafo suelto flotando sobre el fondo oscuro (con la textura de estrellas del tema místico detrás,
+por eso se veía tan aislado) a una nota al pie DENTRO de la tarjeta del resumen, separada por una
+línea divisoria fina — mismo patrón de "letra chica de tarjeta", visible pero ya no protagonista.
+Sigue cumpliendo el requisito legal (visible donde se usa la IA), solo cambió de lugar/peso visual.
+Verificado con un usuario de prueba real, flujo completo (categoría → formulario → 3 cartas →
+interpretación de IA completa) a 375px: el aviso se ve integrado al pie de la tarjeta, con buen
+contraste. tsc/build limpios. Usuario de prueba borrado al terminar. Sin revisor-visual (pantalla ya
+aprobada, ajuste menor de un elemento secundario, no de las 4 pantallas del dinero).
+
+⚠️ CHECKPOINT — Prueba real de login: código corregido a 8 dígitos, envío de correo confirmado sano,
+2026-09-13. El usuario pidió probar de punta a punta si podía entrar fácil a la app. Aparecieron 3
+hallazgos:
 1. **Enlace mágico abierto desde OTRO dispositivo/navegador vuelve al login sin entrar** — no es un
    bug, es el comportamiento esperado de Supabase (el código ya lo explica en su propio comentario):
    el enlace solo puede completarse en el mismo navegador donde se pidió, por eso existe el código
@@ -15,21 +29,25 @@ la app. Aparecieron 3 hallazgos:
    literalmente no se podía escribir completo — si a alguien le fallaba el enlace, tampoco podía
    entrar con el código. Corregido en `app/login/page.tsx` (input, validación, botón, texto) y el
    comentario de `app/auth/callback/route.ts`. Probado el código real del usuario directo contra
-   Supabase: entra sin problema. tsc/build limpios. **Falta: hacer commit** (los archivos quedaron
-   editados en el árbol de trabajo).
-3. **Justo al intentar probar el fix con la app real, dejaron de llegar correos**: Supabase devuelve
-   un error real de envío (no es el límite de "1 correo por minuto" que ya se había configurado antes
-   — se esperó de sobra y siguió fallando). La causa más probable es que la cuenta gratis de Resend
-   (100 correos/día) se agotó por la cantidad de pruebas de HOY. **No tengo acceso al panel de
-   Resend** — el usuario necesita entrar a resend.com → su cuenta → "Emails" y revisar si hay
-   rebotes/errores de cuota, o simplemente esperar a que se reinicie el límite diario.
+   Supabase: entra sin problema. tsc/build limpios. Commiteado y publicado (`0b33b08`).
+3. **RESUELTO — no era límite de cuota.** El correo dejó de salir en un momento puntual mientras se
+   probaba con un usuario de prueba de mentira (`...@example.com`). Se confirmó la causa EXACTA leyendo
+   el registro real de Supabase (`auth_logs`, sin adivinar): Resend RECHAZA a propósito cualquier envío
+   a dominios reservados de prueba como `example.com` ("Invalid `to` field... use our testing email
+   address instead of domains like example.com") — es una protección de Resend, no un problema de la
+   cuenta ni de cuota. El panel de Resend confirmó por separado que solo se habían mandado 6 correos
+   en total ese día, todos "Delivered", cero rebotes. Se probó mandar un código a una dirección real
+   (`@gmail.com` de prueba) justo después y salió bien (200 OK). El límite de envíos por hora de
+   Supabase también se había subido de 2/hora (el default, muy bajo) a 30/hora en esta misma sesión, así
+   que tampoco es eso. **Conclusión: el envío de correos a direcciones reales funciona bien ahora
+   mismo** — no hay nada más que arreglar de este lado. Los 2 usuarios de prueba (`test-codigo8-...` y
+   `verif-directo-...`) se borraron al terminar.
 4. Reportado también que el avatar de Gravatar no se veía en un correo — contradice la verificación
    de ayer (la imagen sí respondía bien desde la API pública de Gravatar). Puede ser solo caché de
-   Gmail o un correo de antes del arreglo. Sin confirmar todavía, queda pendiente revisar de nuevo
-   una vez el envío de correos vuelva a funcionar.
-**Próximo paso**: 1) que el usuario revise Resend o espere el reinicio de cuota, 2) commitear el
-arreglo de 6→8 dígitos, 3) volver a probar el login completo (enlace + código) con la app real ya
-funcionando, 4) revisar de nuevo el tema del avatar.
+   Gmail o un correo de antes del arreglo. Sin confirmar todavía, queda pendiente revisar de nuevo.
+**Próximo paso**: que el usuario pida el enlace/código de nuevo desde la app real y esta vez entre
+con el CÓDIGO (no el enlace, si está en otro dispositivo) para confirmar que todo el flujo funciona
+de punta a punta; después revisar de nuevo el tema del avatar.
 
 ✅ CHECKPOINT — Correo de contacto legal actualizado, 2026-09-12. A pedido explícito del usuario,
 tras desbloquearse con lo de ImprovMX de este mismo día. Reemplazado `jonathanrd198@gmail.com` →
