@@ -1,6 +1,29 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar)
+Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas)
 
+✅ CHECKPOINT — Botón "deslizar para activar" en "Activar el hechizo de mis 3 cartas", 2026-09-14,
+a pedido del usuario con referencia de un CTA de onboarding (perilla circular con flecha que se
+arrastra a la derecha, llenando una barra de progreso). Pidió explícitamente mantener el acabado
+actual del botón (vidrio/cromo dorado) y solo agregar la perilla + el gesto de deslizar.
+Nuevo componente `components/app/BotonDeslizar.tsx`: misma píldora `.boton-principal` de siempre +
+una perilla circular arrastrable (Framer Motion, `drag="x"` con límites medidos por `ResizeObserver`)
+que llena una barra de progreso detrás de ella a medida que avanza; al soltar pasado el 70% del
+recorrido, se anima hasta el final y dispara la acción — si se suelta antes, vuelve al inicio con un
+resorte. Conectado SOLO en el botón de "Sacar mis 3 cartas" (`app/app/lecturas/page.tsx`) — no
+reemplaza `BotonPrincipal` en el resto de la app (paywall/onboarding/los demás CTA no se tocaron).
+**Accesibilidad (regla dura de UX, "todo gesto necesita fallback por tap")**: todo el texto del botón
+sigue siendo un `<button>` normal — un tap/clic en cualquier parte, o Enter/Espacio con teclado,
+activa la acción YA MISMO, sin tener que descubrir ni completar el arrastre. La perilla es un
+affordance adicional, no la única forma de usar el botón.
+Verificado con un usuario de prueba real a 375px: la perilla y la barra de relleno se ven
+correctamente sobre el degradé dorado existente; el tap de respaldo funciona de punta a punta (activa
+la lectura, revela las 3 cartas, genera la interpretación real de IA). tsc/build limpios.
+⚠️ El arrastre en sí (mover la perilla con el dedo/mouse) NO se pudo probar de forma concluyente con
+la herramienta de automatización de este entorno (el simulador de arrastre no logra disparar el
+gesto de Framer Motion de forma confiable) — la lógica está implementada con el patrón estándar de la
+librería (la misma que ya usa toda la app para animaciones), así que se espera que funcione bien en un
+dispositivo real, pero queda pendiente que el usuario lo confirme deslizando con el dedo en su
+celular. Usuario de prueba borrado al terminar.
 ✅ CHECKPOINT — Vidrio esmerilado (glassmorphism) extendido a TODAS las tarjetas de Inicio,
 Lecturas y Bienestar, 2026-09-14, continuación aprobada del piloto anterior ("bien, ahora hazlo con
 las otras"). Mismo estilo en toda la app: fondo semi-transparente (`color-mix` con el color propio
