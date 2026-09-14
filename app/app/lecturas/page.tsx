@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Briefcase, Heart, HeartHandshake, ImagePlus, MessageCircleHeart, Scale, Sparkles, Users, X } from 'lucide-react';
 import { AnimacionCartas } from '@/components/app/AnimacionCartas';
 import { AnilloCompatibilidad } from '@/components/app/AnilloCompatibilidad';
+import { BotonDeslizar } from '@/components/app/BotonDeslizar';
 import { TemaMistico } from '@/components/app/TemaMistico';
 import { BotonPrincipal, TarjetaTarot } from '@/components/onboarding/ui';
 import {
@@ -408,9 +409,9 @@ function LecturasContenido() {
         <input ref={inputFotoRef} type="file" accept="image/*" multiple onChange={agregarFotos} className="sr-only" />
 
         <div className="mt-auto pt-8">
-          <BotonPrincipal disabled={!situacion.trim()} onClick={sacarLectura}>
+          <BotonDeslizar disabled={!situacion.trim()} onCompletar={sacarLectura}>
             Activar el hechizo de mis 3 cartas
-          </BotonPrincipal>
+          </BotonDeslizar>
         </div>
       </div>
     );
