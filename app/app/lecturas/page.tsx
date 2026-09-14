@@ -39,6 +39,19 @@ const ICONO_CATEGORIA: Record<Categoria, typeof Heart> = {
   otro: Sparkles,
 };
 
+// Un color distinto por categoría (a pedido del usuario, "que no se vean tan
+// simples") — reutiliza los acentos YA aprobados del tema místico, nunca hex
+// nuevos. "otro" combina dos acentos porque la paleta solo tiene 5 notas
+// distintas para 6 categorías.
+const COLOR_CATEGORIA: Record<Categoria, string> = {
+  pareja: 'var(--accent-4)',
+  trabajo: 'var(--accent-2)',
+  familia: 'var(--accent-3)',
+  amistad: 'var(--accent-frio)',
+  decision: 'var(--accent)',
+  otro: 'color-mix(in oklab, var(--accent-4) 45%, var(--accent-frio))',
+};
+
 function tituloSituacion(categoria: Categoria, nombreOtra: string): string {
   if (pideOtraPersona(categoria) && nombreOtra.trim()) return `¿Qué está pasando con ${nombreOtra.trim()}?`;
   switch (categoria) {
@@ -317,15 +330,20 @@ function LecturasContenido() {
         <div className="mt-5 grid grid-cols-2 gap-2.5">
           {CATEGORIAS.map(({ id, label }) => {
             const Icono = ICONO_CATEGORIA[id];
+            const color = COLOR_CATEGORIA[id];
             return (
               <button
                 key={id}
                 type="button"
                 onClick={() => elegirCategoria(id)}
-                className="flex flex-col items-start gap-2.5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_16%,transparent)] bg-[color-mix(in_oklab,var(--surface)_38%,transparent)] p-4 text-left shadow-[inset_0_1px_0_rgb(255_255_255/0.2)] backdrop-blur-xl"
+                className="flex flex-col items-start gap-2.5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_20%,transparent)] p-4 text-left backdrop-blur-xl transition-[filter,transform] duration-200 hover:-translate-y-0.5 hover:brightness-90 active:translate-y-0 active:scale-[0.97]"
+                style={{
+                  backgroundImage: `linear-gradient(165deg, color-mix(in oklab, white 22%, ${color}) 0%, color-mix(in oklab, ${color} 46%, transparent) 60%, color-mix(in oklab, black 18%, ${color}) 100%)`,
+                  boxShadow: `inset 0 1px 0 rgb(255 255 255 / 0.3), 0 12px 26px -14px ${color}`,
+                }}
               >
-                <span className="flex size-9 items-center justify-center rounded-full bg-[var(--chip-bg)]">
-                  <Icono size={17} color="var(--accent)" aria-hidden="true" />
+                <span className="flex size-11 items-center justify-center rounded-full bg-[var(--bg)]">
+                  <Icono size={20} color={color} aria-hidden="true" />
                 </span>
                 <span className="text-sm font-bold [font-family:var(--font-display)]">{label}</span>
               </button>
