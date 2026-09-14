@@ -34,7 +34,9 @@
   --accent-3: #abdbf7;         /* 3ª nota — tarjetas de categoría (azul de la ficha) */
   --accent-4: #f6a8dc;         /* 4ª nota — tarjetas de categoría (rosa de la ficha) */
   --accent-4-ink: #6b2c57;     /* texto/ícono con contraste AA sobre --accent-4 */
-  --nav-bg: #15111f;           /* píldora del nav inferior de la app interna (FICHA-ARTE §detalle firma) */
+  --nav-bg: #4a2f18;           /* píldora del nav inferior de la app interna — ámbar oscuro (mismo tono
+                                   que --accent-2 del tema místico), para que resalte sobre el fondo
+                                   casi negro de la app en vez de fundirse con él (FICHA-ARTE §detalle firma) */
   --nav-icon: #7a7492;         /* ícono inactivo del nav inferior */
   --danger: #c0392b;           /* mensajes de error (login, formularios) — AA sobre --bg y --surface */
 

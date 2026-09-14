@@ -1,5 +1,27 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta)
+Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar)
+
+✅ CHECKPOINT — Píldora del nav inferior en ámbar oscuro (antes negro), 2026-09-14, a pedido del
+usuario, con una imagen de referencia (nav de una app de música: píldora oscura que SÍ se distingue
+del fondo, ítem activo en círculo claro). El usuario aclaró explícitamente que no quería copiar el
+color exacto de la referencia, sino lograr el mismo efecto de contraste **usando la paleta ya
+aprobada de la app**, y mantener el círculo activo blanco tal como está.
+Diagnóstico: `--nav-bg` (el color de la píldora) es un token FIJO en el `:root` global —
+intencionalmente el mismo en cualquier pantalla (no se re-define dentro de `[data-tema='mistico']`,
+por eso el círculo activo también sigue usando el `--bg` blanco global aunque la página esté en modo
+oscuro — comportamiento preexistente, documentado en un checkpoint anterior). Su valor original,
+`#15111f` (casi negro), quedaba casi idéntico al fondo real de las pantallas del tema místico
+(`#0e0b17`) — de ahí que "no llamara la atención".
+Cambiado a `#4a2f18` (`components/landing/tokens.css`) — el mismo tono exacto que ya usa
+`--accent-2` (ámbar oscuro) dentro del tema místico, así que no es un color nuevo, es reutilizar uno
+ya aprobado en la ficha. `components/app/VideoCartaDelDia.tsx` reutiliza este mismo token para el
+marco del video (por diseño, "mismo tono que la píldora") — cambió en conjunto, efecto esperado y
+correcto, no un efecto secundario a corregir. `FICHA-ARTE.md` actualizada con la evolución.
+Verificado con un usuario de prueba real a 375px en Inicio: la píldora ahora se distingue claramente
+del fondo oscuro, el círculo activo sigue blanco con el ícono oscuro adentro, los íconos inactivos
+(corazones, luna, infinito) se siguen leyendo bien sobre el nuevo tono. tsc/build limpios. Usuario de
+prueba borrado al terminar. Sin revisor-visual (ajuste de un token de color en un elemento ya
+aprobado, no una pantalla nueva).
 
 ✅ CHECKPOINT — Aviso de IA en Lecturas movido dentro de la tarjeta, 2026-09-14, a pedido del
 usuario ("¿este mensaje lo podemos obviar?", refiriéndose a "Generado por IA — puede no ser exacto.

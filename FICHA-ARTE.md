@@ -12,7 +12,11 @@
   - Sombras: sutiles, tintadas del color de cada tarjeta · Bordes: ninguno, tarjetas de color plano
   - Textura/gradiente: ninguna en las tarjetas base; ilustraciones 3D tipo "clay" flotando dentro del héroe
   - Layout: hero card + grid de tarjetas de categoría + nav inferior en píldora oscura con ítem activo en círculo blanco
-  - Detalle firma a replicar: objetos 3D flotantes dentro de la tarjeta principal + nav inferior en píldora negra con círculo activo
+  - Detalle firma a replicar: objetos 3D flotantes dentro de la tarjeta principal + nav inferior en píldora oscura con círculo activo
+  - ⚠️ EVOLUCIÓN 2026-09-14 (a pedido del usuario, decisión vigente): la píldora del nav pasó de negro
+    puro (#15111f, se fundía con el fondo místico casi negro de la app) a ámbar oscuro (#4a2f18, mismo
+    tono que --accent-2 del tema místico) — para que resalte sobre el fondo en vez de desaparecer en
+    él. El círculo activo blanco NO cambió. Token: `--nav-bg` en `components/landing/tokens.css`.
 - Prohibiciones anti-IA que la referencia LEVANTA: ninguna — la referencia ya es clara/cálida/multicolor, coincide con la Regla 2 (evitar oscuro+neón por defecto)
 
 ## Personalidad compilada
