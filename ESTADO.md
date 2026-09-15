@@ -1,5 +1,5 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-15 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" corregido por el usuario y verificado técnicamente — falta 1 confirmación visual (ver Problemas conocidos), signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema)
+Última actualización: 2026-09-15 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema)
 
 ✅ CHECKPOINT — Círculos de "Esta semana" (tira bajo la Carta del día) en blanco/crema, 2026-09-15,
 a pedido del usuario ("ese color se ve opaco... cambia el círculo a color blanco"). Mismo bug que el
@@ -87,10 +87,14 @@ link or OTP"), con el mismo botón dorado (`{{ .ConfirmationURL }}`) + el códig
 (`{{ .Token }}`) + aviso de "si no fuiste tú, ignora este correo". Paleta CLARA (no el tema místico
 oscuro de la app) a propósito, por compatibilidad de clientes de correo — igual que probablemente ya
 hace la plantilla de Magic Link, dado que ese correo YA se veía bien en las pruebas de hoy.
-**Pendiente**: que el usuario pegue y guarde la plantilla; después probar con un usuario 100% nuevo
-(nunca antes creado) y confirmar en `auth_logs` que el `mail.send` de un `user_confirmation_requested`
-ya sale con la marca — antes de esto, NO declarar el login "listo para vender" (ver Problemas
-conocidos).
+**CERRADO el mismo día**: el usuario pegó el asunto ("Confirma tu correo y entra a Amor & Tarot") y
+el HTML de marca en "Confirm signup" y guardó (se le guió paso a paso porque casi guarda el asunto
+en la plantilla equivocada — "Magic link or OTP" — pero se detectó a tiempo por el breadcrumb y se
+descartó ese cambio antes de guardar, sin daño). Se probó con un usuario 100% nuevo
+(`signInWithOtp` real, `jonathanrd198+confirmfix...@gmail.com`): Supabase respondió 200 sin error
+(antes daba 500) y `auth_logs` confirmó `user_confirmation_requested`. El usuario mandó el screenshot
+del correo real recibido en Gmail: marca correcta, botón dorado "Confirmar mi correo y entrar", y
+el código de 8 dígitos, todo en español — **confirmado visualmente, bug cerrado**.
 
 ✅ CHECKPOINT — Acabado 3D en las tarjetas de Historial, 2026-09-14, a pedido del usuario ("se ven
 muy planos y sencillos... como los de la [imagen de las categorías de Lecturas]"). Mismo lenguaje
@@ -1483,24 +1487,6 @@ presionar ni asustar."
 - Sesión 8: Adquisición y lanzamiento
 
 ## Problemas conocidos ⚠️
-- **BUG del correo de "primera vez" (Confirm signup) — CASI CERRADO, falta 1 confirmación visual**:
-  a cualquier persona que probara la app por PRIMERA VEZ con un correo nunca antes usado le llegaba el
-  correo genérico de Supabase en inglés ("Confirm your email address"), sin marca y sin código — no el
-  correo bonito de "Magic link or OTP" (esa sí se había personalizado en la sesión de EMAILS; la de
-  "Confirm signup", que es la que usa un usuario NUEVO, nunca se había tocado). Causa confirmada con
-  `auth_logs` (acción `user_confirmation_requested`) + documentación oficial de Supabase.
-  **Ya resuelto por el usuario**: pegó el asunto ("Confirma tu correo y entra a Amor & Tarot") y el
-  HTML de marca (botón dorado + `{{ .Token }}`) en Supabase → Authentication → Emails → Templates →
-  "Confirm signup", y guardó. Se guió paso a paso porque en el camino el usuario casi guarda el cambio
-  de asunto en la plantilla EQUIVOCADA ("Magic link or OTP", la que ya funcionaba) — se detectó a
-  tiempo por el breadcrumb de la pantalla y se descartó ese cambio antes de guardar, sin daño.
-  **Verificado por mi lado**: disparé un `signInWithOtp` real a una dirección 100% nueva
-  (`jonathanrd198+confirmfix...@gmail.com`, alias de Gmail del usuario) — Supabase respondió 200 sin
-  ningún error (antes del fix daba 500), y `auth_logs` confirma que se trató como
-  `user_confirmation_requested` (el camino correcto a probar). Usuario de prueba borrado al terminar.
-  ⚠️ Lo único que falta: el usuario nunca confirmó VISUALMENTE que el correo que le llegó a su Gmail
-  se ve bien (asunto correcto + botón dorado + código) — se distrajo con otro pedido antes de
-  contestar esa pregunta. Preguntarle apenas se retome el tema de correos.
 - FICHA-MERCADO.md tiene campos "NO ENCONTRADO" (medios de pago LATAM, conversión típica) — se
   completan al elegir pasarela en Sesión 6, no bloquean nada hasta ahí
 - garantía / FICHA-MERCADO: "la Garantía de los 7 Días" está PROVISIONAL — al elegir la pasarela real
