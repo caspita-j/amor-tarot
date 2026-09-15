@@ -25,6 +25,13 @@ terminar. Sin revisor-visual (pantallas secundarias, mismo patrón ya validado h
 de la lista (la que muestra fecha, categoría, las 3 cartas y el resumen) — se agregó el mismo vidrio
 esmerilado neutro. Verificado con un usuario de prueba con 1 lectura real guardada. tsc/build
 limpios.
+**2ª corrección el mismo día**: el usuario reportó que el texto de "Así funciona tu Historial" seguía
+sin leerse bien (el ajuste anterior solo había bajado la intensidad del fondo, no cambiado el color
+del texto). Causa real: el texto claro (`--text-secondary`/`--accent`) está pensado para fondos
+oscuros, y esta tarjeta ahora tiene fondo dorado claro. Se cambió todo el texto de la tarjeta a
+oscuro (`--bg`), igual que ya usa correctamente "Tu semana en resumen" sobre el mismo dorado; el
+botón "Entendido" se subrayó para que se siga leyendo como acción al perder su color distintivo.
+Verificado con un usuario de prueba real: buen contraste. tsc/build limpios.
 
 ✅ CHECKPOINT — Color propio + acabado 3D + hover en las 6 tarjetas de categoría de Lecturas
 ("¿De qué se trata tu duda?"), 2026-09-14, a pedido del usuario ("no se vean tan simples... cada
