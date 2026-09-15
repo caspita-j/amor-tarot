@@ -60,24 +60,29 @@ function IntroHistorial({ onCerrar }: { onCerrar: () => void }) {
       }}
     >
       <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-bold [font-family:var(--font-display)]">Así funciona tu Historial</p>
-        <button type="button" onClick={onCerrar} aria-label="Cerrar" className="shrink-0 text-[var(--text-secondary)]">
+        <p className="text-sm font-bold text-[var(--bg)] [font-family:var(--font-display)]">Así funciona tu Historial</p>
+        <button
+          type="button"
+          onClick={onCerrar}
+          aria-label="Cerrar"
+          className="shrink-0 text-[color-mix(in_oklab,var(--bg)_65%,transparent)]"
+        >
           <X size={16} aria-hidden="true" />
         </button>
       </div>
-      <ul className="mt-2.5 flex flex-col gap-2 text-sm leading-relaxed text-[var(--text-secondary)]">
+      <ul className="mt-2.5 flex flex-col gap-2 text-sm leading-relaxed text-[color-mix(in_oklab,var(--bg)_78%,transparent)]">
         <li>Acá va quedando cada lectura que guardes, con su fecha y su categoría.</li>
         <li>
-          Cada semana armamos <strong className="font-bold text-[var(--text-primary)]">Tu semana en resumen</strong>,
-          con tu ánimo y tus lecturas juntos.
+          Cada semana armamos <strong className="font-bold text-[var(--bg)]">Tu semana en resumen</strong>, con tu
+          ánimo y tus lecturas juntos.
         </li>
         <li>
           Si tienes 3 o más lecturas sobre lo mismo, va a aparecer{' '}
-          <strong className="font-bold text-[var(--text-primary)]">Tu avance</strong> — te muestra cómo se movió esa
-          situación real, con honestidad (nunca "todo mejora" porque sí).
+          <strong className="font-bold text-[var(--bg)]">Tu avance</strong> — te muestra cómo se movió esa situación
+          real, con honestidad (nunca "todo mejora" porque sí).
         </li>
       </ul>
-      <button type="button" onClick={onCerrar} className="mt-3 text-sm font-bold text-[var(--accent)]">
+      <button type="button" onClick={onCerrar} className="mt-3 text-sm font-bold text-[var(--bg)] underline underline-offset-2">
         Entendido
       </button>
     </div>
