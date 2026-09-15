@@ -1,5 +1,33 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-15 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG encontrado — correo de "primera vez" (Confirm signup) sin marcar, en espera de que el usuario pegue la plantilla en Supabase — ver Problemas conocidos)
+Última actualización: 2026-09-15 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" corregido por el usuario y verificado técnicamente — falta 1 confirmación visual (ver Problemas conocidos), signo zodiacal opcional de la otra persona enriquece la lectura con IA)
+
+✅ CHECKPOINT — Signo zodiacal opcional enriquece la lectura de IA, 2026-09-15, a pedido del usuario
+("que la IA tenga más contexto... signo zodiacal tanto de la persona que quiere saber como el de
+él"). Se le presentaron 2 hallazgos antes de construir nada: (1) el signo PROPIO ya se pregunta en el
+onboarding y vive en `profiles.signo` — pedirlo de nuevo en cada lectura sería fricción repetida sin
+necesidad; (2) el `otra_persona_signo` del onboarding es de UNA sola persona (la del registro), no
+sirve para una lectura nueva sobre alguien distinto. Se le preguntó al usuario si quería fechas de
+nacimiento + signos (como lo describió originalmente) o solo signo — eligió **solo signo** (mi
+recomendación): la IA no necesita más precisión que el signo, y pedir la fecha de nacimiento de un
+TERCERO que ni dio permiso es un dato sensible de más sin beneficio real.
+**Implementado**: en categorías relacionales (Pareja/Familia/Amistad, donde ya se pregunta "¿con
+quién es tu situación?"), justo debajo aparece "¿Sabes su signo? (opcional)" con el mismo selector
+visual de chips con imagen que ya usa Compatibilidad (`SIGNOS`/`imagenSigno`/`SignoChip`, cero
+componentes nuevos) — tocar un signo ya seleccionado lo quita, no hace falta un botón de "no sé"
+aparte. El signo propio se trae SIEMPRE del lado del SERVIDOR (`app/api/lectura/route.ts` consulta
+`profiles.signo`, nunca confía en lo que mande el cliente); el signo de la otra persona si viaja del
+cliente, validado con Zod contra la lista real de signos. Ambos se inyectan al prompt de la IA con
+una regla de voz nueva y explícita: usarlos como matiz sutil y ocasional, JAMÁS como eje de la
+lectura ni para escribir un horóscopo genérico — las 3 cartas siguen mandando.
+Limpieza de paso: `NO_SE_SIGNO` (el valor de "no estoy seguro/a de su signo") vivía duplicado en
+`app/onboarding/page.tsx`; se movió la fuente compartida a `lib/zodiaco.ts` para el nuevo código,
+sin tocar el onboarding existente (mismo valor de string, cero riesgo de regresión).
+Verificado con un usuario de prueba real (signo propio "Leo" puesto a mano en su perfil): el
+selector aparece solo en categorías relacionales, se ve bien a 375px, y la lectura generada
+mencionó con naturalidad "Tu Leo interior, que suele necesitar reconocimiento claro..." — matiz
+real, no un horóscopo pegado con calzador; las 3 cartas siguieron siendo el eje del texto. tsc/build
+limpios. Usuario de prueba borrado al terminar. Sin revisor-visual (no es pantalla nueva, es un campo
+opcional agregado a un formulario ya aprobado).
 
 ⚠️ CHECKPOINT — BUG REAL encontrado: el correo de "primera vez" (usuario nuevo) no tiene la marca ni
 el código, 2026-09-15. El usuario reportó (con captura, y confirmando que le pasó lo mismo a un
@@ -1422,18 +1450,24 @@ presionar ni asustar."
 - Sesión 8: Adquisición y lanzamiento
 
 ## Problemas conocidos ⚠️
-- **BUG REAL, ACTIVO AHORA MISMO, esperando que el usuario haga un cambio en el panel de Supabase**:
-  a cualquier persona que pruebe la app por PRIMERA VEZ con un correo nunca antes usado le llega el
-  correo genérico de Supabase en inglés ("Confirm your email address"), sin marca y sin el código de
-  8 dígitos — no el correo bonito que armamos. Causa confirmada con el registro real de Supabase
-  (`auth_logs`, acción `user_confirmation_requested`, no `user_recovery_requested`): Supabase usa una
-  plantilla de correo DISTINTA para "primera vez" (Confirm signup) que para "ya tiene cuenta" (Magic
-  Link/OTP) — solo se personalizó esta última en la sesión de EMAILS. Se le dieron al usuario, en el
-  chat, el asunto y el HTML exactos para pegar en Supabase → Authentication → Emails → Templates →
-  "Confirm signup" (mismo lugar donde ya editó "Magic link or OTP"). Sin acceso de código/MCP para
-  hacer este cambio yo mismo — es un ajuste de panel, no de repo. Pendiente: que el usuario lo pegue y
-  guarde; después probar con un usuario nuevo real y confirmar en `auth_logs` que el `mail.send` de un
-  `user_confirmation_requested` ya sale con la marca.
+- **BUG del correo de "primera vez" (Confirm signup) — CASI CERRADO, falta 1 confirmación visual**:
+  a cualquier persona que probara la app por PRIMERA VEZ con un correo nunca antes usado le llegaba el
+  correo genérico de Supabase en inglés ("Confirm your email address"), sin marca y sin código — no el
+  correo bonito de "Magic link or OTP" (esa sí se había personalizado en la sesión de EMAILS; la de
+  "Confirm signup", que es la que usa un usuario NUEVO, nunca se había tocado). Causa confirmada con
+  `auth_logs` (acción `user_confirmation_requested`) + documentación oficial de Supabase.
+  **Ya resuelto por el usuario**: pegó el asunto ("Confirma tu correo y entra a Amor & Tarot") y el
+  HTML de marca (botón dorado + `{{ .Token }}`) en Supabase → Authentication → Emails → Templates →
+  "Confirm signup", y guardó. Se guió paso a paso porque en el camino el usuario casi guarda el cambio
+  de asunto en la plantilla EQUIVOCADA ("Magic link or OTP", la que ya funcionaba) — se detectó a
+  tiempo por el breadcrumb de la pantalla y se descartó ese cambio antes de guardar, sin daño.
+  **Verificado por mi lado**: disparé un `signInWithOtp` real a una dirección 100% nueva
+  (`jonathanrd198+confirmfix...@gmail.com`, alias de Gmail del usuario) — Supabase respondió 200 sin
+  ningún error (antes del fix daba 500), y `auth_logs` confirma que se trató como
+  `user_confirmation_requested` (el camino correcto a probar). Usuario de prueba borrado al terminar.
+  ⚠️ Lo único que falta: el usuario nunca confirmó VISUALMENTE que el correo que le llegó a su Gmail
+  se ve bien (asunto correcto + botón dorado + código) — se distrajo con otro pedido antes de
+  contestar esa pregunta. Preguntarle apenas se retome el tema de correos.
 - FICHA-MERCADO.md tiene campos "NO ENCONTRADO" (medios de pago LATAM, conversión típica) — se
   completan al elegir pasarela en Sesión 6, no bloquean nada hasta ahí
 - garantía / FICHA-MERCADO: "la Garantía de los 7 Días" está PROVISIONAL — al elegir la pasarela real
