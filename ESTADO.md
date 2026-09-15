@@ -1,5 +1,26 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover)
+Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial)
+
+✅ CHECKPOINT — Acabado 3D en las tarjetas de Historial, 2026-09-14, a pedido del usuario ("se ven
+muy planos y sencillos... como los de la [imagen de las categorías de Lecturas]"). Mismo lenguaje
+que ya se aplicó hoy en Lecturas: degradé propio (claro arriba → oscuro abajo) + sombra tintada +
+brillo superior, en `app/app/historial/page.tsx`:
+- **"Así funciona tu Historial"** (tarjeta de introducción): pasó de un wash plano de `--chip-bg` a
+  vidrio esmerilado dorado con degradé — a menor intensidad que las demás (ver nota de abajo).
+- **"Tu semana en resumen"**: es la tarjeta HERO (fondo dorado sólido a propósito, con texto oscuro
+  encima) — se le agregó el degradé + brillo 3D pero se mantuvo OPACA (no se volvió vidrio), porque
+  perder opacidad le habría quitado el contraste fuerte que necesita su texto oscuro.
+- **"Tu avance en [categoría]"**: pasó de `--surface` plano al mismo vidrio esmerilado neutro que ya
+  usan sus pares (Lecturas/Bienestar).
+⚠️ AJUSTE hecho en el camino, antes de publicar: el primer intento de "Así funciona tu Historial"
+usó la misma intensidad de degradé que la tarjeta hero — quedó demasiado clara/dorada y el texto
+secundario (lila claro, pensado para fondos oscuros) perdía contraste. Se bajó la intensidad del
+degradé (de 22%/42%/18% a 12%/28%/12%) antes de publicar, dejando el texto legible sin perder el
+efecto 3D.
+Verificado con un usuario de prueba real con datos sembrados a propósito (1 ánimo + 3 lecturas de la
+misma categoría, esta semana) para poder ver las 3 tarjetas completas, no solo la de introducción:
+las 3 se ven con buen contraste a 375px. tsc/build limpios. Usuario y datos de prueba borrados al
+terminar. Sin revisor-visual (pantallas secundarias, mismo patrón ya validado hoy en Lecturas).
 
 ✅ CHECKPOINT — Color propio + acabado 3D + hover en las 6 tarjetas de categoría de Lecturas
 ("¿De qué se trata tu duda?"), 2026-09-14, a pedido del usuario ("no se vean tan simples... cada
