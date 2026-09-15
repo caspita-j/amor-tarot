@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Página de ventas — 3 estilos A/B/C · Amor &amp; Tarot</title>
+
+<!-- ============================================================================
+  PROTOCOLO A/B/C (54-BANCO-DE-DIRECCIONES.md) — rediseño de la PÁGINA DE VENTAS.
+  Caso CON REFERENCIA del usuario (captura de la app de astrología "Soulra":
+  fondo casi negro, acento dorado, bento de tarjetas de color, símbolo de carta
+  astral). La referencia es CONTRATO: las 3 opciones la cumplen.
+  Paleta y tipografía NO divergen (las fija el contrato + pedido explícito del
+  usuario de usar la paleta mística ya aprobada de la app). La divergencia
+  obligatoria va en los ejes 2 y 4: COMPOSICIÓN y DISPOSITIVO OWNABLE.
+  Copy real, trazable a FICHA-AVATAR.md / docs/copy/landing.md — cero lorem.
+============================================================================= -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Mulish:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* ══════════════════════════════════════════════════════════════════════
+     SHELL de la comparativa (neutro — no compite con las opciones)
+     ══════════════════════════════════════════════════════════════════════ */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background:
+      radial-gradient(120% 70% at 50% -10%, #2a2340 0%, transparent 55%),
+      radial-gradient(90% 50% at 90% 110%, #1b2b38 0%, transparent 55%),
+      #121019;
+    color: #efe9f5;
+    font-family: 'Mulish', system-ui, sans-serif;
+    padding: 40px 20px 72px;
+  }
+
+  .cabecera { max-width: 1240px; margin: 0 auto 8px; }
+  .cabecera .kicker {
+    font-size: 11.5px; font-weight: 800; letter-spacing: .16em;
+    color: #d8b25f; text-transform: uppercase;
+  }
+  .cabecera h1 {
+    margin-top: 8px; font-size: 30px; font-weight: 700; letter-spacing: -.01em;
+    font-family: 'Cormorant Garamond', monospace;
+  }
+  .cabecera p.sub { margin-top: 8px; font-size: 14.5px; color: #b6aecb; max-width: 74ch; line-height: 1.55; }
+
+  .salidas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .salidas span {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid rgb(216 178 95 / .3); border-radius: 999px;
+    padding: 7px 13px; font-size: 12.5px; font-weight: 600; color: #cfc6e0;
+    background: rgb(216 178 95 / .07);
+  }
+  .salidas b { color: #f4ecd8; }
+  .aviso { max-width: 1240px; margin: 14px auto 34px; font-size: 12.5px; color: #8b8098; }
+
+  .opciones {
+    max-width: 1240px; margin: 0 auto; display: grid; gap: 34px;
+    grid-template-columns: repeat(auto-fit, minmax(348px, 1fr));
+    align-items: start;
+  }
+  .opcion { display: flex; flex-direction: column; gap: 18px; }
+
+  /* ── Panel meta de cada opción ── */
+  .meta {
+    background: linear-gradient(180deg, rgb(255 255 255 / .05), rgb(255 255 255 / .02));
+    border: 1px solid rgb(255 255 255 / .1);
+    border-radius: 18px; padding: 18px;
+  }
+  .meta h2 { display: flex; align-items: center; font-size: 18px; font-weight: 800; }
+  .meta .letra {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 9px; font-weight: 800; font-size: 15px;
+    color: #12101a; background: #d8b25f; margin-right: 9px;
+  }
+  .meta .direccion { margin-top: 8px; font-size: 13.5px; color: #b6aecb; line-height: 1.55; }
+  .hipotesis {
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid rgb(255 255 255 / .1);
+    font-size: 13px; line-height: 1.55; color: #cfc6e0;
+  }
+  .hipotesis b { color: #d8b25f; }
+
+  .paleta { display: flex; gap: 6px; margin-top: 14px; }
+  .paleta i {
+    width: 30px; height: 30px; border-radius: 9px; display: block;
+    border: 1px solid rgb(255 255 255 / .14);
+  }
+  .especimen { margin-top: 14px; border-top: 1px solid rgb(255 255 255 / .1); padding-top: 12px; }
+  .especimen .esp-display {
+    font-family: 'Cormorant Garamond', monospace; /* fallback-trampa */
+    font-size: 23px; font-weight: 700; color: #f4ecd8;
+  }
+  .especimen .esp-body {
+    font-family: 'Mulish', monospace; /* fallback-trampa */
+    margin-top: 2px; font-size: 13px; color: #b6aecb;
+  }
+
+  .pie-frame {
+    text-align: center; margin-top: 10px; font-size: 12px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: #8b8098;
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     CHASIS DE TELÉFONO (idéntico en las 3 — la simetría se mide)
+     ══════════════════════════════════════════════════════════════════════ */
+  .telefono {
+    width: 320px; margin: 0 auto;
+    aspect-ratio: 9 / 19.5;
+    border: 10px solid #08070d;
+    border-radius: 48px;
+    box-shadow:
+      0 0 0 2px rgb(216 178 95 / .12),
+      0 30px 70px -20px rgb(0 0 0 / .8);
+    overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+    background: #0e0b17;
+  }
+  /* Fondo místico con PROFUNDIDAD: 2 resplandores + textura de estrellas */
+  .telefono::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(120% 55% at 50% -8%, rgb(216 178 95 / .20), transparent 62%),
+      radial-gradient(95% 45% at 50% 108%, rgb(111 163 199 / .16), transparent 62%),
+      radial-gradient(1.4px 1.4px at 14% 12%, rgb(244 236 216 / .55), transparent),
+      radial-gradient(1.2px 1.2px at 78% 9%, rgb(244 236 216 / .45), transparent),
+      radial-gradient(1.1px 1.1px at 32% 31%, rgb(244 236 216 / .35), transparent),
+      radial-gradient(1.3px 1.3px at 88% 38%, rgb(244 236 216 / .4), transparent),
+      radial-gradient(1.1px 1.1px at 8% 52%, rgb(244 236 216 / .32), transparent),
+      radial-gradient(1.4px 1.4px at 62% 61%, rgb(244 236 216 / .42), transparent),
+      radial-gradient(1.2px 1.2px at 22% 74%, rgb(244 236 216 / .34), transparent),
+      radial-gradient(1.3px 1.3px at 84% 82%, rgb(244 236 216 / .38), transparent),
+      radial-gradient(1.1px 1.1px at 46% 91%, rgb(244 236 216 / .3), transparent);
+  }
+  .statusbar {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 24px 4px; font-size: 12.5px; font-weight: 700;
+    color: #f4ecd8; font-variant-numeric: tabular-nums;
+  }
+  .statusbar .der { display: flex; align-items: center; gap: 5px; }
+  .statusbar svg { display: block; }
+  .home-indicator {
+    position: absolute; z-index: 3; bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 118px; height: 5px; border-radius: 999px;
+    background: #f4ecd8; opacity: .55;
+  }
+  .pantalla {
+    position: relative; z-index: 2; flex: 1;
+    display: flex; flex-direction: column; overflow: hidden;
+    color: #f4ecd8;
+  }
+
+  /* ── Barra de marca (igual en las 3: es la identidad, no la composición) ── */
+  .marca {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 20px 0;
+  }
+  .marca .nombre {
+    font-family: 'Cormorant Garamond', monospace;
+    font-size: 17px; font-weight: 700; color: #d8b25f; letter-spacing: .01em;
+  }
+  .marca .entrar { font-size: 11.5px; font-weight: 700; color: #b3a8c9; }
+
+  /* ── CTA dorado con degradé tonal + luz interior + sombra tintada ── */
+  .cta {
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    height: 50px; border-radius: 999px;
+    font-size: 15.5px; font-weight: 800; color: #1a1205;
+    background-image: linear-gradient(180deg, #ecd399 0%, #d8b25f 48%, #a8873f 100%);
+    box-shadow:
+      inset 0 1px 1px rgb(255 255 255 / .6),
+      inset 0 -3px 5px rgb(0 0 0 / .28),
+      0 14px 28px -10px rgb(216 178 95 / .55);
+  }
+  .cta::after {
+    content: ''; position: absolute; inset: 0;
+    background-image: linear-gradient(180deg, rgb(255 255 255 / .5) 0%, rgb(255 255 255 / .05) 45%, transparent 60%);
+  }
+  .prueba {
+    font-size: 10.5px; color: #b3a8c9; text-align: center; line-height: 1.5;
+  }
+
+  /* ── Chip de ícono (nunca un ícono pelado) ── */
+  .chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0; color: #d8b25f;
+    background: linear-gradient(145deg, rgb(216 178 95 / .22), rgb(216 178 95 / .08));
+    border: 1px solid rgb(216 178 95 / .3);
+    box-shadow: inset 0 1px 1px rgb(255 255 255 / .18);
+  }
+  .chip svg { width: 17px; height: 17px; }
+
+  /* ── Hairline con degradé (1px, solo en puntos clave) ── */
+  .hairline {
+    height: 1px; border: 0;
+    background: linear-gradient(90deg, transparent, rgb(216 178 95 / .55), transparent);
+  }
+
+  /* ── Checkmark custom (nunca el ✓ del sistema) ── */
+  .check {
+    width: 17px; height: 17px; border-radius: 999px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgb(216 178 95 / .16); border: 1px solid rgb(216 178 95 / .38);
+    color: #d8b25f;
+  }
+  .check svg { width: 10px; height: 10px; }
+
+  /* Tipografía base de los mockups */
+  .h1 {
+    font-family: 'Cormorant Garamond', monospace;
+    font-weight: 700; letter-spacing: -.005em; color: #f4ecd8;
+  }
+  .h1 em { font-style: normal; color: #d8b25f; }
+  .sub { font-size: 13px; line-height: 1.5; color: #b3a8c9; }
+  .sub b { color: #f4ecd8; font-weight: 700; }
+  .kick {
+    font-size: 9.5px; font-weight: 800; letter-spacing: .18em;
+    text-transform: uppercase; color: #d8b25f;
+  }
+  .dato {
+    font-family: 'Cormorant Garamond', monospace;
+    font-variant-numeric: tabular-nums; letter-spacing: -.02em; color: #f4ecd8;
+  }
+
+  /* Tarjeta con MATERIAL (relleno + degradé + luz en borde superior) */
+  .mat {
+    position: relative;
+    background-image: linear-gradient(180deg, rgb(255 255 255 / .1), rgb(255 255 255 / .02));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / .22),
+      0 2px 6px rgb(0 0 0 / .4),
+      0 18px 34px -18px rgb(0 0 0 / .8);
+  }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     OPCIÓN A — "Carta Astral" · forma dominante: CÍRCULOS / ANILLOS
+     Dispositivo ownable: la rueda astral grande como protagonista
+     ══════════════════════════════════════════════════════════════════════ */
+  .op-a .pa { padding: 0 20px 22px; flex: 1; display: flex; flex-direction: column; }
+  .op-a .rueda-wrap {
+    margin: 6px auto 0; width: 196px; height: 196px; position: relative;
+  }
+  .op-a .rueda-wrap svg { width: 100%; height: 100%; display: block; }
+  .op-a .rueda-centro {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+  }
+  .op-a .rueda-centro .k { font-size: 8.5px; font-weight: 800; letter-spacing: .18em; color: #8b8098; }
+  .op-a .rueda-centro .v {
+    font-family: 'Cormorant Garamond', monospace; font-size: 26px; font-weight: 700;
+    line-height: 1.1; color: #f4ecd8; margin-top: 1px;
+  }
+  .op-a .rueda-centro .n { font-size: 9.5px; color: #d8b25f; font-weight: 700; margin-top: 2px; }
+  .op-a .h1 { margin-top: 14px; font-size: 32px; line-height: 1.08; text-align: center; }
+  .op-a .sub { margin-top: 9px; text-align: center; padding: 0 4px; }
+  .op-a .cta { margin-top: 16px; }
+  .op-a .prueba { margin-top: 9px; }
+  .op-a .sellos {
+    margin-top: auto; display: flex; gap: 7px; padding-top: 14px;
+  }
+  .op-a .sello {
+    flex: 1; border-radius: 16px; padding: 9px 6px; text-align: center;
+    border: 1px solid rgb(255 255 255 / .1);
+  }
+  .op-a .sello .chip { width: 26px; height: 26px; border-radius: 999px; margin: 0 auto 5px; }
+  .op-a .sello .chip svg { width: 13px; height: 13px; }
+  .op-a .sello span { font-size: 9px; font-weight: 700; color: #b3a8c9; line-height: 1.3; display: block; }
+
+  /* A — frame 2: tarjetas 2×2 con medallón circular */
+  .op-a .seccion { padding: 14px 20px 22px; flex: 1; display: flex; flex-direction: column; }
+  .op-a .seccion .h1 { font-size: 26px; text-align: center; margin-top: 6px; }
+  .op-a .grid-a { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .op-a .card-a {
+    border-radius: 26px; padding: 14px 11px; text-align: center;
+    border: 1px solid rgb(255 255 255 / .12);
+  }
+  .op-a .card-a .medallon {
+    width: 46px; height: 46px; border-radius: 999px; margin: 0 auto 9px;
+    display: flex; align-items: center; justify-content: center;
+    background: #0e0b17; box-shadow: inset 0 1px 0 rgb(255 255 255 / .18);
+  }
+  .op-a .card-a .medallon svg { width: 20px; height: 20px; }
+  .op-a .card-a h4 { font-size: 12.5px; font-weight: 800; color: #f4ecd8; line-height: 1.25; }
+  .op-a .card-a p { margin-top: 4px; font-size: 10px; color: #b3a8c9; line-height: 1.4; }
+  .op-a .precio {
+    margin-top: auto; margin-bottom: 12px; border-radius: 26px; padding: 13px 14px;
+    text-align: center; border: 1px solid rgb(216 178 95 / .28); background-color: #1a1526;
+  }
+  .op-a .precio .k { font-size: 8.5px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #b3a8c9; }
+  .op-a .precio .v { font-size: 30px; font-weight: 700; line-height: 1.1; margin-top: 2px; }
+  .op-a .precio .v small { font-size: 13px; color: #b3a8c9; font-family: 'Mulish', monospace; font-weight: 700; }
+  .op-a .precio .g { display: inline-flex; align-items: center; gap: 6px; margin-top: 7px; font-size: 10px; color: #b3a8c9; font-weight: 700; }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     OPCIÓN B — "Panel de tu situación" · forma dominante: BENTO COMPACTO
+     Dispositivo ownable: la rejilla de tarjetas-dato + el dato héroe tabular
+     ══════════════════════════════════════════════════════════════════════ */
+  .op-b .pb { padding: 10px 16px 20px; flex: 1; display: flex; flex-direction: column; }
+  .op-b .kick { margin-top: 6px; }
+  .op-b .h1 { margin-top: 5px; font-size: 27px; line-height: 1.1; }
+  .op-b .sub { margin-top: 7px; font-size: 12px; }
+  .op-b .bento { margin-top: 13px; display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .op-b .b-card {
+    border-radius: 16px; padding: 11px 12px; overflow: hidden;
+    border: 1px solid rgb(255 255 255 / .11);
+  }
+  .op-b .b-ancha { grid-column: span 2; }
+  .op-b .b-card .k { font-size: 8.5px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #b3a8c9; }
+  .op-b .b-card .dato-xl { font-size: 34px; font-weight: 700; line-height: 1.05; margin-top: 1px; }
+  .op-b .b-card .pie { font-size: 10px; color: #b3a8c9; margin-top: 2px; }
+  .op-b .b-card .pie b { color: #d8b25f; font-weight: 700; }
+  .op-b .fila-señal { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .op-b .rueda-mini { width: 54px; height: 54px; flex-shrink: 0; opacity: .95; }
+  .op-b .rueda-mini svg { width: 100%; height: 100%; display: block; }
+  .op-b .anillo { width: 56px; height: 56px; margin: 6px auto 0; position: relative; }
+  .op-b .anillo svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .op-b .anillo span {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', monospace; font-size: 17px; font-weight: 700;
+    font-variant-numeric: tabular-nums; color: #f4ecd8;
+  }
+  .op-b .cartas-mini { display: flex; gap: 4px; margin-top: 8px; justify-content: center; }
+  .op-b .cartas-mini i {
+    width: 19px; height: 30px; border-radius: 4px; display: block;
+    background: linear-gradient(180deg, #241d34, #14101f);
+    border: 1px solid rgb(216 178 95 / .5);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .16);
+  }
+  .op-b .cta { margin-top: 11px; height: 46px; font-size: 14.5px; }
+  .op-b .prueba { margin-top: 9px; }
+  .op-b .sellos-b { display: flex; gap: 12px; justify-content: space-between; }
+  .op-b .sellos-b span {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 9.5px; font-weight: 700; color: #b3a8c9;
+  }
+  .op-b .sellos-b .check { width: 14px; height: 14px; }
+  .op-b .sellos-b .check svg { width: 8px; height: 8px; }
+
+  /* B — frame 2: bento asimétrico de tipos de lectura */
+  .op-b .seccion { padding: 12px 16px 20px; flex: 1; display: flex; flex-direction: column; }
+  .op-b .seccion .h1 { font-size: 24px; margin-top: 4px; }
+  .op-b .grid-b { margin-top: 13px; display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .op-b .card-b {
+    border-radius: 16px; padding: 12px 11px;
+    border: 1px solid rgb(255 255 255 / .11);
+  }
+  .op-b .card-b .chip { width: 32px; height: 32px; border-radius: 10px; margin-bottom: 8px; }
+  .op-b .card-b h4 { font-size: 12px; font-weight: 800; color: #f4ecd8; line-height: 1.25; }
+  .op-b .card-b p { margin-top: 3px; font-size: 9.5px; color: #b3a8c9; line-height: 1.4; }
+  .op-b .card-b.ancha { grid-column: span 2; display: flex; align-items: center; gap: 11px; }
+  .op-b .card-b.ancha .chip { margin-bottom: 0; }
+  .op-b .cita {
+    margin-top: 9px; border-radius: 16px; padding: 12px;
+    border: 1px solid rgb(216 178 95 / .26); background-color: #1a1526;
+  }
+  .op-b .cita .k { font-size: 8.5px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #b3a8c9; }
+  .op-b .cita blockquote {
+    font-family: 'Cormorant Garamond', monospace; font-size: 14.5px; font-style: italic;
+    line-height: 1.35; color: #f4ecd8; margin-top: 5px;
+    border-left: 2px solid rgb(216 178 95 / .55); padding-left: 9px;
+  }
+  .op-b .cita .pie2 { margin-top: 7px; font-size: 9.5px; color: #b3a8c9; line-height: 1.4; }
+  .op-b .cita .pie2 b { color: #d8b25f; font-weight: 700; }
+  .op-b .precio-b {
+    margin-top: auto; margin-bottom: 10px; border-radius: 16px; padding: 12px;
+    border: 1px solid rgb(216 178 95 / .3); background-color: #1a1526;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .op-b .precio-b .izq .k { font-size: 8.5px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #b3a8c9; }
+  .op-b .precio-b .izq .v { font-size: 27px; font-weight: 700; line-height: 1.05; }
+  .op-b .precio-b .izq .v small { font-size: 12px; color: #b3a8c9; font-family: 'Mulish', monospace; font-weight: 700; }
+  .op-b .precio-b .der-col { display: flex; flex-direction: column; gap: 6px; }
+  .op-b .precio-b .der-col span { display: inline-flex; align-items: center; gap: 6px; font-size: 9.5px; font-weight: 700; color: #b3a8c9; }
+  .op-b .precio-b .check { width: 14px; height: 14px; }
+  .op-b .precio-b .check svg { width: 8px; height: 8px; }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     OPCIÓN C — "Umbral" · forma dominante: EDITORIAL, HAIRLINES, SIN CAJAS
+     Dispositivo ownable: las 3 cartas en abanico + reglas doradas
+     ══════════════════════════════════════════════════════════════════════ */
+  .op-c .pc { padding: 12px 22px 22px; flex: 1; display: flex; flex-direction: column; }
+  .op-c .filigrana {
+    position: absolute; top: 96px; left: 50%; transform: translateX(-50%);
+    width: 300px; height: 300px; opacity: .13; pointer-events: none; z-index: -1;
+  }
+  .op-c .filigrana svg { width: 100%; height: 100%; }
+  .op-c .kick { margin-top: 12px; }
+  .op-c .h1 { margin-top: 8px; font-size: 38px; line-height: 1.02; }
+  .op-c .hairline { margin: 14px 0 12px; }
+  .op-c .sub { font-size: 12.5px; }
+  .op-c .abanico {
+    position: relative; height: 138px; margin-top: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .op-c .tcarta {
+    position: absolute; width: 74px; height: 124px; border-radius: 9px;
+    background: linear-gradient(170deg, #2a2238 0%, #14101f 100%);
+    border: 1px solid rgb(216 178 95 / .55);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / .2),
+      0 14px 26px -10px rgb(0 0 0 / .85);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
+  }
+  .op-c .tcarta svg { width: 22px; height: 22px; color: #d8b25f; }
+  .op-c .tcarta span {
+    font-family: 'Cormorant Garamond', monospace;
+    font-size: 8.5px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: #d8b25f;
+  }
+  .op-c .tcarta.izq { transform: translateX(-56px) rotate(-11deg); }
+  .op-c .tcarta.der { transform: translateX(56px) rotate(11deg); }
+  .op-c .tcarta.cen { transform: translateY(-8px) scale(1.06); z-index: 2; }
+  .op-c .cta { margin-top: 16px; }
+  .op-c .prueba { margin-top: 9px; }
+  .op-c .garantia {
+    margin-top: auto; padding-top: 12px;
+  }
+  .op-c .garantia .fila {
+    display: flex; align-items: center; gap: 9px; padding: 11px 0 2px;
+  }
+  .op-c .garantia .fila .txt h5 {
+    font-family: 'Cormorant Garamond', monospace; font-size: 14px; font-weight: 700; color: #f4ecd8;
+  }
+  .op-c .garantia .fila .txt p { margin-top: 2px; font-size: 9.5px; color: #b3a8c9; line-height: 1.4; }
+  .op-c .garantia .chip { width: 30px; height: 30px; border-radius: 999px; }
+  .op-c .garantia .chip svg { width: 14px; height: 14px; }
+
+  /* C — frame 2: lista editorial numerada con reglas doradas (sin cajas) */
+  .op-c .seccion { padding: 14px 22px 28px; flex: 1; display: flex; flex-direction: column; }
+  .op-c .seccion .h1 { font-size: 25px; margin-top: 5px; line-height: 1.06; }
+  .op-c .lista { margin-top: 4px; }
+  .op-c .item { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; }
+  .op-c .item .num {
+    font-family: 'Cormorant Garamond', monospace; font-size: 15px; font-weight: 700;
+    color: #d8b25f; font-variant-numeric: tabular-nums; width: 20px; flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .op-c .item .txt h4 { font-size: 13.5px; font-weight: 800; color: #f4ecd8; }
+  .op-c .item .txt p { margin-top: 3px; font-size: 10.5px; color: #b3a8c9; line-height: 1.45; }
+  .op-c .item .chip { width: 30px; height: 30px; border-radius: 999px; margin-left: auto; }
+  .op-c .item .chip svg { width: 14px; height: 14px; }
+  .op-c .precio-c { margin-top: auto; padding-top: 10px; flex-shrink: 0; }
+  .op-c .precio-c .fila { display: flex; align-items: baseline; gap: 8px; margin-top: 8px; }
+  .op-c .precio-c .fila .lbl { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #b3a8c9; }
+  .op-c .precio-c .fila .v { font-size: 32px; font-weight: 700; line-height: 1; }
+  .op-c .precio-c .fila .v small { font-size: 12px; color: #b3a8c9; font-family: 'Mulish', monospace; font-weight: 700; }
+  .op-c .precio-c .nota { margin-top: 4px; font-size: 9.5px; color: #b3a8c9; line-height: 1.4; }
+  .op-c .seccion .cta { margin-top: 12px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- Rueda astral reutilizable (el "símbolo" que el usuario pidió conservar) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="glowRueda" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#d8b25f" stop-opacity=".22"/>
+      <stop offset="65%" stop-color="#d8b25f" stop-opacity=".05"/>
+      <stop offset="100%" stop-color="#d8b25f" stop-opacity="0"/>
+    </radialGradient>
+    <symbol id="rueda" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="96" fill="url(#glowRueda)"/>
+      <circle cx="100" cy="100" r="84" fill="none" stroke="#d8b25f" stroke-opacity=".6" stroke-width="1"/>
+      <circle cx="100" cy="100" r="72" fill="none" stroke="#d8b25f" stroke-opacity=".3" stroke-width="1"/>
+      <circle cx="100" cy="100" r="46" fill="none" stroke="#d8b25f" stroke-opacity=".4" stroke-width="1"/>
+      <circle cx="100" cy="100" r="30" fill="none" stroke="#6fa3c7" stroke-opacity=".3" stroke-width="1"/>
+      <g stroke="#d8b25f" stroke-opacity=".55" stroke-width="1" stroke-linecap="round">
+        <line x1="100" y1="28" x2="100" y2="16"/>
+        <line x1="136" y1="37.6" x2="142" y2="27.3"/>
+        <line x1="162.4" y1="64" x2="172.7" y2="58"/>
+        <line x1="172" y1="100" x2="184" y2="100"/>
+        <line x1="162.4" y1="136" x2="172.7" y2="142"/>
+        <line x1="136" y1="162.4" x2="142" y2="172.7"/>
+        <line x1="100" y1="172" x2="100" y2="184"/>
+        <line x1="64" y1="162.4" x2="58" y2="172.7"/>
+        <line x1="37.6" y1="136" x2="27.3" y2="142"/>
+        <line x1="28" y1="100" x2="16" y2="100"/>
+        <line x1="37.6" y1="64" x2="27.3" y2="58"/>
+        <line x1="64" y1="37.6" x2="58" y2="27.3"/>
+      </g>
+      <polygon points="100,54 139.8,123 60.2,123" fill="none" stroke="#6fa3c7" stroke-opacity=".55" stroke-width="1"/>
+      <polygon points="143.2,84.3 115.7,143.2 56.8,115.7 84.3,56.8" fill="none" stroke="#d8b25f" stroke-opacity=".32" stroke-width="1"/>
+      <circle cx="100" cy="54" r="3.4" fill="#d8b25f"/>
+      <circle cx="139.8" cy="123" r="2.8" fill="#6fa3c7"/>
+      <circle cx="60.2" cy="123" r="2.8" fill="#d8b25f"/>
+      <circle cx="143.2" cy="84.3" r="2.2" fill="#d8b25f" fill-opacity=".75"/>
+      <circle cx="56.8" cy="115.7" r="2.2" fill="#6fa3c7" fill-opacity=".8"/>
+      <circle cx="172" cy="100" r="2.4" fill="#d8b25f" fill-opacity=".9"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="cabecera">
+  <p class="kicker">Página de ventas · 3 estilos</p>
+  <h1>Elige cómo se va a ver tu página de ventas</h1>
+  <p class="sub">
+    Las tres usan la misma paleta oscura y dorada de tu app y conservan el símbolo de carta astral
+    que te gustó de la referencia. Lo que cambia en cada una es <b>cómo está armada la página</b> y
+    <b>qué elemento manda</b>. Cada opción se muestra en dos pantallas: la portada (lo primero que ve
+    quien llega) y una sección de más abajo.
+  </p>
+  <div class="salidas">
+    <span><b>1.</b> Elige A, B o C</span>
+    <span><b>2.</b> Combina ("la B pero con la portada de la A")</span>
+    <span><b>3.</b> Pídeme otras 3</span>
+    <span><b>4.</b> Ajusta un detalle</span>
+  </div>
+</header>
+<p class="aviso">Ábrelo con conexión a internet — las tipografías se cargan de Google Fonts.</p>
+
+<main class="opciones">
+
+  <!-- ══════════════ OPCIÓN A ══════════════ -->
+  <section class="opcion op-a">
+    <div class="meta">
+      <h2><span class="letra">A</span> Carta Astral</h2>
+      <p class="direccion">
+        El símbolo manda: una rueda astral grande recibe a la persona, y el texto y el botón viven
+        alrededor de ella. Todo va centrado y en círculos — medallones redondos, tarjetas muy
+        redondeadas.
+      </p>
+      <p class="hipotesis">
+        <b>Por qué podría vender mejor:</b> tu clienta ya probó apps que le tiraban el mismo texto a
+        todo el mundo. Una rueda que parece calculada le dice, antes de leer una palabra, "esto es
+        sobre tu caso", no un horóscopo para todos.
+      </p>
+      <div class="paleta">
+        <i style="background:#0e0b17"></i><i style="background:#1a1526"></i><i style="background:#d8b25f"></i>
+        <i style="background:#4a2f18"></i><i style="background:#1f3a4a"></i><i style="background:#6fa3c7"></i>
+      </div>
+      <div class="especimen">
+        <div class="esp-display">Cormorant Garamond</div>
+        <div class="esp-body">Mulish — texto de lectura</div>
+      </div>
+    </div>
+
+    <!-- A · Frame 1: PORTADA -->
+    <div>
+      <div class="telefono">
+        <div class="statusbar">
+          <span>9:41</span>
+          <span class="der">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="0.6" y="1.4" width="12" height="8.2" rx="2.2"/><rect x="2.2" y="3" width="8.4" height="5" rx="1.2" fill="currentColor" stroke="none"/><path d="M14.4 4.2v3.6" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+        <div class="pantalla">
+          <div class="marca">
+            <span class="nombre">Amor &amp; Tarot</span>
+            <span class="entrar">Entrar</span>
+          </div>
+          <div class="pa">
+            <div class="rueda-wrap">
+              <svg><use href="#rueda"/></svg>
+              <div class="rueda-centro">
+                <span class="k">HOY</span>
+                <span class="v">El Ermitaño</span>
+                <span class="n">Introspección</span>
+              </div>
+            </div>
+            <h1 class="h1"><em>Tu verdad</em>, en 3 cartas y 60 segundos</h1>
+            <p class="sub">Recibe una lectura que <b>cita tu situación</b> con El Espejo de las 3 Cartas.</p>
+            <div class="cta">Sacar mis 3 cartas</div>
+            <p class="prueba">Cero anuncios · Cero cobros ocultos<br>Cancelas cuando quieras</p>
+            <div class="sellos">
+              <div class="sello mat">
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
+                <span>Sin anuncios</span>
+              </div>
+              <div class="sello mat">
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+                <span>Precio visible</span>
+              </div>
+              <div class="sello mat">
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+                <span>Cancelas<br>en 1 toque</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <p class="pie-frame">Portada</p>
+    </div>
+
+    <!-- A · Frame 2: SECCIÓN -->
+    <div>
+      <div class="telefono">
+        <div class="statusbar">
+          <span>9:41</span>
+          <span class="der">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="0.6" y="1.4" width="12" height="8.2" rx="2.2"/><rect x="2.2" y="3" width="8.4" height="5" rx="1.2" fill="currentColor" stroke="none"/><path d="M14.4 4.2v3.6" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+        <div class="pantalla">
+          <div class="seccion">
+            <p class="kick" style="text-align:center">Tipos de lectura</p>
+            <h2 class="h1">Todo lo que puedes hacer</h2>
+            <hr class="hairline" style="margin-top:12px">
+            <div class="grid-a">
+              <div class="card-a mat" style="background-color:#3a2a42">
+                <span class="medallon"><svg viewBox="0 0 24 24" fill="none" stroke="#d8b25f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>
+                <h4>Tu lectura de pareja</h4>
+                <p>Tú, la otra persona y la dinámica, en 3 cartas.</p>
+              </div>
+              <div class="card-a mat" style="background-color:#1f3a4a">
+                <span class="medallon"><svg viewBox="0 0 24 24" fill="none" stroke="#d8b25f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4L12 3Z"/></svg></span>
+                <h4>Compatibilidad de signos</h4>
+                <p>Qué tan compatibles son tu signo y el suyo.</p>
+              </div>
+              <div class="card-a mat" style="background-color:#4a2f18">
+                <span class="medallon"><svg viewBox="0 0 24 24" fill="none" stroke="#d8b25f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
+                <h4>Carta del día</h4>
+                <p>Tu energía de hoy, cada mañana, en segundos.</p>
+              </div>
+              <div class="card-a mat" style="background-color:#241d34">
+                <span class="medallon"><svg viewBox="0 0 24 24" fill="none" stroke="#d8b25f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span>
+                <h4>Tu historial</h4>
+                <p>Vuelve a leer tus lecturas guardadas.</p>
+              </div>
+            </div>
+            <div class="precio mat">
+              <p class="k">Después de tus 3 días gratis</p>
+              <p class="dato v">$3.66<small> /mes</small></p>
+              <span class="g">
+                <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+                Garantía de los 7 Días
+              </span>
+            </div>
+            <div class="cta">Sacar mis 3 cartas</div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <p class="pie-frame">Más abajo</p>
+    </div>
+  </section>
+
+  <!-- ══════════════ OPCIÓN B ══════════════ -->
+  <section class="opcion op-b">
+    <div class="meta">
+      <h2><span class="letra">B</span> Panel de tu situación</h2>
+      <p class="direccion">
+        La más parecida a tu imagen de referencia: la portada es un tablero de tarjetas de colores,
+        cada una con un dato real de la app. Se ve densa, con mucha información de un vistazo.
+      </p>
+      <p class="hipotesis">
+        <b>Por qué podría vender mejor:</b> su miedo número uno es "va a ser genérico". Aquí ve la
+        sustancia del producto (su señal de hoy, el porcentaje, las 3 cartas) antes de dar un solo
+        dato — el producto se demuestra en vez de prometerse.
+      </p>
+      <div class="paleta">
+        <i style="background:#0e0b17"></i><i style="background:#1a1526"></i><i style="background:#d8b25f"></i>
+        <i style="background:#4a2f18"></i><i style="background:#1f3a4a"></i><i style="background:#6fa3c7"></i>
+      </div>
+      <div class="especimen">
+        <div class="esp-display">Cormorant Garamond</div>
+        <div class="esp-body">Mulish — texto de lectura</div>
+      </div>
+    </div>
+
+    <!-- B · Frame 1: PORTADA -->
+    <div>
+      <div class="telefono">
+        <div class="statusbar">
+          <span>9:41</span>
+          <span class="der">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="0.6" y="1.4" width="12" height="8.2" rx="2.2"/><rect x="2.2" y="3" width="8.4" height="5" rx="1.2" fill="currentColor" stroke="none"/><path d="M14.4 4.2v3.6" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+        <div class="pantalla">
+          <div class="marca">
+            <span class="nombre">Amor &amp; Tarot</span>
+            <span class="entrar">Entrar</span>
+          </div>
+          <div class="pb">
+            <p class="kick">Para tu situationship</p>
+            <h1 class="h1"><em>Tu verdad</em>, en 3 cartas y 60 segundos</h1>
+            <p class="sub">Una lectura que <b>cita tu situación</b>, no un significado de carta.</p>
+
+            <div class="bento">
+              <div class="b-card b-ancha mat" style="background-color:#4a2f18">
+                <div class="fila-señal">
+                  <div>
+                    <p class="k">Tu señal de hoy</p>
+                    <p class="dato dato-xl">Espera</p>
+                    <p class="pie">El Emperador, invertida · <b>no escribas todavía</b></p>
+                  </div>
+                  <div class="rueda-mini"><svg><use href="#rueda"/></svg></div>
+                </div>
+              </div>
+
+              <div class="b-card mat" style="background-color:#1f3a4a">
+                <p class="k">Compatibilidad</p>
+                <div class="anillo">
+                  <svg viewBox="0 0 64 64">
+                    <circle cx="32" cy="32" r="26" fill="none" stroke="#0e0b17" stroke-opacity=".55" stroke-width="6"/>
+                    <circle cx="32" cy="32" r="26" fill="none" stroke="#d8b25f" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="58.8"/>
+                  </svg>
+                  <span>64%</span>
+                </div>
+                <p class="pie" style="text-align:center;margin-top:5px">Escorpio + Piscis</p>
+              </div>
+
+              <div class="b-card mat" style="background-color:#3a2a42">
+                <p class="k">Tus 3 cartas</p>
+                <div class="cartas-mini"><i></i><i></i><i></i></div>
+                <p class="pie" style="text-align:center;margin-top:6px">Tú · Ella · La dinámica</p>
+              </div>
+
+              <div class="b-card b-ancha mat" style="background-color:#1a1526">
+                <div class="sellos-b">
+                  <span><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>Sin anuncios</span>
+                  <span><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>Precio visible</span>
+                  <span><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>Cancelas en 1 toque</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="cta">Sacar mis 3 cartas</div>
+            <p class="prueba">3 días gratis · después $3.66/mes · Garantía de los 7 Días</p>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <p class="pie-frame">Portada</p>
+    </div>
+
+    <!-- B · Frame 2: SECCIÓN -->
+    <div>
+      <div class="telefono">
+        <div class="statusbar">
+          <span>9:41</span>
+          <span class="der">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="0.6" y="1.4" width="12" height="8.2" rx="2.2"/><rect x="2.2" y="3" width="8.4" height="5" rx="1.2" fill="currentColor" stroke="none"/><path d="M14.4 4.2v3.6" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+        <div class="pantalla">
+          <div class="seccion">
+            <p class="kick">Tipos de lectura</p>
+            <h2 class="h1">Todo lo que puedes hacer</h2>
+            <div class="grid-b">
+              <div class="card-b ancha mat" style="background-color:#3a2a42">
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>
+                <div>
+                  <h4>Tu lectura de pareja</h4>
+                  <p>Tú, la otra persona y la dinámica, en 3 cartas.</p>
+                </div>
+              </div>
+              <div class="card-b mat" style="background-color:#1f3a4a">
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4L12 3Z"/></svg></span>
+                <h4>Compatibilidad</h4>
+                <p>Tu signo y el suyo, con su porcentaje.</p>
+              </div>
+              <div class="card-b mat" style="background-color:#4a2f18">
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
+                <h4>Carta del día</h4>
+                <p>Tu energía de hoy, en segundos.</p>
+              </div>
+              <div class="card-b ancha mat" style="background-color:#241d34">
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span>
+                <div>
+                  <h4>Tu historial</h4>
+                  <p>Vuelve a leer tus lecturas guardadas cuando quieras.</p>
+                </div>
+              </div>
+            </div>
+            <div class="cita mat">
+              <p class="k">Tu lectura, en tus palabras</p>
+              <blockquote>«Llevamos dos semanas sin hablar de lo que pasó…»</blockquote>
+              <p class="pie2">Tu lectura <b>cita tu situación</b>, palabra por palabra — no un significado de carta que le sirve a cualquiera.</p>
+            </div>
+            <div class="precio-b mat">
+              <div class="izq">
+                <p class="k">3 días gratis, después</p>
+                <p class="dato v">$3.66<small> /mes</small></p>
+              </div>
+              <div class="der-col">
+                <span><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>Garantía 7 días</span>
+                <span><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>Cancelas cuando quieras</span>
+              </div>
+            </div>
+            <div class="cta">Sacar mis 3 cartas</div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <p class="pie-frame">Más abajo</p>
+    </div>
+  </section>
+
+  <!-- ══════════════ OPCIÓN C ══════════════ -->
+  <section class="opcion op-c">
+    <div class="meta">
+      <h2><span class="letra">C</span> Umbral</h2>
+      <p class="direccion">
+        Estilo revista: mucho aire, titular enorme en la tipografía elegante, líneas doradas finas en
+        vez de cajas, y las 3 cartas de tarot abiertas en abanico como el objeto protagonista.
+      </p>
+      <p class="hipotesis">
+        <b>Por qué podría vender mejor:</b> lo que compra es "El Espejo de las 3 Cartas". Ver las
+        tres cartas como objeto real hace tangible el mecanismo, y el aire y la calma son lo
+        contrario de las apps saturadas de anuncios que ya la cansaron.
+      </p>
+      <div class="paleta">
+        <i style="background:#0e0b17"></i><i style="background:#1a1526"></i><i style="background:#d8b25f"></i>
+        <i style="background:#4a2f18"></i><i style="background:#1f3a4a"></i><i style="background:#6fa3c7"></i>
+      </div>
+      <div class="especimen">
+        <div class="esp-display">Cormorant Garamond</div>
+        <div class="esp-body">Mulish — texto de lectura</div>
+      </div>
+    </div>
+
+    <!-- C · Frame 1: PORTADA -->
+    <div>
+      <div class="telefono">
+        <div class="statusbar">
+          <span>9:41</span>
+          <span class="der">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="0.6" y="1.4" width="12" height="8.2" rx="2.2"/><rect x="2.2" y="3" width="8.4" height="5" rx="1.2" fill="currentColor" stroke="none"/><path d="M14.4 4.2v3.6" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+        <div class="pantalla">
+          <div class="marca">
+            <span class="nombre">Amor &amp; Tarot</span>
+            <span class="entrar">Entrar</span>
+          </div>
+          <div class="pc">
+            <div class="filigrana"><svg><use href="#rueda"/></svg></div>
+            <p class="kick">El Espejo de las 3 Cartas</p>
+            <h1 class="h1"><em>Tu verdad</em>,<br>en 3 cartas y<br>60 segundos</h1>
+            <hr class="hairline">
+            <p class="sub">Recibe una lectura que <b>cita tu situación</b> con tus propias palabras — y te da un paso concreto para hoy.</p>
+            <div class="abanico">
+              <div class="tcarta izq">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
+                <span>Tú</span>
+              </div>
+              <div class="tcarta der">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                <span>Ella</span>
+              </div>
+              <div class="tcarta cen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4L12 3Z"/></svg>
+                <span>La dinámica</span>
+              </div>
+            </div>
+            <div class="cta">Sacar mis 3 cartas</div>
+            <p class="prueba">Cero anuncios · Cero cobros ocultos · Cancelas cuando quieras</p>
+            <div class="garantia">
+              <hr class="hairline">
+              <div class="fila">
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 4.5 5.5v6c0 4.6 3.1 8.6 7.5 10 4.4-1.4 7.5-5.4 7.5-10v-6Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+                <div class="txt">
+                  <h5>La Garantía de los 7 Días</h5>
+                  <p>Si sientes que no te sirvió, te devolvemos tu dinero. Sin preguntas.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <p class="pie-frame">Portada</p>
+    </div>
+
+    <!-- C · Frame 2: SECCIÓN -->
+    <div>
+      <div class="telefono">
+        <div class="statusbar">
+          <span>9:41</span>
+          <span class="der">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="0.6" y="1.4" width="12" height="8.2" rx="2.2"/><rect x="2.2" y="3" width="8.4" height="5" rx="1.2" fill="currentColor" stroke="none"/><path d="M14.4 4.2v3.6" stroke-linecap="round"/></svg>
+          </span>
+        </div>
+        <div class="pantalla">
+          <div class="seccion">
+            <p class="kick">Tipos de lectura</p>
+            <h2 class="h1">Todo lo que<br>puedes hacer</h2>
+            <div class="lista">
+              <hr class="hairline">
+              <div class="item">
+                <span class="num">01</span>
+                <div class="txt">
+                  <h4>Tu lectura de pareja</h4>
+                  <p>Tú, la otra persona y la dinámica, en 3 cartas.</p>
+                </div>
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>
+              </div>
+              <hr class="hairline">
+              <div class="item">
+                <span class="num">02</span>
+                <div class="txt">
+                  <h4>Compatibilidad de signos</h4>
+                  <p>Qué tan compatibles son tu signo y el suyo.</p>
+                </div>
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4L12 3Z"/></svg></span>
+              </div>
+              <hr class="hairline">
+              <div class="item">
+                <span class="num">03</span>
+                <div class="txt">
+                  <h4>Carta del día</h4>
+                  <p>Tu energía de hoy, cada mañana, en segundos.</p>
+                </div>
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span>
+              </div>
+              <hr class="hairline">
+              <div class="item">
+                <span class="num">04</span>
+                <div class="txt">
+                  <h4>Tu historial</h4>
+                  <p>Vuelve a leer tus lecturas guardadas cuando quieras.</p>
+                </div>
+                <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span>
+              </div>
+              <hr class="hairline">
+            </div>
+            <div class="precio-c">
+              <div class="fila">
+                <span class="lbl">Desde</span>
+                <span class="dato v">$3.66<small> /mes</small></span>
+              </div>
+              <p class="nota">3 días gratis · Garantía de los 7 Días</p>
+            </div>
+            <div class="cta">Sacar mis 3 cartas</div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+      <p class="pie-frame">Más abajo</p>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>
