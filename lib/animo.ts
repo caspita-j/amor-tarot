@@ -25,9 +25,19 @@ export function colorEstado(estado: Estado): string {
  * tira de "Esta semana") — 3 de los 4 acentos ya son oscuros y funcionan
  * bien tal cual, pero "tranquila" (dorado claro) mide 1.7:1 de contraste
  * sobre el círculo casi blanco, muy por debajo del 4.5:1 mínimo. Se
- * oscurece SOLO para este uso, sin tocar el color donde ya funciona
- * (íconos, chips, "Hoy te sentiste..."). */
+ * oscurece SOLO para este uso. */
 export function inkEstado(estado: Estado): string {
   if (estado === 'tranquila') return 'color-mix(in oklab, black 45%, var(--accent))';
   return colorEstado(estado);
+}
+
+/** Versión de `colorEstado` para usar como TEXTO sobre el fondo OSCURO de la
+ * app (p. ej. "Hoy te sentiste [ánimo]" en la tarjeta de Inicio) — al revés
+ * de `inkEstado`: acá "tranquila" (dorado) ya es clara y se deja igual, pero
+ * las otras 3 (oscuras, pensadas para fondo de tarjeta con texto claro
+ * encima) miden 1.3-1.5:1 sobre `--surface`, muy por debajo del 4.5:1
+ * mínimo — se aclaran solo para este uso. */
+export function colorEstadoSobreOscuro(estado: Estado): string {
+  if (estado === 'tranquila') return colorEstado(estado);
+  return `color-mix(in oklab, white 45%, ${colorEstado(estado)})`;
 }

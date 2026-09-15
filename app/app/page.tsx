@@ -21,7 +21,7 @@ import { TemaMistico } from '@/components/app/TemaMistico';
 import { VideoCartaDelDia } from '@/components/app/VideoCartaDelDia';
 import { TarjetaTarot } from '@/components/onboarding/ui';
 import { cartaDelDia, hoyISO, tituloFecha } from '@/lib/tarot-data';
-import { ESTADOS, colorEstado, labelEstado, type Estado } from '@/lib/animo';
+import { ESTADOS, colorEstadoSobreOscuro, labelEstado, type Estado } from '@/lib/animo';
 import { leerFotoPerfil, leerOnboarding } from '@/lib/estado-app';
 import {
   guardarEstadoAnimo,
@@ -196,7 +196,7 @@ export default function InicioPage() {
             {estadoHoy ? (
               <p className="text-sm font-semibold text-[var(--text-secondary)]">
                 Hoy te sentiste{' '}
-                <span className="font-bold" style={{ color: colorEstado(estadoHoy) }}>
+                <span className="font-bold" style={{ color: colorEstadoSobreOscuro(estadoHoy) }}>
                   {labelEstado(estadoHoy)}
                 </span>
               </p>
