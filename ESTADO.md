@@ -26,6 +26,16 @@ pasa a ser el visual del héroe, así que ya no se pasa captura de celular ahí)
 Verificado a 375px y a 1280px, recorriendo TODAS las secciones con scroll real (no captura de
 página completa: con `whileInView` las capturas full-page salen vacías y engañan). Consola sin
 errores. tsc/build limpios. Evidencia: `docs/revisiones/landing-A-375.png` y `landing-A-desktop.png`.
+✅ BOTONES 3D el mismo día, a pedido del usuario ("que se vean más 3D como están dentro de la
+app"): `CtaButton` y el botón de la barra fija (`components/landing/ui.tsx`) ahora llevan la clase
+`boton-principal`, que engancha el acabado vidrio/cromo que YA definía `tokens.css` bajo
+`[data-tema='mistico']` — el mismo de los botones de la app, no una receta nueva (degradé tonal +
+brillo especular en `::before` + 2 sombras internas + sombra externa tintada de dorado). Hizo falta
+agregarles `relative overflow-hidden`: el brillo es un `::before` absoluto y sin recorte se salía de
+la píldora. En un tema claro esa regla no aplica sola, así que el kit sigue sirviendo para otros
+proyectos sin arrastrar este acabado. Verificado con `getComputedStyle`, no solo a ojo: degradé
+presente, `::before` con gradiente, y las 3 capas de sombra (2 `inset` + 1 externa).
+
 ✅ LOGO REAL puesto el mismo día, a pedido del usuario ("pon el logo primero"): la cabecera y el
 pie ya no muestran un cuadro de color de relleno. Se creó `public/marca/emblema.png` recortando
 del logo completo SOLO el emblema (las 3 cartas + el aro + el monograma "AT"), dejando fuera la
