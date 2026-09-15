@@ -1,5 +1,28 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-15 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido)
+Última actualización: 2026-09-15 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
+
+✅ CHECKPOINT — BUG REAL de una usuaria real (no de prueba): "Hola, ahí" en vez de su nombre,
+2026-09-15. El usuario reportó que una amiga entró a probar los 3 días gratis y le aparecía el
+saludo genérico en vez de su nombre.
+**Causa raíz**: `sincronizarOnboardingSiHaceFalta()` (en `lib/supabase/datos.ts`) copia el nombre
+(y signo, y datos de "la otra persona") de las respuestas del onboarding — guardadas en
+`sessionStorage`, que vive SOLO en esa pestaña/navegador — al perfil real, la primera vez que la
+persona entra a `/app` ya con sesión. Si abre el enlace de acceso en un navegador o pestaña
+DISTINTA a donde hizo el onboarding (típico: hace el onboarding en un navegador, luego abre el
+correo y el enlace en otra app/pestaña), `sessionStorage` está vacío ahí, la sincronización no tiene
+nada que copiar, y el nombre se queda vacío para siempre — porque hasta hoy no existía ninguna
+pantalla donde la persona pudiera corregirlo después.
+**Arreglo**: se agregó edición del nombre directamente en Perfil (ícono de lápiz junto al nombre →
+campo de texto → guardar), usando `actualizarPerfil()` — una función que ya existía en la capa de
+datos (probablemente para esto mismo) pero que ninguna pantalla usaba todavía. Con esto la amiga del
+usuario (y cualquiera en el mismo caso) puede corregirlo ella misma en 5 segundos, sin que nadie
+tenga que tocar la base de datos a mano.
+Verificado con un usuario de prueba sembrado A PROPÓSITO sin nombre (mismo caso exacto que la
+amiga): apareció "Tú" con el lápiz, se editó a "Valentina", se guardó, y se confirmó con una
+recarga completa de la página que quedó en la base de datos (no solo en memoria). tsc/build
+limpios. Usuario de prueba borrado al terminar.
+**Nota para el usuario**: no hizo falta tocar la cuenta real de su amiga — dile que entre a Perfil
+y toque el lápiz junto a su nombre para corregirlo ella misma.
 
 ✅ CHECKPOINT — Revisión general de todo lo hecho hoy, de punta a punta, 2026-09-15, a pedido
 explícito del usuario ("revisa paso a paso detalladamente... verifica que todo esté funcionando
