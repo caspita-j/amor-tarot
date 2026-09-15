@@ -1,5 +1,35 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-14 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial)
+Última actualización: 2026-09-15 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG encontrado — correo de "primera vez" (Confirm signup) sin marcar, en espera de que el usuario pegue la plantilla en Supabase — ver Problemas conocidos)
+
+⚠️ CHECKPOINT — BUG REAL encontrado: el correo de "primera vez" (usuario nuevo) no tiene la marca ni
+el código, 2026-09-15. El usuario reportó (con captura, y confirmando que le pasó lo mismo a un
+amigo) que al abrir la app por primera vez en el celular llega un correo de Supabase genérico en
+inglés ("Confirm your email address"), sin ningún código, en vez del correo de marca con el botón
+dorado y el código de 8 dígitos que se armó en la sesión de EMAILS.
+**Diagnóstico, confirmado con evidencia real (no supuesto)**: se leyó el registro real de Supabase
+(`auth_logs`) para las 2 personas afectadas — ambas dispararon la acción `user_confirmation_requested`
+(no `user_recovery_requested`, que es la que sí usa el correo ya personalizado). Se confirmó además
+contra la documentación oficial de Supabase (`search_docs`): el sistema tiene DOS plantillas de correo
+separadas para el mismo botón "Enviarme el enlace mágico" — **"Magic link or OTP"** (se usa cuando la
+persona YA tiene cuenta — esta SÍ se personalizó en la sesión de EMAILS) y **"Confirm signup"** (se
+usa la PRIMERA vez que alguien entra con un correo nunca antes visto — esta NUNCA se tocó, sigue con
+el texto de fábrica de Supabase). El texto exacto de la plantilla de fábrica ("Confirm your email
+address... Follow the link below... Confirm email address") coincide letra por letra con la
+documentación oficial del template por defecto — confirma la causa al 100%.
+**Impacto real**: CUALQUIER persona nueva que pruebe la app hoy (no solo el usuario y su amigo) recibe
+este correo roto, sin marca y sin código — es decir, la puerta de entrada de clientes nuevos está
+rota ahora mismo hasta que se corrija.
+**Corrección entregada al usuario en el chat** (no es un cambio de código — vive en el panel de
+Supabase, no tengo herramienta para editarlo yo mismo): asunto + HTML completo para pegar en
+Supabase → Authentication → Emails → Templates → "Confirm signup" (mismo lugar donde ya editó "Magic
+link or OTP"), con el mismo botón dorado (`{{ .ConfirmationURL }}`) + el código de 8 dígitos
+(`{{ .Token }}`) + aviso de "si no fuiste tú, ignora este correo". Paleta CLARA (no el tema místico
+oscuro de la app) a propósito, por compatibilidad de clientes de correo — igual que probablemente ya
+hace la plantilla de Magic Link, dado que ese correo YA se veía bien en las pruebas de hoy.
+**Pendiente**: que el usuario pegue y guarde la plantilla; después probar con un usuario 100% nuevo
+(nunca antes creado) y confirmar en `auth_logs` que el `mail.send` de un `user_confirmation_requested`
+ya sale con la marca — antes de esto, NO declarar el login "listo para vender" (ver Problemas
+conocidos).
 
 ✅ CHECKPOINT — Acabado 3D en las tarjetas de Historial, 2026-09-14, a pedido del usuario ("se ven
 muy planos y sencillos... como los de la [imagen de las categorías de Lecturas]"). Mismo lenguaje
@@ -1392,6 +1422,18 @@ presionar ni asustar."
 - Sesión 8: Adquisición y lanzamiento
 
 ## Problemas conocidos ⚠️
+- **BUG REAL, ACTIVO AHORA MISMO, esperando que el usuario haga un cambio en el panel de Supabase**:
+  a cualquier persona que pruebe la app por PRIMERA VEZ con un correo nunca antes usado le llega el
+  correo genérico de Supabase en inglés ("Confirm your email address"), sin marca y sin el código de
+  8 dígitos — no el correo bonito que armamos. Causa confirmada con el registro real de Supabase
+  (`auth_logs`, acción `user_confirmation_requested`, no `user_recovery_requested`): Supabase usa una
+  plantilla de correo DISTINTA para "primera vez" (Confirm signup) que para "ya tiene cuenta" (Magic
+  Link/OTP) — solo se personalizó esta última en la sesión de EMAILS. Se le dieron al usuario, en el
+  chat, el asunto y el HTML exactos para pegar en Supabase → Authentication → Emails → Templates →
+  "Confirm signup" (mismo lugar donde ya editó "Magic link or OTP"). Sin acceso de código/MCP para
+  hacer este cambio yo mismo — es un ajuste de panel, no de repo. Pendiente: que el usuario lo pegue y
+  guarde; después probar con un usuario nuevo real y confirmar en `auth_logs` que el `mail.send` de un
+  `user_confirmation_requested` ya sale con la marca.
 - FICHA-MERCADO.md tiene campos "NO ENCONTRADO" (medios de pago LATAM, conversión típica) — se
   completan al elegir pasarela en Sesión 6, no bloquean nada hasta ahí
 - garantía / FICHA-MERCADO: "la Garantía de los 7 Días" está PROVISIONAL — al elegir la pasarela real
