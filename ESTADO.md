@@ -26,11 +26,16 @@ pasa a ser el visual del héroe, así que ya no se pasa captura de celular ahí)
 Verificado a 375px y a 1280px, recorriendo TODAS las secciones con scroll real (no captura de
 página completa: con `whileInView` las capturas full-page salen vacías y engañan). Consola sin
 errores. tsc/build limpios. Evidencia: `docs/revisiones/landing-A-375.png` y `landing-A-desktop.png`.
+✅ LOGO REAL puesto el mismo día, a pedido del usuario ("pon el logo primero"): la cabecera y el
+pie ya no muestran un cuadro de color de relleno. Se creó `public/marca/emblema.png` recortando
+del logo completo SOLO el emblema (las 3 cartas + el aro + el monograma "AT"), dejando fuera la
+palabra "AMOR Y TAROT" que el logo trae dentro: el nombre ya va al lado como texto, y repetirlo
+dentro de la imagen lo volvía un borrón a 32px. Se guardó a 210×160 (alcanza para pantallas 3x) y
+se marca `alt=""` porque es decorativo — el nombre accesible lo aporta el texto del mismo enlace,
+si no un lector de pantalla lo diría dos veces. Verificado a 375px en cabecera y pie.
 ⚠️ PENDIENTES conscientes de esta tanda: (a) onboarding y paywall siguen en paleta clara — el
 funnel tiene un salto visual (oscuro → claro → claro → oscuro) hasta la tanda siguiente, ya
-acordada con el usuario; (b) la marca del héroe y del pie siguen siendo un cuadro de color de
-relleno, no el logo real (`public/marca/` ya tiene el monograma) — es PREEXISTENTE, no lo
-introdujo este cambio, pero se nota más ahora que la página subió de nivel; (c) sin revisor-visual
+acordada con el usuario; (b) sin revisor-visual
 todavía (la landing ya estaba documentada como NO LISTA por su veredicto viejo; este rediseño
 cambia la base, así que cuando se retome la certificación hay que re-lanzarlo desde cero).
 

@@ -23,6 +23,7 @@ import {
   Undo2,
   Users,
 } from 'lucide-react';
+import Image from 'next/image';
 import { FondoMistico } from '@/components/app/TemaMistico';
 import { RuedaAstral } from '@/components/landing/RuedaAstral';
 import { SellosConfianza } from '@/components/landing/ui';
@@ -43,6 +44,16 @@ import { ExitIntentPopup } from '@/components/landing/ExitIntentPopup';
 const CTA_HREF = '/onboarding';
 const CTA_LABEL = 'Sacar mis 3 cartas';
 
+/* Emblema del logo real: el recorte del logo completo SIN la palabra "Amor y
+   Tarot" que este trae dentro — el nombre ya va al lado como texto, y repetirlo
+   dentro de la imagen lo volvería un borrón ilegible a 32px.
+   `alt=""` a propósito: es decorativo, el nombre accesible lo da el texto
+   contiguo del mismo enlace (si no, un lector de pantalla lo diría dos veces). */
+const EMBLEMA_HERO = (
+  <Image src="/marca/emblema.png" alt="" width={210} height={160} priority className="h-8 w-auto" />
+);
+const EMBLEMA_PIE = <Image src="/marca/emblema.png" alt="" width={210} height={160} className="h-6 w-auto" />;
+
 export default function LandingPage() {
   return (
     /* Tema oscuro/dorado también acá (FICHA-ARTE.md → "A · Carta Astral"): el
@@ -62,6 +73,7 @@ export default function LandingPage() {
       {/* 1. HERO */}
       <Hero
         appName="Amor & Tarot"
+        logo={EMBLEMA_HERO}
         loginHref="/login"
         h1Marked="[acento]Tu verdad[/acento], en 3 cartas y 60 segundos"
         subtitleMarked="Recibe una lectura que [b]cita tu situación[/b] con El Espejo de las 3 Cartas"
@@ -278,6 +290,7 @@ export default function LandingPage() {
       {/* 10. FOOTER LEGAL */}
       <FooterLegal
         appName="Amor & Tarot"
+        logo={EMBLEMA_PIE}
         soporteEmail="hola@amorytarot.app"
         enlaces={[
           { label: 'Privacidad', href: '/privacidad' },
