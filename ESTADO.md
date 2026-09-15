@@ -1,6 +1,46 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
+✅ CHECKPOINT — Dirección elegida para la NUEVA página de ventas: "A · Carta Astral", 2026-09-15.
+El usuario trajo una referencia (app de astrología "Soulra": fondo casi negro, dorado, bento de
+tarjetas de color, símbolo de carta astral) y pidió adaptarla a la landing conservando la paleta
+mística de la app y el carrusel. Se aplicó el PROTOCOLO A/B/C del 54 en su rama CON REFERENCIA:
+paleta y tipografía NO divergen (las fija el contrato), las 3 opciones divergen en composición y
+dispositivo ownable. Comparativa renderizada y verificada contra los gates (tipografías clase por
+clase, cero emojis, 6 frames llenos sin media pantalla vacía, materiales premium):
+`docs/revisiones/landing-direcciones-abc.html` + `.png`.
+**ELEGIDA: A "Carta Astral"** (rueda astral protagonista, composición centrada, círculos/medallones).
+Descartadas B (bento tipo tablero) y C (editorial con las 3 cartas en abanico) — quedan archivadas
+como evidencia de decisión. Detalle y la hipótesis de conversión, en FICHA-ARTE.md.
+⚠️ Esta elección ENMIENDA la regla vieja de "tema místico solo en la app por dentro": la landing
+pasa a oscuro/dorado. La razón original para dejarla clara ("ya certificada") ya no aplica — su
+veredicto nunca pasó el gate (31/40 · 14/20, ver Problemas conocidos).
+⚠️ REQUISITO del usuario anotado en la ficha: el carrusel se MANTIENE con las capturas actuales
+(`public/landing-app-*.jpg`, renovadas hoy mismo) — no se sustituye ni se vuelve a capturar.
+**Pendiente**: construir la landing con esta dirección (aún NO se tocó `app/page.tsx` ni el kit).
+
+✅ CHECKPOINT — Auditoría de conversión PAUSADA en el hook de cierre, 2026-09-15, a pedido del
+usuario. Al corregir el gate de veredicto (ver abajo), el hook empezó a alcanzar
+`scripts/audit-conversion.sh`, que nunca se ejecutaba porque el gate anterior cortaba antes. Dos
+problemas reales: (1) ~90% de sus ~50 hallazgos son falsos positivos porque analiza el CÓDIGO como
+si fuera copy visible (marca `animate` de Framer Motion como "voseo", nombres de clases de Tailwind
+y comentarios como "párrafos demasiado largos para 375px"); (2) propaga `exit≠0`, y eso cortaba el
+hook ANTES del chequeo de TypeScript, que sí importa. Se dejó detrás de un interruptor
+(`AUDIT_CONVERSION=1` para reactivarla) en vez de borrarla. **Pendiente**: revisarla —y corregir los
+2-3 hallazgos que SÍ son reales, p. ej. un "✓" de texto en `components/landing/ui.tsx:95` que
+debería ser un ícono SVG— cuando se reconstruya la página de ventas.
+
+✅ CHECKPOINT — Hook de cierre: el gate de veredicto ya respeta "Problemas conocidos", 2026-09-15.
+El guardián de cierre (`.claude/hooks/pre-stop.sh`) bloqueaba en CADA turno por las 3 pantallas con
+veredicto pausado (landing/onboarding/paywall), aunque las 3 están correctamente documentadas en
+"Problemas conocidos" desde sesiones anteriores. Causa raíz: la escapatoria de "pendiente ya
+documentado" solo corría en la SEGUNDA pasada del hook (`stop_hook_active`), y este entorno no
+reenvía esa señal — así que la segunda pasada no llegaba nunca. Se movió la misma escapatoria a la
+primera pasada. Verificado por los dos lados en un sandbox aislado: pendiente documentado → cierra
+en silencio (exit 0); pendiente NO documentado → sigue bloqueando con su mensaje exacto (exit 2).
+El guardián conserva los dientes; lo que se eliminó fue la alarma que sonaba siempre (y que, de
+tanto sonar, se iba a ignorar el día que saltara por algo real).
+
 ✅ CHECKPOINT — Las 4 capturas del carrusel "Así se ve por dentro" de la landing, actualizadas al
 tema místico actual, 2026-09-15, a pedido del usuario ("quiero mantener nuestro carrusel... pero con
 capturas de la aplicación actualmente como se encuentra"). Las 4 imágenes originales

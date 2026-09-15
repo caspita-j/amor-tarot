@@ -52,7 +52,37 @@
 - Paleta derivada de: referencia del usuario (imagen subida en el chat) — tomada tal cual, no de un líder del nicho
 - Registro anti-repetición: paleta lila #8D7FEF + naranja/azul/pastel + par tipográfico Baloo 2/Mulish — VETADOS para el próximo proyecto de este SO
 
-## TEMA MÍSTICO — fondo oscuro/dorado (solo app por dentro, NO landing/onboarding/paywall)
+## PÁGINA DE VENTAS — dirección "A · Carta Astral" (elegida 2026-09-15)
+- Estado: APROBADA — 2026-09-15, elegida por el usuario entre 3 opciones renderizadas.
+- ⚠️ ESTA DECISIÓN ENMIENDA la regla de abajo ("solo app por dentro"): la página de ventas SÍ
+  adopta el tema oscuro/dorado. Motivo del cambio: el usuario trajo una referencia nueva (app de
+  astrología con fondo casi negro, acento dorado, bento de tarjetas de color y un símbolo de carta
+  astral) y pidió adaptarla a la landing con la paleta mística ya aprobada. La razón original para
+  dejar la landing clara ("ya certificada, repintarla tira ese trabajo") YA NO APLICA: el veredicto
+  de landing nunca llegó al gate (31/40 · 14/20, ver "Problemas conocidos" de ESTADO.md).
+- Referencia del usuario (CONTRATO): captura de la app "Soulra" — fondo casi negro, acento dorado,
+  rejilla bento de tarjetas de color, ilustración de carta astral, display serif.
+- Caso CON referencia ⇒ paleta y tipografía NO se redecidieron: son las del tema místico de abajo
+  (`[data-tema='mistico']` en `components/landing/tokens.css`). Las 3 opciones divergieron solo en
+  los ejes que el contrato deja libres: COMPOSICIÓN y DISPOSITIVO OWNABLE.
+- ELEGIDA: **A · "Carta Astral"** — composición centrada; la RUEDA ASTRAL es el elemento
+  protagonista y el texto/CTA viven alrededor de ella; forma dominante = círculos y anillos
+  (medallones redondos, tarjetas de radio 26px).
+- Dispositivo ownable de la landing: la RUEDA ASTRAL (círculo con marcas zodiacales, polígono de
+  aspectos y puntos). NO reemplaza los 2 dispositivos de la app (aro medidor y carta de tarot):
+  se suma como el dispositivo propio de la superficie de venta.
+- Hipótesis de conversión (se conserva para revisarla si la landing no convierte — 60): el avatar
+  ya probó apps que le devolvían el mismo texto a todo el mundo; una rueda que se ve calculada
+  comunica "esto es sobre tu caso" antes de leer una palabra.
+- Descartadas: B "Panel de tu situación" (bento denso tipo tablero) · C "Umbral" (editorial con las
+  3 cartas en abanico). No re-proponerlas como novedad.
+- ⚠️ REQUISITO EXPLÍCITO DEL USUARIO (2026-09-15): el carrusel "Así se ve por dentro" SE MANTIENE,
+  con las capturas ACTUALES de la app (`public/landing-app-*.jpg`, renovadas ese mismo día con el
+  tema místico). No se sustituye por ilustraciones ni se vuelve a capturar.
+- Página comparativa (evidencia, incluidas las descartadas): `docs/revisiones/landing-direcciones-abc.html`
+  + screenshot `docs/revisiones/landing-direcciones-abc.png`.
+
+## TEMA MÍSTICO — fondo oscuro/dorado (app por dentro + página de ventas desde 2026-09-15)
 - Estado: APROBADA — 2026-09-10, a pedido explícito del usuario (2 rondas de referencias de apps de
   tarot/horóscopo oscuras y ornamentadas). NO reemplaza la ficha de arriba: la paleta clara sigue
   siendo la única aprobada para landing/onboarding/paywall (ya certificadas, 5 rondas de revisor

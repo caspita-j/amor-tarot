@@ -277,7 +277,13 @@ if [ "$N" -gt 0 ]; then
 fi
 
 # f) Auditoría de conversión del proyecto (la crea otro editor del SO; solo se invoca si existe).
-if [ -f "scripts/audit-conversion.sh" ]; then
+# PAUSADA a pedido del usuario (2026-09-15) hasta rehacer la página de ventas con la
+# dirección elegida. Motivo: hoy analiza el CÓDIGO como si fuera copy visible (marca
+# `animate` de las animaciones como voseo, nombres de clases y comentarios como párrafos
+# largos), así que ~90% de sus ~50 hallazgos son falsos positivos; y como propaga exit≠0,
+# cortaba el hook ANTES del chequeo de TypeScript, que sí importa.
+# REACTIVAR con:  AUDIT_CONVERSION=1   (o quitando esa condición de la línea de abajo).
+if [ "${AUDIT_CONVERSION:-0}" = "1" ] && [ -f "scripts/audit-conversion.sh" ]; then
   bash scripts/audit-conversion.sh
   RC=$?
   if [ "$RC" -ne 0 ]; then
