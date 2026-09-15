@@ -10,6 +10,11 @@ export const SIGNOS = [
 
 export type Signo = (typeof SIGNOS)[number];
 
+// Valor guardado cuando la persona no está segura del signo de la otra
+// persona (onboarding paso 5) — compartido para que cualquier pantalla que
+// lea `otraPersonaSigno` sepa distinguirlo de un signo real.
+export const NO_SE_SIGNO = 'No estoy segura/o';
+
 const IMAGEN_SIGNO: Record<Signo, string> = {
   Aries: '/zodiaco/aries.png',
   Tauro: '/zodiaco/tauro.png',

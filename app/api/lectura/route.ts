@@ -17,11 +17,13 @@ import Anthropic from '@anthropic-ai/sdk';
 import { z } from 'zod';
 import { esSituacionDeCrisis, mensajeDeCrisis } from '@/lib/tarot-data';
 import { CATEGORIAS, etiquetaCarta3, labelCategoria, type Categoria } from '@/lib/categorias';
+import { NO_SE_SIGNO, SIGNOS } from '@/lib/zodiaco';
 import { createClient } from '@/lib/supabase/server';
 
 export const runtime = 'nodejs';
 
 const CATEGORIA_IDS = CATEGORIAS.map((c) => c.id) as [Categoria, ...Categoria[]];
+const SIGNO_IDS = SIGNOS as unknown as [string, ...string[]];
 
 const CartaSchema = z.object({
   nombre: z.string().min(1).max(60),
@@ -34,6 +36,11 @@ const CuerpoSchema = z.object({
   situacion: z.string().trim().min(1).max(1200),
   categoria: z.enum(CATEGORIA_IDS),
   nombreOtra: z.string().trim().min(1).max(60),
+  // Signo de la otra persona para ESTA lectura puntual (puede ser alguien
+  // distinto de la "otra persona" del onboarding) — opcional, lo escribe el
+  // cliente. El signo PROPIO nunca se confía del cliente: se trae del
+  // perfil ya guardado, del lado del servidor (ver más abajo).
+  signoOtra: z.enum(SIGNO_IDS).optional(),
   cartas: z.tuple([CartaSchema, CartaSchema, CartaSchema]),
 });
 
@@ -50,6 +57,7 @@ REGLAS DE VOZ:
 - No das consejos médicos, legales ni terapéuticos. No le dices qué hacer con la otra persona ni con la situación — la lectura devuelve claridad, el paso siguiente es de ella.
 - Cierra con una idea de agencia propia: el trabajo/la claridad empieza en la persona que lee, no depende de que la otra persona o la situación externa actúe.
 - Si te doy contexto de lecturas anteriores de esta misma persona, y de verdad se conecta con lo que cuenta hoy, puedes reconocerlo brevemente ("la vez pasada me contaste que... y esto se conecta con eso"). Si NO hay conexión real, ignora el contexto — nunca fuerces una conexión que no existe.
+- Si te doy signos zodiacales, úsalos SOLO como un matiz sutil y ocasional (por ejemplo, una cualidad típica de ese signo que resuene de verdad con lo que dice una carta) — nunca como base principal ni para escribir un horóscopo genérico. Las 3 cartas siguen mandando siempre; si el signo no aporta nada real a esta lectura puntual, ignóralo sin problema.
 - Extensión: 120 a 180 palabras. Un solo párrafo, sin títulos, sin viñetas, sin markdown.
 - Nunca menciones que eres una IA, un modelo o un sistema — hablas como El Espejo, el mecanismo de la app.
 
@@ -64,6 +72,14 @@ type Cuerpo = z.infer<typeof CuerpoSchema>;
 
 type LecturaPrevia = { categoria: Categoria; situacion: string; resumen: string };
 
+function bloqueAstrologico(signoPropio: string | null, signoOtra: string | undefined, nombreOtra: string): string {
+  const partes: string[] = [];
+  if (signoPropio && signoPropio !== NO_SE_SIGNO) partes.push(`quien pregunta es ${signoPropio}`);
+  if (signoOtra) partes.push(`${nombreOtra} es ${signoOtra}`);
+  if (partes.length === 0) return '';
+  return `\n\nDato astrológico disponible (ver regla de voz — matiz sutil, nunca el eje de la lectura): ${partes.join(' · ')}.`;
+}
+
 function bloqueContexto(previas: LecturaPrevia[]): string {
   if (previas.length === 0) return '';
   const items = previas
@@ -75,7 +91,7 @@ function bloqueContexto(previas: LecturaPrevia[]): string {
   return `\n\nContexto de sus lecturas anteriores (más reciente primero — úsalo SOLO si de verdad conecta con lo de hoy, ver regla de voz):\n${items}`;
 }
 
-function promptUsuario(cuerpo: Cuerpo, previas: LecturaPrevia[]): string {
+function promptUsuario(cuerpo: Cuerpo, previas: LecturaPrevia[], signoPropio: string | null): string {
   const [tu, otra, dinamica] = cuerpo.cartas;
   const nombre = (c: (typeof cuerpo.cartas)[number]) => `${c.nombre}${c.invertida ? ' (invertida)' : ''}`;
   const carta3 = etiquetaCarta3(cuerpo.categoria);
@@ -84,6 +100,7 @@ function promptUsuario(cuerpo: Cuerpo, previas: LecturaPrevia[]): string {
 Situación que la persona escribió (cítala literalmente al menos una vez, entre comillas):
 "${cuerpo.situacion}"
 ${bloqueContexto(previas)}
+${bloqueAstrologico(signoPropio, cuerpo.signoOtra, cuerpo.nombreOtra)}
 
 Las 3 cartas ya sorteadas (no cambies el sorteo, solo interprétalas):
 1. "Tú" → ${nombre(tu)} — esencia: ${tu.esencia}. Significado base: ${tu.frase}
@@ -162,6 +179,12 @@ export async function POST(req: Request) {
     .limit(2);
   const previas: LecturaPrevia[] = previasData ?? [];
 
+  // Signo propio: siempre del perfil ya guardado (nunca del cuerpo que manda
+  // el cliente) — ya se preguntó una vez en el onboarding, no hace falta
+  // volver a pedirlo en cada lectura.
+  const { data: perfilData } = await supabase.from('profiles').select('signo').eq('id', user.id).maybeSingle();
+  const signoPropio: string | null = perfilData?.signo ?? null;
+
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   try {
@@ -170,7 +193,7 @@ export async function POST(req: Request) {
         model: process.env.AI_MODEL || 'claude-sonnet-5',
         max_tokens: 700,
         system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: promptUsuario(cuerpo, previas) }],
+        messages: [{ role: 'user', content: promptUsuario(cuerpo, previas, signoPropio) }],
         stream: true,
       })
     );

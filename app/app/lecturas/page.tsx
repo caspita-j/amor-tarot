@@ -23,7 +23,7 @@ import {
   type CartaSalida,
 } from '@/lib/tarot-data';
 import { CATEGORIAS, etiquetaCarta2, etiquetaCarta3, pideOtraPersona, type Categoria } from '@/lib/categorias';
-import { SIGNOS, imagenSigno } from '@/lib/zodiaco';
+import { NO_SE_SIGNO, SIGNOS, imagenSigno } from '@/lib/zodiaco';
 import { leerOnboarding, type RespuestasOnboarding } from '@/lib/estado-app';
 import { guardarLecturaReal, registrarDia } from '@/lib/supabase/datos';
 import { comprimirProporcional } from '@/lib/imagen';
@@ -113,6 +113,7 @@ function LecturasContenido() {
   const [onboarding, setOnboarding] = useState<RespuestasOnboarding>({});
   const [categoria, setCategoria] = useState<Categoria>('pareja');
   const [nombreOtraInput, setNombreOtraInput] = useState('');
+  const [signoOtraInput, setSignoOtraInput] = useState('');
   const [situacion, setSituacion] = useState('');
   const [cartas, setCartas] = useState<[CartaSalida, CartaSalida, CartaSalida] | null>(null);
   const [resumen, setResumen] = useState('');
@@ -144,9 +145,11 @@ function LecturasContenido() {
     setCategoria(c);
     if (c === 'pareja') {
       setNombreOtraInput(onboarding.otraPersonaNombre ?? '');
+      setSignoOtraInput(onboarding.otraPersonaSigno && onboarding.otraPersonaSigno !== NO_SE_SIGNO ? onboarding.otraPersonaSigno : '');
       if (!situacion.trim()) setSituacion(onboarding.detalle ?? '');
     } else {
       setNombreOtraInput('');
+      setSignoOtraInput('');
     }
     setModo('situacion-form');
   };
@@ -174,6 +177,7 @@ function LecturasContenido() {
           situacion: situacionTexto,
           categoria,
           nombreOtra,
+          signoOtra: pideOtraPersona(categoria) && signoOtraInput ? signoOtraInput : undefined,
           cartas: nuevasCartas.map((c) => ({
             nombre: c.carta.nombre,
             invertida: c.invertida,
@@ -375,6 +379,20 @@ function LecturasContenido() {
               placeholder="Su nombre"
               className="mt-2 h-12 w-full rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] bg-[var(--bg)] px-4 text-base text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
             />
+
+            <p className="mt-3 text-xs font-bold text-[var(--text-secondary)]">
+              ¿Sabes su signo? (opcional — ayuda a afinar la lectura)
+            </p>
+            <div className="mt-2 flex gap-3 overflow-x-auto pb-1">
+              {SIGNOS.map((s) => (
+                <SignoChip
+                  key={s}
+                  signo={s}
+                  seleccionado={signoOtraInput === s}
+                  onClick={() => setSignoOtraInput(signoOtraInput === s ? '' : s)}
+                />
+              ))}
+            </div>
           </div>
         )}
 
