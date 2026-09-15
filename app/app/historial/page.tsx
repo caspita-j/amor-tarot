@@ -51,7 +51,14 @@ function patronReciente(lecturas: LecturaGuardada[]): string | null {
 
 function IntroHistorial({ onCerrar }: { onCerrar: () => void }) {
   return (
-    <div className="mt-5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--accent)_30%,transparent)] bg-[var(--chip-bg)] p-4">
+    <div
+      className="mt-5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_20%,transparent)] p-4 backdrop-blur-xl"
+      style={{
+        backgroundImage:
+          'linear-gradient(165deg, color-mix(in oklab, white 12%, var(--accent)) 0%, color-mix(in oklab, var(--accent) 28%, transparent) 55%, color-mix(in oklab, black 12%, var(--accent)) 100%)',
+        boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.25), 0 12px 26px -14px var(--accent)',
+      }}
+    >
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-bold [font-family:var(--font-display)]">Así funciona tu Historial</p>
         <button type="button" onClick={onCerrar} aria-label="Cerrar" className="shrink-0 text-[var(--text-secondary)]">
@@ -101,7 +108,14 @@ function InformeSemanal() {
   if (estado === 'vacio') return null;
 
   return (
-    <div className="mt-5 overflow-hidden rounded-[var(--radius-card)] bg-[var(--accent)] p-4 shadow-[var(--shadow-2)]">
+    <div
+      className="mt-5 overflow-hidden rounded-[var(--radius-card)] p-4"
+      style={{
+        backgroundImage:
+          'linear-gradient(165deg, color-mix(in oklab, white 26%, var(--accent)) 0%, var(--accent) 55%, color-mix(in oklab, black 20%, var(--accent)) 100%)',
+        boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.35), var(--shadow-2)',
+      }}
+    >
       <p className="text-xs font-bold uppercase tracking-wide text-[color-mix(in_oklab,var(--bg)_92%,transparent)]">
         Tu semana en resumen
       </p>
@@ -146,7 +160,14 @@ function AvanceCategoria({ categoria }: { categoria: Categoria }) {
   if (estado === 'vacio') return null;
 
   return (
-    <div className="mt-3 rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
+    <div
+      className="mt-3 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_16%,transparent)] p-4 backdrop-blur-xl"
+      style={{
+        backgroundImage:
+          'linear-gradient(165deg, color-mix(in oklab, white 12%, var(--surface)) 0%, color-mix(in oklab, var(--surface) 42%, transparent) 60%, color-mix(in oklab, black 10%, var(--surface)) 100%)',
+        boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.2)',
+      }}
+    >
       <div className="flex items-center gap-2">
         <Route size={16} color="var(--accent)" aria-hidden="true" />
         <p className="text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
