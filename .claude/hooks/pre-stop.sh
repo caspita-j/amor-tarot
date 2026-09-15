@@ -13,6 +13,11 @@
 #   e) ANTI-LOOP REPARADO — la segunda pasada (stop_hook_active) ya NO desarma los gates:
 #      RE-CORRE a-d y solo permite cerrar si pasan, o si cada violación pendiente está
 #      documentada (grepeable) en la sección "Problemas conocidos" de ESTADO.md.
+#      La MISMA escapatoria se aplica en la PRIMERA pasada: hay entornos que no reenvían
+#      stop_hook_active, y ahí la segunda pasada no llega nunca — el hook quedaba gritando
+#      en cada turno por pendientes YA anotados, y una alarma que siempre suena es una
+#      alarma que nadie mira (se pierde la señal el día que salte por algo real).
+#      Lo NO documentado sigue bloqueando igual: la escapatoria exige la anotación explícita.
 #   f) Si existe scripts/audit-conversion.sh en el proyecto, se corre y se propaga su exit
 #      (lo crea otro editor del SO; este hook solo lo invoca si existe).
 # Diseño: los gates a-d ACUMULAN todas las violaciones y se reportan juntas en un solo
@@ -248,17 +253,27 @@ gates_extra
 
 N=${#VIOL_KEYS[@]}
 if [ "$N" -gt 0 ]; then
-  echo "⛔ GATES DE EVIDENCIA (pre-stop v2): ${N} violación(es). No se declara terminado sin resolverlas:" >&2
+  # Misma escapatoria que la segunda pasada (ver cabecera, punto e): lo documentado en
+  # "Problemas conocidos" de ESTADO.md no bloquea; lo NO documentado sigue bloqueando.
+  carga_problemas
+  SIN_DOC=0
   i=0
   while [ "$i" -lt "$N" ]; do
-    printf '\n• [%s] %s\n' "${VIOL_KEYS[$i]}" "${VIOL_MSGS[$i]}" >&2
+    if ! documentada "${VIOL_KEYS[$i]}"; then
+      if [ "$SIN_DOC" -eq 0 ]; then
+        echo "⛔ GATES DE EVIDENCIA (pre-stop v2). No se declara terminado sin resolver:" >&2
+      fi
+      printf '\n• [%s] %s\n' "${VIOL_KEYS[$i]}" "${VIOL_MSGS[$i]}" >&2
+      SIN_DOC=1
+    fi
     i=$((i + 1))
   done
-  echo "" >&2
-  echo "→ Resuelve cada punto. Si decides posponer alguno, documéntalo (grepeable, con su palabra" >&2
-  echo "  clave) en la sección 'Problemas conocidos' de ESTADO.md — solo así la siguiente pasada" >&2
-  echo "  permite cerrar." >&2
-  exit 2
+  if [ "$SIN_DOC" -eq 1 ]; then
+    echo "" >&2
+    echo "→ Resuelve cada punto. Si decides posponer alguno, documéntalo (grepeable, con su palabra" >&2
+    echo "  clave) en la sección 'Problemas conocidos' de ESTADO.md — solo así se permite cerrar." >&2
+    exit 2
+  fi
 fi
 
 # f) Auditoría de conversión del proyecto (la crea otro editor del SO; solo se invoca si existe).
