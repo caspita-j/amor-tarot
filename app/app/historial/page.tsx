@@ -241,7 +241,15 @@ export default function HistorialPage() {
               </div>
             )}
             {lecturas.map((l) => (
-              <div key={l.id} className="rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
+              <div
+                key={l.id}
+                className="rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_16%,transparent)] p-4 backdrop-blur-xl"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(165deg, color-mix(in oklab, white 12%, var(--surface)) 0%, color-mix(in oklab, var(--surface) 42%, transparent) 60%, color-mix(in oklab, black 10%, var(--surface)) 100%)',
+                  boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.2)',
+                }}
+              >
                 <div className="flex items-start gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5">
