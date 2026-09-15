@@ -6,9 +6,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Camera, Flame, LogOut, TriangleAlert } from 'lucide-react';
+import { Camera, Check, Flame, LogOut, Pencil, TriangleAlert } from 'lucide-react';
 import { guardarFotoPerfil, leerFotoPerfil } from '@/lib/estado-app';
-import { leerPerfil, type Perfil } from '@/lib/supabase/datos';
+import { actualizarPerfil, leerPerfil, type Perfil } from '@/lib/supabase/datos';
 import { recortarCuadrado } from '@/lib/imagen';
 import { createClient } from '@/lib/supabase/client';
 import { imagenSigno } from '@/lib/zodiaco';
@@ -19,6 +19,9 @@ export default function PerfilPage() {
   const [perfil, setPerfil] = useState<Perfil | null>(null);
   const [foto, setFoto] = useState<string | null>(null);
   const inputFotoRef = useRef<HTMLInputElement>(null);
+  const [editandoNombre, setEditandoNombre] = useState(false);
+  const [nombreInput, setNombreInput] = useState('');
+  const [guardandoNombre, setGuardandoNombre] = useState(false);
 
   useEffect(() => {
     leerPerfil().then(setPerfil);
@@ -27,6 +30,25 @@ export default function PerfilPage() {
 
   const nombre = perfil?.nombre?.trim() || 'Tú';
   const dias = perfil?.rachaDias ?? 0;
+
+  // Editar el nombre desde acá es el respaldo de cuando la sincronización del
+  // onboarding no llegó a tiempo (p. ej. la persona abrió el enlace de acceso
+  // en otro navegador/pestaña y perdió lo que había escrito en el
+  // onboarding) — antes de esto no había forma de corregirlo.
+  const abrirEdicionNombre = () => {
+    setNombreInput(perfil?.nombre?.trim() ?? '');
+    setEditandoNombre(true);
+  };
+
+  const guardarNombre = async () => {
+    const limpio = nombreInput.trim();
+    if (!limpio || guardandoNombre) return;
+    setGuardandoNombre(true);
+    await actualizarPerfil({ nombre: limpio });
+    setPerfil((p) => (p ? { ...p, nombre: limpio } : p));
+    setGuardandoNombre(false);
+    setEditandoNombre(false);
+  };
 
   const cambiarFoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const archivo = e.target.files?.[0];
@@ -75,8 +97,42 @@ export default function PerfilPage() {
             </span>
           </button>
           <input ref={inputFotoRef} type="file" accept="image/*" onChange={cambiarFoto} className="sr-only" />
-          <div>
-            <p className="text-base font-bold [font-family:var(--font-display)]">{nombre}</p>
+          <div className="min-w-0 flex-1">
+            {editandoNombre ? (
+              <div className="flex items-center gap-2">
+                <input
+                  autoFocus
+                  value={nombreInput}
+                  onChange={(e) => setNombreInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') guardarNombre();
+                    if (e.key === 'Escape') setEditandoNombre(false);
+                  }}
+                  maxLength={40}
+                  placeholder="Tu nombre"
+                  className="h-9 min-w-0 flex-1 rounded-[var(--radius-button)] border border-[color-mix(in_oklab,var(--accent)_45%,transparent)] bg-[var(--bg)] px-3 text-base font-bold text-[var(--text-primary)] outline-none [font-family:var(--font-display)]"
+                />
+                <button
+                  type="button"
+                  onClick={guardarNombre}
+                  disabled={!nombreInput.trim() || guardandoNombre}
+                  aria-label="Guardar nombre"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-[var(--bg)] disabled:opacity-40"
+                >
+                  <Check size={16} aria-hidden="true" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={abrirEdicionNombre}
+                aria-label="Editar tu nombre"
+                className="flex items-center gap-1.5"
+              >
+                <p className="text-base font-bold [font-family:var(--font-display)]">{nombre}</p>
+                <Pencil size={13} color="var(--text-secondary)" aria-hidden="true" />
+              </button>
+            )}
             {perfil?.signo && (
               <p className="mt-0.5 flex items-center gap-1.5 text-sm text-[var(--text-secondary)]">
                 {imagenSigno(perfil.signo) && (
