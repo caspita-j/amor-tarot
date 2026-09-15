@@ -6,8 +6,8 @@
 // Modelo de monetización: Freemium con prueba de 3 días (onboarding-first) —
 // el CTA lleva a /onboarding, nunca directo a un checkout.
 
-import Image from 'next/image';
 import {
+  Ban,
   CircleHelp,
   Clock,
   Eye,
@@ -19,8 +19,13 @@ import {
   PenLine,
   Shuffle,
   Sparkles,
+  Tag,
+  Undo2,
   Users,
 } from 'lucide-react';
+import { FondoMistico } from '@/components/app/TemaMistico';
+import { RuedaAstral } from '@/components/landing/RuedaAstral';
+import { SellosConfianza } from '@/components/landing/ui';
 import { Hero } from '@/components/landing/Hero';
 import { Problema } from '@/components/landing/Problema';
 import { Agitacion } from '@/components/landing/Agitacion';
@@ -40,7 +45,20 @@ const CTA_LABEL = 'Sacar mis 3 cartas';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-dvh bg-[var(--bg)] text-[var(--text-primary)] [font-family:var(--font-body)]">
+    /* Tema oscuro/dorado también acá (FICHA-ARTE.md → "A · Carta Astral"): el
+       mismo mecanismo que ya usa la app por dentro, así las 10 secciones cambian
+       de piel sin re-estilarse una por una — el kit consume solo tokens. El fondo
+       (base oscura + resplandores + estrellas) lo pinta <FondoMistico>, por eso
+       este contenedor ya no lleva bg-[var(--bg)]: taparía las estrellas. */
+    <div
+      data-tema="mistico"
+      className="relative isolate min-h-dvh bg-[var(--bg)] text-[var(--text-primary)] [font-family:var(--font-body)]"
+    >
+      {/* `isolate` no es decorativo: crea el contexto de apilamiento propio para
+          que el fondo (-z-10) quede DETRÁS del contenido pero DELANTE del color
+          base de este contenedor. Sin él se escapa al ancestro y desaparece —
+          el mismo bug de z-index que ya apareció en onboarding y paywall. */}
+      <FondoMistico posicion="absoluta" />
       {/* 1. HERO */}
       <Hero
         appName="Amor & Tarot"
@@ -49,17 +67,19 @@ export default function LandingPage() {
         subtitleMarked="Recibe una lectura que [b]cita tu situación[/b] con El Espejo de las 3 Cartas"
         ctaLabel={CTA_LABEL}
         ctaHref={CTA_HREF}
-        socialProof={<span>Cero anuncios · Cero cobros ocultos · Cancelas cuando quieras</span>}
-        visual={
-          <Image
-            src="/landing-app-inicio.jpg"
-            alt="Pantalla 'Tu carta de hoy' de Amor & Tarot: La Estrella en el aro medidor de calma"
-            width={300}
-            height={633}
-            priority
-            className="mx-auto h-auto w-full max-w-72"
-          />
+        socialProof={
+          <div className="flex flex-col items-center gap-4">
+            <span>Cero anuncios · Cero cobros ocultos · Cancelas cuando quieras</span>
+            <SellosConfianza
+              items={[
+                { icon: Ban, label: 'Sin anuncios' },
+                { icon: Tag, label: 'Precio visible' },
+                { icon: Undo2, label: 'Cancelas en 1 toque' },
+              ]}
+            />
+          </div>
         }
+        dispositivo={<RuedaAstral className="mx-auto size-64 md:size-80" />}
       />
 
       {/* 2. PROBLEMA */}

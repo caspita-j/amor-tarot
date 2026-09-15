@@ -1,6 +1,39 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
+✅ CHECKPOINT — Página de ventas CONSTRUIDA con la dirección "A · Carta Astral", 2026-09-15.
+Cómo se hizo sin reescribir la página: el kit de landing consume SOLO tokens, así que basta
+`data-tema="mistico"` en el contenedor raíz de `app/page.tsx` para que las 10 secciones cambien de
+piel solas. Piezas nuevas/tocadas: `components/landing/RuedaAstral.tsx` (NUEVA — el dispositivo
+ownable: rueda con marcas zodiacales que se dibuja al entrar y gira muy lento, con
+reduced-motion respetado), `Hero.tsx` (prop `dispositivo` — el símbolo va ARRIBA del titular y
+pasa a ser el visual del héroe, así que ya no se pasa captura de celular ahí), `ui.tsx`
+(`SellosConfianza`, los 3 sellos bajo el CTA), `TemaMistico.tsx` (`FondoMistico` exportado + prop
+`posicion`), `tokens.css` (tokens nuevos `--invertido-bg`/`--invertido-ink`).
+⚠️ 3 BUGS REALES encontrados y corregidos mirando el render (ninguno se veía en el código):
+1. **Hidratación rota**: las marcas de la rueda salen de seno/coseno y Node y el navegador
+   serializaban el último decimal distinto (…52043 vs …52044) → React abortaba la hidratación.
+   Corregido redondeando la geometría a 2 decimales en origen (`r2()`), no silenciando el aviso.
+2. **Fondo blanco detrás de la página**: `FondoMistico` era `fixed`, o sea solo cubría el viewport;
+   en un documento largo el resto dejaba ver el blanco del body. Ahora la landing lo usa
+   `absoluta` (cubre la altura real) + `isolate` en el contenedor raíz para que el `-z-10` no se
+   escape al ancestro — el MISMO bug de z-index ya documentado en onboarding y paywall.
+3. **Sección final ilegible**: el CTA final del kit es un bloque "invertido" (fondo
+   `--text-primary`). En paleta clara da negro; en la oscura daba CREMA, y encima el botón dorado
+   perdía contraste contra el crema. Corregido con tokens por tema (`--invertido-bg`/`-ink`): la
+   paleta clara sigue invirtiendo a casi-negro y la oscura se hunde a `--surface-2` con el dorado
+   como único punto brillante. Cero condicionales de tema dentro del componente.
+Verificado a 375px y a 1280px, recorriendo TODAS las secciones con scroll real (no captura de
+página completa: con `whileInView` las capturas full-page salen vacías y engañan). Consola sin
+errores. tsc/build limpios. Evidencia: `docs/revisiones/landing-A-375.png` y `landing-A-desktop.png`.
+⚠️ PENDIENTES conscientes de esta tanda: (a) onboarding y paywall siguen en paleta clara — el
+funnel tiene un salto visual (oscuro → claro → claro → oscuro) hasta la tanda siguiente, ya
+acordada con el usuario; (b) la marca del héroe y del pie siguen siendo un cuadro de color de
+relleno, no el logo real (`public/marca/` ya tiene el monograma) — es PREEXISTENTE, no lo
+introdujo este cambio, pero se nota más ahora que la página subió de nivel; (c) sin revisor-visual
+todavía (la landing ya estaba documentada como NO LISTA por su veredicto viejo; este rediseño
+cambia la base, así que cuando se retome la certificación hay que re-lanzarlo desde cero).
+
 ✅ CHECKPOINT — Dirección elegida para la NUEVA página de ventas: "A · Carta Astral", 2026-09-15.
 El usuario trajo una referencia (app de astrología "Soulra": fondo casi negro, dorado, bento de
 tarjetas de color, símbolo de carta astral) y pidió adaptarla a la landing conservando la paleta

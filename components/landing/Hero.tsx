@@ -30,6 +30,10 @@ export interface HeroProps {
   socialProof?: ReactNode;
   /** Screenshot real o mini-demo honesto. Sin visual → placeholder honesto (55 §1.3). */
   visual?: ReactNode;
+  /** Dispositivo ownable ARRIBA del titular (dirección "A · Carta Astral" de
+   *  FICHA-ARTE.md: el símbolo recibe y el texto vive alrededor). Cuando está
+   *  presente ÉL es el visual del héroe, así que `visual` deja de ser obligatorio. */
+  dispositivo?: ReactNode;
   /** Sugerencia CONCRETA de qué imagen poner en el placeholder — nunca "imagen aquí". */
   visualPlaceholderSugerencia?: string;
   id?: string;
@@ -46,6 +50,7 @@ export function Hero({
   ctaHref,
   socialProof,
   visual,
+  dispositivo,
   visualPlaceholderSugerencia = 'captura de la pantalla principal con datos reales',
   id = 'hero',
 }: HeroProps) {
@@ -87,6 +92,10 @@ export function Hero({
           transition={{ duration: 0.3 }}
           className="mx-auto flex max-w-[820px] flex-col items-center pt-10 text-center md:pt-16"
         >
+          {/* Dispositivo ownable ARRIBA del titular (dirección A): recibe a la
+              persona y el texto vive alrededor de él. */}
+          {dispositivo && <div className="mb-6 md:mb-8">{dispositivo}</div>}
+
           {/* H1: bold completo por defecto; el acento lo pone el [acento] del copy */}
           <h1 className="text-balance text-[40px] font-bold leading-[1.08] tracking-[-0.01em] text-[var(--text-primary)] [font-family:var(--font-display)] md:text-[60px]">
             <MarkedCopy text={h1Marked} />
@@ -105,13 +114,15 @@ export function Hero({
             <div className="mt-3 text-[13px] text-[var(--text-secondary)]">{socialProof}</div>
           )}
 
-          {/* Visual del producto: asoma en el primer viewport e invita al scroll */}
-          <div className="mt-10 w-full max-w-[720px]">
+          {/* Visual del producto: asoma en el primer viewport e invita al scroll.
+              Con `dispositivo` presente, ÉL es el visual del héroe: este bloque no
+              se dibuja y no hay nada "faltante" que avisar. */}
+          <div className={`w-full max-w-[720px] ${dispositivo && !visual ? '' : 'mt-10'}`}>
             {visual ? (
               <div className="overflow-hidden rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--accent)_18%,transparent)] shadow-[var(--shadow-2)]">
                 {visual}
               </div>
-            ) : (
+            ) : dispositivo ? null : (
               /* Placeholder HONESTO (55 §1.3): dashed + ratio fijo (CLS 0) + sugerencia.
                  Queda anotado como pendiente en ESTADO.md hasta montar el visual real. */
               <div className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 rounded-[var(--radius-card)] border-2 border-dashed border-[color-mix(in_oklab,var(--text-tertiary)_45%,transparent)] bg-[color-mix(in_oklab,var(--accent)_5%,transparent)] px-8">

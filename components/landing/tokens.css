@@ -52,6 +52,15 @@
   --shadow-1: 0 1px 2px rgb(141 127 239 / 0.08);
   --shadow-2: 0 12px 32px -12px rgb(141 127 239 / 0.35);
 
+  /* ── BLOQUE INVERTIDO (CTA final — el clímax de la página, 55 §9) ──
+     En la paleta clara "invertir" es literal: fondo casi-negro y texto casi-blanco.
+     Vive como token propio y no como `var(--text-primary)` directo porque en un tema
+     OSCURO invertir de verdad daría un bloque crema, y ahí el CTA dorado se pierde
+     contra el fondo (medido: dorado sobre crema no llega a AA). Cada tema decide
+     cómo se ve su clímax; el componente solo consume estos dos. */
+  --invertido-bg: var(--text-primary);
+  --invertido-ink: var(--bg);
+
   /* ── DERIVADOS (no se tocan: se recalculan solos desde --accent) ── */
   --chip-bg: color-mix(in oklab, var(--accent) 10%, transparent);
 }
@@ -104,6 +113,11 @@
   --accent-4-ink: #f4ecd8;
   --accent-frio: #6fa3c7; /* segunda nota de brillo (resplandores/detalles) */
   --danger: #e2867a;
+  /* Clímax del tema oscuro: NO se invierte a crema (el CTA dorado se perdería
+     encima). Se intensifica hacia adentro — la superficie más honda de la escala,
+     con el dorado como único punto brillante. */
+  --invertido-bg: var(--surface-2);
+  --invertido-ink: var(--text-primary);
   --chip-bg: color-mix(in oklab, var(--accent) 18%, transparent);
   --shadow-1: 0 2px 10px rgb(0 0 0 / 0.45);
   --shadow-2: 0 18px 44px -16px rgb(216 178 95 / 0.35);

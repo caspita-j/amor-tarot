@@ -56,17 +56,25 @@ MHF=$(grep -nE 'min-h-full' "$FILE_PATH" 2>/dev/null | head -3)
 ❌ min-h-full (el shell de pantalla usa min-h-dvh — archivo 32):
 $MHF"
 
-# 5. Valores arbitrarios fuera de la escala 4·8·12·16·24·32·48·64.
-#    El filtro whitelist se aplica VALOR POR VALOR, no a la línea entera de salida de grep:
-#    una línea con p-[16px] Y p-[17px] debe marcarse igual (mismo arreglo que en audit-diseno.sh:
-#    filtrar la parte que corresponde, no la línea completa).
-ARB=$(grep -nE '\b[a-z]+-\[[0-9]+px\]' "$FILE_PATH" 2>/dev/null \
-      | awk '{ rest = $0; bad = 0
-               while (match(rest, /\[[0-9]+px\]/)) {
-                 v = substr(rest, RSTART, RLENGTH)
-                 if (v !~ /^\[(4|8|12|16|24|32|48|64)px\]$/) bad = 1
-                 rest = substr(rest, RSTART + RLENGTH) }
-               if (bad) print }' | head -5)
+# 5. ESPACIADO arbitrario fuera de la escala 4·8·12·16·24·32·48·64 (archivo 14).
+#    ALCANCE (corregido 2026-09-15): la escala del 14 es de ESPACIADO — padding, margin,
+#    gap. Antes el patrón era `[a-z]+-[Npx]`, que barría TODA utilidad con valor en px y
+#    contradecía las otras reglas del propio SO: marcaba text-[14px] (el mínimo de cuerpo
+#    que exige UX 5), text-[40px]/text-[60px] (rango display de la fórmula de jerarquía),
+#    text-[12px] (labels 11-13px, nivel N4) y anchos de medida como max-w-[1140px] o
+#    w-[250px], que no viven en una escala de 8. Resultado: bloqueaba ediciones legítimas
+#    del kit ya certificado y empujaba a romper la tipografía aprobada para callar al linter.
+#    Ahora mira SOLO utilidades de espaciado; ahí sigue siendo estricto valor por valor
+#    (una línea con p-[16px] Y p-[17px] se marca igual).
+ARB=$(awk '{ rest = $0; bad = 0
+             while (match(rest, /(^|[^A-Za-z0-9_-])-?(p|px|py|pt|pr|pb|pl|m|mx|my|mt|mr|mb|ml|gap|gap-x|gap-y|space-x|space-y)-\[[0-9]+px\]/)) {
+               s = RSTART; l = RLENGTH
+               tok = substr(rest, s, l)
+               if (match(tok, /\[[0-9]+px\]/)) {
+                 v = substr(tok, RSTART, RLENGTH)
+                 if (v !~ /^\[(4|8|12|16|24|32|48|64)px\]$/) bad = 1 }
+               rest = substr(rest, s + l) }
+             if (bad) print FNR ":" $0 }' "$FILE_PATH" 2>/dev/null | head -5)
 [ -n "$ARB" ] && FINDINGS="$FINDINGS
 ⚠️ Valores arbitrarios fuera de la escala 4·8·12·16·24·32·48·64 (archivo 14):
 $ARB"

@@ -104,6 +104,31 @@ export function CheckCustom() {
   );
 }
 
+/* ── <SellosConfianza> — los 3 sellos bajo el CTA del héroe (dirección "A ·
+   Carta Astral"). Responden las objeciones #1 y #6 de FICHA-AVATAR.md (cobros
+   ocultos, anuncios) con hechos de política, nunca con números inventados.
+   El medallón circular es la forma dominante de esta dirección. ── */
+export function SellosConfianza({ items }: { items: { icon: LucideIcon; label: string }[] }) {
+  return (
+    <ul className="flex w-full items-stretch justify-center gap-2">
+      {items.map(({ icon: Icono, label }) => (
+        <li
+          key={label}
+          className="flex max-w-[168px] flex-1 flex-col items-center gap-2 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--accent)_16%,transparent)] bg-[color-mix(in_oklab,var(--accent)_5%,transparent)] p-3 text-center"
+        >
+          <span
+            aria-hidden="true"
+            className="inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-[color-mix(in_oklab,var(--accent)_25%,transparent)] bg-[var(--chip-bg)]"
+          >
+            <Icono size={16} strokeWidth={2} color="var(--accent)" aria-hidden="true" />
+          </span>
+          <span className="text-[12px] font-semibold leading-snug text-[var(--text-secondary)]">{label}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 /* ── <SectionShell> — ritmo vertical y alternancia base↔elevado (55 T1).
    64px mobile / 96px desktop; compacta (garantía) 48/64. flush pega las
    secciones que son UN movimiento visual (problema+agitación). ── */
