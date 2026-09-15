@@ -20,3 +20,14 @@ export function labelEstado(estado: Estado): string {
 export function colorEstado(estado: Estado): string {
   return ESTADOS.find((e) => e.id === estado)?.color ?? 'var(--text-tertiary)';
 }
+
+/** Versión de `colorEstado` para usar como TEXTO sobre un círculo claro (la
+ * tira de "Esta semana") — 3 de los 4 acentos ya son oscuros y funcionan
+ * bien tal cual, pero "tranquila" (dorado claro) mide 1.7:1 de contraste
+ * sobre el círculo casi blanco, muy por debajo del 4.5:1 mínimo. Se
+ * oscurece SOLO para este uso, sin tocar el color donde ya funciona
+ * (íconos, chips, "Hoy te sentiste..."). */
+export function inkEstado(estado: Estado): string {
+  if (estado === 'tranquila') return 'color-mix(in oklab, black 45%, var(--accent))';
+  return colorEstado(estado);
+}

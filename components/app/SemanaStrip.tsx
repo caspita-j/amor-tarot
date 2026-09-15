@@ -7,7 +7,7 @@
 // vista de calendario real que enlazar todavía).
 
 import type { Estado } from '@/lib/animo';
-import { colorEstado } from '@/lib/animo';
+import { inkEstado } from '@/lib/animo';
 
 const DIAS = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
 
@@ -46,13 +46,11 @@ export function SemanaStrip({ estados = {} }: { estados?: Record<string, Estado>
               </span>
               <span
                 className={`flex size-8 items-center justify-center rounded-full text-sm tabular-nums ${
-                  estado
-                    ? 'font-bold text-[var(--bg)]'
-                    : esHoy
-                      ? 'bg-[var(--text-primary)] font-bold text-[var(--bg)]'
-                      : 'font-normal text-[var(--text-tertiary)]'
+                  estado || esHoy
+                    ? 'bg-[var(--text-primary)] font-bold'
+                    : 'font-normal text-[var(--text-tertiary)]'
                 }`}
-                style={estado ? { backgroundColor: colorEstado(estado) } : undefined}
+                style={estado ? { color: inkEstado(estado) } : esHoy ? { color: 'var(--bg)' } : undefined}
               >
                 {fecha.getDate()}
               </span>
