@@ -1,5 +1,30 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-15 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema)
+Última actualización: 2026-09-15 | Sesión actual: 6 (Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido)
+
+✅ CHECKPOINT — Revisión general de todo lo hecho hoy, de punta a punta, 2026-09-15, a pedido
+explícito del usuario ("revisa paso a paso detalladamente... verifica que todo esté funcionando
+correctamente"). Se hizo con un usuario de prueba real sembrado con datos de sobra (signo propio,
+3 días de ánimo distintos esta semana, 3 lecturas previas de "pareja") para poder ver TODAS las
+piezas tocadas hoy a la vez, no solo la última.
+**Recorrido completo**: Inicio (carta del día, "Hoy te sentiste...", tira "Esta semana", tarjetas de
+"Tu momento") → Lecturas (menú → categoría → formulario con selector de signo → botón deslizar,
+toque de respaldo → resultado con disclaimer de IA → Guardar) → Compatibilidad (formulario →
+resultado con anillo) → Bienestar (categorías → lista de prácticas → detalle) → Historial (intro →
+Tu semana en resumen → Tu avance en pareja → lista de lecturas) → Perfil. tsc/build limpios antes y
+después. Cero errores nuevos en consola (el único que aparece es el de hidratación de `/login` ya
+documentado como benigno y preexistente).
+⚠️ BUG REAL encontrado y corregido en el camino (no estaba en ningún reporte anterior): el texto
+"Hoy te sentiste [ánimo]" en Inicio tenía el MISMO problema de contraste que ya se había corregido
+hoy en otros 2 lugares (íconos de ánimo, círculos de "Esta semana") pero en un tercer lugar que
+nadie había mirado todavía — medido en 1.3-1.5:1 contra el fondo de su tarjeta, muy por debajo del
+4.5:1 mínimo. Corregido con el mismo criterio (ver checkpoint de "Contraste corregido..." de
+`colorEstadoSobreOscuro()` en `lib/animo.ts`).
+**Todo lo demás, confirmado funcionando sin regresiones**: el signo zodiacal (propio y de la otra
+persona) llegó de nuevo a la IA correctamente ("siendo Escorpio como eres"); el contexto de lecturas
+anteriores se sigue citando bien; "Tu avance" sigue siendo honesto (no inventó una mejora que no
+había); el patrón "X de tus últimas Y lecturas" sigue contando bien; los 3 tipos de tarjeta 3D de
+Historial y los de Lecturas/Bienestar se ven con buen contraste; el botón deslizar funciona por
+toque (fallback de accesibilidad). Usuario y datos de prueba borrados al terminar.
 
 ✅ CHECKPOINT — Círculos de "Esta semana" (tira bajo la Carta del día) en blanco/crema, 2026-09-15,
 a pedido del usuario ("ese color se ve opaco... cambia el círculo a color blanco"). Mismo bug que el
