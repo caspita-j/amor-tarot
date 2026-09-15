@@ -21,6 +21,10 @@ Verificado con un usuario de prueba real con datos sembrados a propósito (1 án
 misma categoría, esta semana) para poder ver las 3 tarjetas completas, no solo la de introducción:
 las 3 se ven con buen contraste a 375px. tsc/build limpios. Usuario y datos de prueba borrados al
 terminar. Sin revisor-visual (pantallas secundarias, mismo patrón ya validado hoy en Lecturas).
+**Corrección el mismo día**: el usuario notó que faltaba la tarjeta de cada LECTURA individual dentro
+de la lista (la que muestra fecha, categoría, las 3 cartas y el resumen) — se agregó el mismo vidrio
+esmerilado neutro. Verificado con un usuario de prueba con 1 lectura real guardada. tsc/build
+limpios.
 
 ✅ CHECKPOINT — Color propio + acabado 3D + hover en las 6 tarjetas de categoría de Lecturas
 ("¿De qué se trata tu duda?"), 2026-09-14, a pedido del usuario ("no se vean tan simples... cada
