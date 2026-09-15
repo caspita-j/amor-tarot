@@ -26,6 +26,26 @@ pasa a ser el visual del héroe, así que ya no se pasa captura de celular ahí)
 Verificado a 375px y a 1280px, recorriendo TODAS las secciones con scroll real (no captura de
 página completa: con `whileInView` las capturas full-page salen vacías y engañan). Consola sin
 errores. tsc/build limpios. Evidencia: `docs/revisiones/landing-A-375.png` y `landing-A-desktop.png`.
+✅ CHECKPOINT — Onboarding y paywall pasados al tema oscuro/dorado, 2026-09-15. Cierra el salto
+visual del recorrido: ahora página de ventas → onboarding → paywall → app son la misma piel.
+- **Onboarding**: bastó tocar `PantallaOnboarding` (`components/onboarding/ui.tsx`), la cáscara
+  compartida por los 11 pasos — `data-tema="mistico"` + `isolate` y su degradé propio reemplazado
+  por `<FondoMistico posicion="absoluta">`, el MISMO fondo (resplandores + estrellas) del resto del
+  producto. Cero cambios en los 11 pasos: todos consumen tokens.
+- **Paywall**: mismo tratamiento en su `<main>`. Además se le puso el emblema real del logo donde
+  tenía un cuadro de color de relleno (igual que la landing).
+- Los botones heredaron solos el acabado 3D dorado: `BotonPrincipal` ya traía la clase
+  `boton-principal`, cuya regla vive bajo `[data-tema='mistico']` — antes no aplicaba porque estas
+  pantallas no tenían el atributo.
+Verificado recorriendo el flujo COMPLETO a 375px como usuaria real (11 pasos, uno por uno:
+situación → dolor → nombre → signo → otra persona → su signo → momento del día → relato →
+reconocimiento → teaser de 3 cartas → paywall, incluido el scroll del paywall hasta la garantía).
+Consola sin errores. tsc/build limpios. Evidencia: `docs/revisiones/onboarding-A-375.png` y
+`paywall-A-375.png`.
+⚠️ Los veredictos VIEJOS de onboarding y paywall (NO LISTA, ver Problemas conocidos) quedaron
+caducados por este cambio: cuando se retome la certificación hay que re-lanzar el revisor sobre la
+base nueva, no sobre las notas de la versión clara.
+
 ✅ BOTONES 3D el mismo día, a pedido del usuario ("que se vean más 3D como están dentro de la
 app"): `CtaButton` y el botón de la barra fija (`components/landing/ui.tsx`) ahora llevan la clase
 `boton-principal`, que engancha el acabado vidrio/cromo que YA definía `tokens.css` bajo

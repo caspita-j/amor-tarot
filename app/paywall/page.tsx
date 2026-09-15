@@ -10,10 +10,12 @@
 // scrolleado (mismo principio que StickyCtaMobile del kit de landing).
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, useReducedMotion } from 'motion/react';
 import { ArrowLeft, Check, Shield, XCircle } from 'lucide-react';
+import { FondoMistico } from '@/components/app/TemaMistico';
 import { BotonPrincipal, TarjetaTarot } from '@/components/onboarding/ui';
 
 type Respuestas = {
@@ -85,16 +87,15 @@ export default function PaywallPage() {
   };
 
   return (
-    <main className="flex h-dvh flex-col overflow-hidden bg-[var(--bg)] text-[var(--text-primary)] [font-family:var(--font-body)]">
-      <div className="relative min-h-0 flex-1">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{
-          background:
-            'radial-gradient(720px 460px at 50% -10%, color-mix(in oklab, var(--accent) 22%, transparent) 0%, transparent 62%)',
-        }}
-      />
+    // Tema oscuro/dorado, igual que el onboarding del que viene y la app a la que
+    // lleva (FICHA-ARTE.md) — el recorrido no cambia de piel a mitad de camino.
+    <main
+      data-tema="mistico"
+      className="flex h-dvh flex-col overflow-hidden bg-[var(--bg)] text-[var(--text-primary)] [font-family:var(--font-body)]"
+    >
+      <div className="relative isolate min-h-0 flex-1">
+      {/* Mismo fondo que el resto del producto (resplandores + estrellas). */}
+      <FondoMistico posicion="absoluta" />
       <div className="relative z-10 h-full overflow-y-auto px-6 pt-6 pb-6">
         <motion.div
           initial="hidden"
@@ -111,7 +112,9 @@ export default function PaywallPage() {
             >
               <ArrowLeft size={20} aria-hidden="true" />
             </button>
-            <span className="size-7 shrink-0 rounded-xl bg-[var(--accent)]" aria-hidden="true" />
+            {/* Emblema del logo real (sin el texto que el logo trae dentro: el
+                nombre ya va al lado). Decorativo — de ahí el alt vacío. */}
+            <Image src="/marca/emblema.png" alt="" width={210} height={160} className="h-7 w-auto shrink-0" />
             <span className="text-sm font-bold [font-family:var(--font-display)]">Amor & Tarot</span>
           </motion.div>
 

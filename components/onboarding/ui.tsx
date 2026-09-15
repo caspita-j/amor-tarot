@@ -8,6 +8,7 @@
 import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { ArrowLeft, Check, Loader2, Lock } from 'lucide-react';
+import { FondoMistico } from '@/components/app/TemaMistico';
 import { SimboloCarta } from '@/components/app/SimboloCarta';
 import { IMAGENES_REALES } from '@/lib/tarot-data';
 
@@ -41,18 +42,18 @@ export function PantallaOnboarding({
 }) {
   const reduce = useReducedMotion();
   return (
+    // Tema oscuro/dorado, igual que la página de ventas y la app por dentro
+    // (FICHA-ARTE.md): el recorrido completo se siente de la misma app en vez de
+    // saltar de oscuro a claro y volver. `isolate` crea el contexto de apilamiento
+    // para que el fondo (-z-10 dentro de FondoMistico) quede detrás del contenido
+    // pero delante del color base — sin él se escapa al ancestro y desaparece.
     <main
-      className="relative flex min-h-dvh flex-col overflow-hidden bg-[var(--bg)] px-6 pt-6 pb-8 text-[var(--text-primary)] [font-family:var(--font-body)]"
+      data-tema="mistico"
+      className="relative isolate flex min-h-dvh flex-col overflow-hidden bg-[var(--bg)] px-6 pt-6 pb-8 text-[var(--text-primary)] [font-family:var(--font-body)]"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{
-          background:
-            'radial-gradient(720px 460px at 50% -10%, color-mix(in oklab, var(--accent) 22%, transparent) 0%, transparent 62%), ' +
-            'radial-gradient(560px 380px at 85% 75%, color-mix(in oklab, var(--accent-2, var(--accent)) 24%, transparent) 0%, transparent 55%)',
-        }}
-      />
+      {/* Mismo fondo que el resto del producto (resplandores + estrellas), en vez
+          del degradé propio que tenía antes: la coherencia es el punto. */}
+      <FondoMistico posicion="absoluta" />
       <div className="relative z-10 mx-auto flex w-full max-w-md flex-1 flex-col">
         <div className="flex items-center gap-3">
           {onAtras ? (
