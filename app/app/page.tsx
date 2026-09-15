@@ -214,11 +214,8 @@ export default function InicioPage() {
                         disabled={guardandoEstado}
                         className="flex flex-col items-center gap-1.5 rounded-[var(--radius-button)] py-1.5 outline-none disabled:opacity-50"
                       >
-                        <span
-                          className="flex size-9 items-center justify-center rounded-full"
-                          style={{ backgroundColor: `color-mix(in oklab, ${color} 16%, transparent)` }}
-                        >
-                          <Icono size={16} color={color} aria-hidden="true" />
+                        <span className="flex size-10 items-center justify-center rounded-full bg-[var(--bg)]">
+                          <Icono size={18} color={color} aria-hidden="true" />
                         </span>
                         <span className="text-center text-xs font-semibold leading-tight text-[var(--text-secondary)]">
                           {label}
