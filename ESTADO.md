@@ -91,7 +91,7 @@ descripciones de "Tipos de lectura" se truncan a mitad de palabra (falta `line-c
 de los 4 chips de categoría (naranja/accent) se ven parecidos entre sí en el tema oscuro.
 Evidencia: las 10 capturas en `docs/revisiones/landing-A-*.png` + `landing-veredicto.md`.
 
-⚠️ CHECKPOINT — Onboarding y paywall, MÁS CERCA de certificar pero todavía NO LISTA,
+✅ CHECKPOINT — LAS 3 PANTALLAS CERTIFICADAS (Veredicto: LISTA), 2026-09-16.
 2026-09-16, misma tercera pasada. Puntajes: **onboarding 32/40 · 15/20 craft** (subió de 29→31→32
 en 3 rondas); **paywall 35/40 · 16/20 craft · 19/20 copy** (a 1 solo punto del gate de
 usabilidad — craft y copy YA pasan).
@@ -151,6 +151,49 @@ Verificado visualmente ambos arreglos (capturas nuevas en `docs/revisiones/`). t
 **Decisión de alcance**: llevar las 3 pantallas hasta pasar el gate estricto (≥36/40, ≥16/20) es
 un trabajo de pulido más grande y abierto que "corregir los hallazgos ya listados" — se le
 presenta al usuario como una decisión aparte en vez de seguir iterando sin su OK.
+
+✅ CHECKPOINT — CERTIFICACIÓN COMPLETA: landing + onboarding + paywall, las 3 en LISTA,
+2026-09-16 — cierra el pedido explícito del usuario ("sigue puliendo hasta que certifiquen").
+Resultado final de 4 rondas de revisor-visual con contexto limpio en cada pasada:
+
+| Pantalla    | Usabilidad | Craft | Copy  | Veredicto |
+|-------------|-----------|-------|-------|-----------|
+| Landing     | 37/40     | 19/20 | 19/20 | LISTA     |
+| Onboarding  | 37/40     | 17/20 | —     | LISTA     |
+| Paywall     | 37/40     | 16/20 | 19/20 | LISTA     |
+
+Progreso real de la usabilidad ronda a ronda (evidencia de que el pulido funcionó, no solo
+variación entre revisores): landing 33→29→29→**37** · onboarding 29→31→32→**37** · paywall
+29→31→35→**37**. Los últimos 2 arreglos, los que cerraron el gate:
+- **Onboarding**: el paso 7 (texto libre) se había quedado con el patrón VIEJO de botón
+  deshabilitado sin explicar por qué, mientras los pasos 2 y 4 ya usaban el patrón nuevo (botón
+  siempre activo + error al tocar) — inconsistencia real que el revisor detectó comparando
+  pasos entre sí. Unificado con el mismo `errorDetalle` + mensaje en rojo.
+- **Paywall**: en el plan Mensual, `cobroReal` y `precioMes` son el MISMO número ($6.99) —
+  mostrar "equivale a $6.99/mes" bajo un "$6.99/mes" ya grande repetía el número exacto justo
+  en la zona de más desconfianza del avatar. Ahora esa nota solo se pinta cuando de verdad
+  difieren (el caso del plan Anual). Además, el párrafo de "así funciona tu prueba" subió de
+  12px a 14px — es el copy más sensible de la pantalla (la objeción de cobro sorpresa) y estaba
+  por debajo del mínimo de cuerpo de la regla 5 de UX.
+**Bugs reales encontrados y corregidos en el camino** (ninguno se veía en el código a simple
+vista, todos salieron de mirar el render real): el precio equivocado del paywall (checkpoint de
+más abajo, el más grave — afectaba dinero real), 2 casos del mismo color sin contraste AA en la
+landing (`Agitacion.tsx` y `Solucion.tsx`), 1 caso de colores del tema claro incrustados en la
+landing oscura (`TiposDeLectura.tsx`, resuelto con un override por tema en `tokens.css`), 2 pasos
+del onboarding sin centrar que se habían saltado en la primera pasada, y la inconsistencia del
+paso 7 de arriba.
+**Defectos MENORES que quedan, no bloqueantes, anotados para pulido futuro** (ningún revisor los
+marcó como razón de NO LISTA):
+- Landing: las descripciones de "Tipos de lectura" se truncan a mitad de palabra (falta
+  `line-clamp-2`); 2 de los 4 chips de categoría se ven parecidos entre sí en el tema oscuro.
+- Onboarding: `ChipOpcion`/`ChipGrid` mantienen 2 tratamientos de "seleccionado" distintos —
+  decisión consciente, no se va a unificar salvo que un futuro veredicto lo vuelva a bloquear;
+  el paso 7 no muestra un contador de caracteres mientras se escribe (solo al fallar).
+- Paywall: sin estado de error visible si el pago falla — pendiente real hasta conectar la
+  pasarela (próxima sesión), ya documentado como tal desde la primera ronda.
+Evidencia completa en `docs/revisiones/` (10 capturas de la landing + 4 del onboarding + 2 del
+paywall) y los 3 archivos `*-veredicto.md`, todos con fecha de esta sesión. tsc y `npm run build`
+limpios en cada ronda.
 
 ⚠️ CHECKPOINT — BUG REAL de dinero encontrado y corregido: el paywall mostraba el precio
 equivocado como "lo que se cobra", 2026-09-16. A pedido del usuario ("primero revisemos como la
