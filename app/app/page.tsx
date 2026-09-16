@@ -11,7 +11,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { ArrowRight, ChevronRight, CloudRain, Feather, Leaf, Sparkles, Sunrise, Waves } from 'lucide-react';
+import { ArrowRight, ChevronRight, CloudRain, Feather, Leaf, Sparkles, Sunrise, Waves, X } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { AroMedidor } from '@/components/app/AroMedidor';
 import { BolaDeCristal } from '@/components/app/BolaDeCristal';
@@ -22,7 +22,7 @@ import { VideoCartaDelDia } from '@/components/app/VideoCartaDelDia';
 import { TarjetaTarot } from '@/components/onboarding/ui';
 import { cartaDelDia, hoyISO, tituloFecha } from '@/lib/tarot-data';
 import { ESTADOS, colorEstadoSobreOscuro, labelEstado, type Estado } from '@/lib/animo';
-import { leerFotoPerfil, leerOnboarding } from '@/lib/estado-app';
+import { leerFotoPerfil, leerOnboarding, limpiarOnboarding } from '@/lib/estado-app';
 import {
   guardarEstadoAnimo,
   leerEstadosAnimoRango,
@@ -56,13 +56,23 @@ export default function InicioPage() {
   const [aroRevelado, setAroRevelado] = useState(false);
   const [estadosSemana, setEstadosSemana] = useState<Record<string, Estado>>({});
   const [guardandoEstado, setGuardandoEstado] = useState(false);
+  const [avisoRegreso, setAvisoRegreso] = useState(false);
   const reduce = useReducedMotion();
   const hoy = hoyISO();
   const carta = cartaDelDia(hoy);
 
   useEffect(() => {
     (async () => {
-      await sincronizarOnboardingSiHaceFalta(leerOnboarding());
+      const onboarding = leerOnboarding();
+      const yaTeniaCuenta = await sincronizarOnboardingSiHaceFalta(onboarding);
+      // Si la persona acaba de llenar el onboarding (trae un nombre nuevo en
+      // sessionStorage) y resultó que su correo YA tenía cuenta, ese nombre
+      // nuevo se descartó a propósito (no se pisa el real). Avisarle evita la
+      // confusión de "escribí un nombre y no se ve" — sin esto, quedaba en
+      // silencio total (bug real detectado por el dueño probando la app).
+      if (yaTeniaCuenta && onboarding.nombre?.trim()) setAvisoRegreso(true);
+      limpiarOnboarding();
+
       const perfil = await leerPerfil();
       setNombre(perfil.nombre?.trim() || 'ahí');
       setFoto(leerFotoPerfil());
@@ -161,6 +171,31 @@ export default function InicioPage() {
             )}
           </Link>
         </motion.header>
+
+        {avisoRegreso && (
+          <motion.div
+            variants={item}
+            className="mx-4 mt-3 flex items-start gap-2.5 rounded-[var(--radius-card)] border border-[color-mix(in_oklab,white_20%,transparent)] p-3.5 backdrop-blur-xl"
+            style={{
+              backgroundImage:
+                'linear-gradient(165deg, color-mix(in oklab, white 12%, var(--accent)) 0%, color-mix(in oklab, var(--accent) 28%, transparent) 55%, color-mix(in oklab, black 12%, var(--accent)) 100%)',
+              boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.25), 0 12px 26px -14px var(--accent)',
+            }}
+          >
+            <Sparkles size={16} color="var(--bg)" className="mt-0.5 shrink-0" aria-hidden="true" />
+            <p className="flex-1 text-sm leading-relaxed text-[color-mix(in_oklab,var(--bg)_88%,transparent)]">
+              Ese correo ya tenía una cuenta con nosotros — te trajimos de vuelta a la tuya, con tu nombre y tus datos de siempre.
+            </p>
+            <button
+              type="button"
+              onClick={() => setAvisoRegreso(false)}
+              aria-label="Cerrar aviso"
+              className="shrink-0 text-[color-mix(in_oklab,var(--bg)_65%,transparent)]"
+            >
+              <X size={16} aria-hidden="true" />
+            </button>
+          </motion.div>
+        )}
 
         <motion.div
           variants={item}

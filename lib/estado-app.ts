@@ -27,6 +27,18 @@ export function leerOnboarding(): RespuestasOnboarding {
   }
 }
 
+/** Se llama una vez que `sincronizarOnboardingSiHaceFalta` ya resolvió qué
+ * hacer con estos datos (los copió a `profiles`, o los descartó por tratarse
+ * de una cuenta que ya existía) — de cualquier forma, ya cumplieron su
+ * función y no deben quedar dando vueltas en sessionStorage. */
+export function limpiarOnboarding(): void {
+  try {
+    sessionStorage.removeItem('amor-tarot:onboarding');
+  } catch {
+    // Safari privado u otro bloqueo: no es crítico, no rompe nada.
+  }
+}
+
 const CLAVE_FOTO_PERFIL = 'amor-tarot:foto-perfil';
 
 /** Data URL (JPEG, ya recortada/comprimida en el cliente) o null si no subió ninguna. */

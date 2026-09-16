@@ -79,7 +79,11 @@ export function Hero({
             {appName}
           </a>
           {loginHref && (
-            <a href={loginHref} className="px-2 py-3 text-[14px] font-medium text-[var(--text-tertiary)]">
+            <a
+              href={loginHref}
+              className="px-2 py-3 text-[14px] font-medium text-[var(--text-tertiary)] underline decoration-[color-mix(in_oklab,var(--text-tertiary)_45%,transparent)] underline-offset-4"
+            >
+              <span className="hidden sm:inline">¿Ya tienes cuenta? </span>
               {loginLabel}
             </a>
           )}

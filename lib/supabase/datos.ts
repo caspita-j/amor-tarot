@@ -57,21 +57,27 @@ export async function leerPerfil(): Promise<Perfil> {
 /** Copia las respuestas del onboarding (guardadas en sessionStorage ANTES de
  * tener cuenta) a la fila real de `profiles` — solo si el perfil todavía no
  * tiene nombre, para no pisar cambios que la persona ya haya hecho a mano en
- * Perfil. Se llama una vez, la primera vez que hay sesión real. */
+ * Perfil, NI el nombre real de una cuenta que ya existía (alguien que vuelve
+ * a hacer el onboarding con el correo de siempre no debe silenciarle su
+ * nombre guardado con el que acaba de escribir de nuevo por probar la app).
+ * Se llama cada vez que hay sesión real; solo escribe la primera vez.
+ * Devuelve `true` si la cuenta YA tenía nombre (usuario que regresa — el
+ * onboarding recién completado no se usó), `false` si se acaba de crear el
+ * perfil con estos datos (o no había sesión). */
 export async function sincronizarOnboardingSiHaceFalta(datos: {
   nombre?: string;
   signo?: string;
   otraPersonaNombre?: string;
   otraPersonaSigno?: string;
-}): Promise<void> {
+}): Promise<boolean> {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return;
+  if (!user) return false;
 
   const { data: actual } = await supabase.from('profiles').select('nombre').eq('id', user.id).maybeSingle();
-  if (actual?.nombre) return;
+  if (actual?.nombre) return true;
 
   await supabase.from('profiles').upsert({
     id: user.id,
@@ -80,6 +86,7 @@ export async function sincronizarOnboardingSiHaceFalta(datos: {
     otra_persona_nombre: datos.otraPersonaNombre?.trim() || null,
     otra_persona_signo: datos.otraPersonaSigno || null,
   });
+  return false;
 }
 
 export async function actualizarPerfil(cambios: { nombre?: string; signo?: string }): Promise<void> {
