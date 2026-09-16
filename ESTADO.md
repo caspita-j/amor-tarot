@@ -1,6 +1,36 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
+⚠️ CHECKPOINT — BUG REAL de dinero encontrado y corregido: el paywall mostraba el precio
+equivocado como "lo que se cobra", 2026-09-16. A pedido del usuario ("primero revisemos como la
+anterior"), se relanzó el subagente `revisor-visual` con contexto limpio sobre las 3 pantallas
+recién repintadas (landing, onboarding, paywall) — los 3 veredictos viejos (03-09) ya no servían,
+eran de la versión clara.
+**Los 3 salieron NO LISTA** (mínimo para pasar: ≥36/40 usabilidad y ≥16/20 craft):
+- Landing: 33/40 · 15/20 · copy 19/20 (el copy quedó muy sólido, trazado bien a FICHA-AVATAR.md)
+- Onboarding: 29/40 · 14/20
+- Paywall: 31/40 · 14/20 · copy 14/20
+**El hallazgo más grave, confirmado leyendo el código (no solo el veredicto)**: en
+`app/paywall/page.tsx`, la línea de tiempo "Así funciona tu prueba — sin sorpresas" y el pie fijo
+bajo el botón de pago usaban `precioMes` (el precio MENSUAL EQUIVALENTE, ej. "$3.66") como si fuera
+"lo que se te cobra" al terminar los 3 días gratis — pero para el plan Anual (el que viene
+preseleccionado) el cargo real es $43.99/año, no $3.66. Es decir: la sección que existe
+específicamente para prevenir la objeción #1 del avatar ("me van a cobrar sin avisar") mentía por
+omisión sobre el monto real. Corregido agregando un campo nuevo por plan, `cobroReal` +
+`cobroRealUnidad` (Anual: $43.99/año · Mensual: $6.99/mes), separado a propósito de `precioMes`
+(que sigue existiendo solo para la comparación "por mes" dentro de la tarjeta de cada plan, donde
+SÍ es correcto mostrarlo así porque va acompañado de "Se cobra $43.99/año" al lado).
+Verificado en vivo cambiando entre los 2 planes: con Anual seleccionado ambos textos dicen
+"$43.99/año"; con Mensual seleccionado, ambos dicen "$6.99/mes". tsc limpio.
+**Pendiente**: el usuario pidió corregir solo el precio por ahora; el resto de los hallazgos de los
+3 veredictos (colores hardcodeados en `Agitacion.tsx` que rompen la paleta del tema místico, falta
+de hairline degradé en el paywall, ambigüedad entre el trial de 3 días y la garantía de 7,
+pantallas del onboarding con la mitad inferior vacía, selector de 12 signos que excede el máximo de
+opciones por pantalla, y la sección de FICHA-ARTE.md que todavía dice "tema místico solo en la app
+por dentro" y no refleja que landing/onboarding/paywall ya lo adoptaron) siguen abiertos, con su
+detalle completo en `docs/revisiones/landing-veredicto.md`, `onboarding-veredicto.md` y
+`paywall-veredicto.md`.
+
 ✅ CHECKPOINT — Página de ventas CONSTRUIDA con la dirección "A · Carta Astral", 2026-09-15.
 Cómo se hizo sin reescribir la página: el kit de landing consume SOLO tokens, así que basta
 `data-tema="mistico"` en el contenedor raíz de `app/page.tsx` para que las 10 secciones cambien de

@@ -31,6 +31,14 @@ const PLANES = {
     nombre: 'Anual',
     badge: 'MÁS POPULAR',
     precioMes: '$3.66',
+    // Lo que se cobra DE VERDAD al terminar la prueba (nunca precioMes: ese es
+    // el equivalente mensual, solo para comparar planes en la tarjeta de precio
+    // — mostrarlo como "monto que se cobra" en la línea de tiempo o el pie fue
+    // el bug real que encontró el revisor: alguien en el plan Anual leía "se te
+    // cobra $3.66" cuando el cargo real es $43.99, justo en la sección que
+    // promete "sin sorpresas").
+    cobroReal: '$43.99',
+    cobroRealUnidad: '/año',
     totalAnual: 'Se cobra $43.99/año',
     ahorro: 'Ahorras $39.89 al año (casi 6 meses gratis)',
   },
@@ -39,6 +47,8 @@ const PLANES = {
     nombre: 'Mensual',
     badge: null,
     precioMes: '$6.99',
+    cobroReal: '$6.99',
+    cobroRealUnidad: '/mes',
     totalAnual: 'Se cobra $6.99/mes',
     ahorro: null,
   },
@@ -227,7 +237,7 @@ export default function PaywallPage() {
               {[
                 { dia: 'Hoy', detalle: '$0.00 — tu lectura completa' },
                 { dia: 'Día 2', detalle: 'Te avisamos antes de cobrar' },
-                { dia: 'Día 3', detalle: `${seleccionado.precioMes.replace('/mes', '')} si no cancelaste` },
+                { dia: 'Día 3', detalle: `${seleccionado.cobroReal} si no cancelaste` },
               ].map((paso, i) => (
                 <div key={paso.dia} className="flex flex-1 flex-col items-center text-center">
                   <div className="flex w-full items-center">
@@ -289,7 +299,8 @@ export default function PaywallPage() {
           </BotonPrincipal>
           <p className="mt-2 flex items-center justify-center gap-1.5 text-center text-xs text-[var(--text-secondary)]">
             <Shield size={12} className="shrink-0 text-[var(--accent)]" aria-hidden="true" />
-            Garantía de 7 días · después, {seleccionado.precioMes} — cancela cuando quieras.
+            Garantía de 7 días · después, {seleccionado.cobroReal}
+            {seleccionado.cobroRealUnidad} — cancela cuando quieras.
           </p>
           {/* 7. SALIDA LIMPIA — sin culpa */}
           <Link
