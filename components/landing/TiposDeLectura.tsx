@@ -7,6 +7,12 @@
 // nuestra paleta e íconos (no hay assets de arte de cartas todavía). Cada fila
 // es honesta: no promete una pantalla que no existe, describe una FUNCIÓN real
 // del MVP (ver ESTADO.md → Decisiones técnicas → Features del MVP).
+// Va justo DESPUÉS del carrusel <AppPorDentro> y comparte 2-3 conceptos con él
+// (compatibilidad, carta del día) — el revisor marcó eso como redundante si
+// las dos secciones se leen como "la misma demo dos veces". El `subtituloMarked`
+// existe para eso: convierte esta lista en un ÍNDICE rápido para quien ya vio
+// el carrusel y quiere saltar directo a lo que le interesa, no en una segunda
+// demostración — misión distinta a la del carrusel (probar, no repasar).
 
 import { motion } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
@@ -25,6 +31,9 @@ export interface TipoDeLectura {
 export interface TiposDeLecturaProps {
   kicker?: string;
   tituloMarked?: string;
+  /** 1 línea que aclara el propósito de ÍNDICE (evita que se lea como una
+   *  segunda demo del carrusel de arriba). Sin ella, no se pinta ningún subtítulo. */
+  subtituloMarked?: string;
   items: TipoDeLectura[];
   ctaLabel: string;
   ctaHref: string;
@@ -41,6 +50,7 @@ const TONOS: Record<TipoDeLectura['tono'], string> = {
 export function TiposDeLectura({
   kicker = 'ASÍ SE VE POR DENTRO',
   tituloMarked,
+  subtituloMarked,
   items,
   ctaLabel,
   ctaHref,
@@ -59,6 +69,9 @@ export function TiposDeLectura({
             <h2 className="text-balance text-[30px] font-bold leading-[1.15] text-[var(--text-primary)] [font-family:var(--font-display)] md:text-[40px]">
               {tituloMarked}
             </h2>
+          )}
+          {subtituloMarked && (
+            <p className="mt-3 text-[15px] leading-relaxed text-[var(--text-secondary)]">{subtituloMarked}</p>
           )}
         </motion.div>
 

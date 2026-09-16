@@ -9,7 +9,7 @@
 // El destino de los CTAs sigue al MODELO de 02C (checkout vs /onboarding).
 
 import { motion } from 'motion/react';
-import { Star } from 'lucide-react';
+import { ShieldCheck, Star } from 'lucide-react';
 import { CheckCustom, CtaButton, Hairline, Kicker, SectionShell, useReveal, VIEWPORT_ONCE } from './ui';
 import { MarkedCopy, warnCopy, warnRango } from './MarkedCopy';
 
@@ -47,6 +47,11 @@ export interface OfertaProps {
     totalTachado: string;
     nota?: string;
   };
+  /** Nombre PROPIO de la garantía ("la Garantía de los 7 Días" — MISMO texto que
+   *  <Garantia nombre="..."> más abajo). Se repite chico bajo el CTA de cada plan:
+   *  el gate de conversión exige que la garantía esté nombrada CERCA de la
+   *  decisión de compra, no solo en su propia sección más adelante. */
+  garantiaLabel?: string;
   /** default 'oferta' — lo observa StickyCtaMobile. */
   id?: string;
 }
@@ -91,6 +96,15 @@ function Features({ items, origen }: { items: string[]; origen: string }) {
   );
 }
 
+function GarantiaCerca({ label }: { label: string }) {
+  return (
+    <p className="mt-3 flex items-center justify-center gap-1.5 text-[12.5px] text-[var(--text-secondary)]">
+      <ShieldCheck size={14} strokeWidth={2} className="shrink-0 text-[var(--accent)]" aria-hidden="true" />
+      Respaldado por {label}
+    </p>
+  );
+}
+
 export function Oferta({
   kicker = 'LA OFERTA',
   tituloMarked,
@@ -98,6 +112,7 @@ export function Oferta({
   anual,
   mensual,
   stack,
+  garantiaLabel,
   id = 'oferta',
 }: OfertaProps) {
   warnCopy('Oferta → título', tituloMarked, 8);
@@ -168,6 +183,7 @@ export function Oferta({
                   <CtaButton href={anual.ctaHref} fullMobile>
                     {anual.ctaLabel}
                   </CtaButton>
+                  {garantiaLabel && <GarantiaCerca label={garantiaLabel} />}
                 </div>
               </div>
             </Hairline>
@@ -190,6 +206,7 @@ export function Oferta({
               <CtaButton href={mensual.ctaHref} fullMobile>
                 {mensual.ctaLabel}
               </CtaButton>
+              {garantiaLabel && <GarantiaCerca label={garantiaLabel} />}
             </div>
           </motion.div>
         </div>

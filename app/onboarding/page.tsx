@@ -38,9 +38,16 @@ const DOLORES = [
 
 const MOMENTOS = ['Apenas despierto', 'Durante el día, sin parar', 'En la noche, antes de dormir'];
 
-const SIGNOS = [
-  'Aries', 'Tauro', 'Géminis', 'Cáncer', 'Leo', 'Virgo',
-  'Libra', 'Escorpio', 'Sagitario', 'Capricornio', 'Acuario', 'Piscis',
+// Agrupados por elemento (fuego/tierra/aire/agua) en vez de una grilla plana de
+// 12 — el revisor marcó los 12-a-la-vez como riesgo de parálisis (máximo
+// recomendado por decisión: 4). Agrupar no reduce las opciones (siguen siendo
+// 12), pero las presenta como 4 decisiones chicas y reconocibles en vez de una
+// sola decisión grande — más fácil de escanear sin perder ninguna opción.
+const ELEMENTOS_SIGNO: { nombre: string; signos: string[] }[] = [
+  { nombre: 'Fuego', signos: ['Aries', 'Leo', 'Sagitario'] },
+  { nombre: 'Tierra', signos: ['Tauro', 'Virgo', 'Capricornio'] },
+  { nombre: 'Aire', signos: ['Géminis', 'Libra', 'Acuario'] },
+  { nombre: 'Agua', signos: ['Cáncer', 'Escorpio', 'Piscis'] },
 ];
 
 const NO_SE_SIGNO = 'No estoy segura/o';
@@ -57,6 +64,28 @@ type Respuestas = {
 };
 
 const TOTAL_PREGUNTAS = 8;
+
+/** Grilla de signos agrupada por elemento, compartida por los pasos 3 y 5. */
+function GridSignos({ seleccionado, onSelect }: { seleccionado?: string; onSelect: (signo: string) => void }) {
+  return (
+    <div className="mt-6 flex flex-col gap-5">
+      {ELEMENTOS_SIGNO.map((el) => (
+        <div key={el.nombre}>
+          <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--text-secondary)]">
+            {el.nombre}
+          </p>
+          <div className="mt-2 grid grid-cols-3 gap-2">
+            {el.signos.map((s) => (
+              <ChipGrid key={s} seleccionado={seleccionado === s} onClick={() => onSelect(s)}>
+                {s}
+              </ChipGrid>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -135,22 +164,27 @@ export default function OnboardingPage() {
   if (paso === 0) {
     return (
       <PantallaOnboarding pasoActual={1} totalPasos={TOTAL_PREGUNTAS} onSaltar={siguiente}>
-        <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
-          ¿Qué te trae por acá hoy?
-        </h1>
-        <div className="mt-6 flex flex-col gap-3">
-          {SITUACIONES.map((op) => (
-            <ChipOpcion
-              key={op}
-              seleccionado={r.situacion === op}
-              onClick={() => {
-                setR({ ...r, situacion: op });
-                siguiente();
-              }}
-            >
-              {op}
-            </ChipOpcion>
-          ))}
+        {/* Centrado vertical: con solo 4 opciones, el bloque flotaba pegado
+            arriba y dejaba la mitad inferior vacía (el revisor lo leyó como
+            "pantalla a medio construir", no como calma deliberada). */}
+        <div className="flex flex-1 flex-col justify-center">
+          <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
+            ¿Qué te trae por acá hoy?
+          </h1>
+          <div className="mt-6 flex flex-col gap-3">
+            {SITUACIONES.map((op) => (
+              <ChipOpcion
+                key={op}
+                seleccionado={r.situacion === op}
+                onClick={() => {
+                  setR({ ...r, situacion: op });
+                  siguiente();
+                }}
+              >
+                {op}
+              </ChipOpcion>
+            ))}
+          </div>
         </div>
       </PantallaOnboarding>
     );
@@ -160,22 +194,24 @@ export default function OnboardingPage() {
   if (paso === 1) {
     return (
       <PantallaOnboarding pasoActual={2} totalPasos={TOTAL_PREGUNTAS} onAtras={atras} onSaltar={siguiente}>
-        <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
-          ¿Qué es lo que más te quita el sueño?
-        </h1>
-        <div className="mt-6 flex flex-col gap-3">
-          {DOLORES.map((op) => (
-            <ChipOpcion
-              key={op}
-              seleccionado={r.dolor === op}
-              onClick={() => {
-                setR({ ...r, dolor: op });
-                siguiente();
-              }}
-            >
-              {op}
-            </ChipOpcion>
-          ))}
+        <div className="flex flex-1 flex-col justify-center">
+          <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
+            ¿Qué es lo que más te quita el sueño?
+          </h1>
+          <div className="mt-6 flex flex-col gap-3">
+            {DOLORES.map((op) => (
+              <ChipOpcion
+                key={op}
+                seleccionado={r.dolor === op}
+                onClick={() => {
+                  setR({ ...r, dolor: op });
+                  siguiente();
+                }}
+              >
+                {op}
+              </ChipOpcion>
+            ))}
+          </div>
         </div>
       </PantallaOnboarding>
     );
@@ -215,20 +251,13 @@ export default function OnboardingPage() {
         <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
           ¿Cuál es tu signo?
         </h1>
-        <div className="mt-6 grid grid-cols-3 gap-2">
-          {SIGNOS.map((s) => (
-            <ChipGrid
-              key={s}
-              seleccionado={r.signo === s}
-              onClick={() => {
-                setR({ ...r, signo: s });
-                siguiente();
-              }}
-            >
-              {s}
-            </ChipGrid>
-          ))}
-        </div>
+        <GridSignos
+          seleccionado={r.signo}
+          onSelect={(s) => {
+            setR({ ...r, signo: s });
+            siguiente();
+          }}
+        />
       </PantallaOnboarding>
     );
   }
@@ -267,20 +296,13 @@ export default function OnboardingPage() {
         <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
           ¿Y el signo de {nombreOtra}?
         </h1>
-        <div className="mt-6 grid grid-cols-3 gap-2">
-          {SIGNOS.map((s) => (
-            <ChipGrid
-              key={s}
-              seleccionado={r.otraPersonaSigno === s}
-              onClick={() => {
-                setR({ ...r, otraPersonaSigno: s });
-                siguiente();
-              }}
-            >
-              {s}
-            </ChipGrid>
-          ))}
-        </div>
+        <GridSignos
+          seleccionado={r.otraPersonaSigno}
+          onSelect={(s) => {
+            setR({ ...r, otraPersonaSigno: s });
+            siguiente();
+          }}
+        />
         <button
           type="button"
           onClick={() => {
@@ -299,22 +321,24 @@ export default function OnboardingPage() {
   if (paso === 6) {
     return (
       <PantallaOnboarding pasoActual={7} totalPasos={TOTAL_PREGUNTAS} onAtras={atras} onSaltar={siguiente}>
-        <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
-          ¿En qué momento del día te pega más fuerte?
-        </h1>
-        <div className="mt-6 flex flex-col gap-3">
-          {MOMENTOS.map((op) => (
-            <ChipOpcion
-              key={op}
-              seleccionado={r.momento === op}
-              onClick={() => {
-                setR({ ...r, momento: op });
-                siguiente();
-              }}
-            >
-              {op}
-            </ChipOpcion>
-          ))}
+        <div className="flex flex-1 flex-col justify-center">
+          <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
+            ¿En qué momento del día te pega más fuerte?
+          </h1>
+          <div className="mt-6 flex flex-col gap-3">
+            {MOMENTOS.map((op) => (
+              <ChipOpcion
+                key={op}
+                seleccionado={r.momento === op}
+                onClick={() => {
+                  setR({ ...r, momento: op });
+                  siguiente();
+                }}
+              >
+                {op}
+              </ChipOpcion>
+            ))}
+          </div>
         </div>
       </PantallaOnboarding>
     );
@@ -342,6 +366,15 @@ export default function OnboardingPage() {
           rows={6}
           className="mt-6 w-full flex-1 resize-none rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] bg-[var(--bg)] p-5 text-base leading-relaxed text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
         />
+        {/* El botón se apagaba sin explicar por qué (el mínimo de 10 caracteres
+            no se comunicaba en ningún lado). Solo aparece una vez que la
+            persona ya empezó a escribir — no antes, para no regañar un campo
+            todavía vacío. */}
+        {(r.detalle ?? '').trim().length > 0 && !listo && (
+          <p className="mt-2 text-xs text-[var(--text-secondary)]">
+            Cuéntanos un poco más — mínimo 10 caracteres.
+          </p>
+        )}
         <div className="mt-6">
           <BotonPrincipal disabled={!listo} onClick={siguiente}>
             Sacar mis 3 cartas

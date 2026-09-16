@@ -17,6 +17,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { ArrowLeft, Check, Shield, XCircle } from 'lucide-react';
 import { FondoMistico } from '@/components/app/TemaMistico';
 import { BotonPrincipal, TarjetaTarot } from '@/components/onboarding/ui';
+import { Hairline } from '@/components/landing/ui';
 
 type Respuestas = {
   nombre?: string;
@@ -217,7 +218,11 @@ export default function PaywallPage() {
                   <span
                     aria-hidden="true"
                     className={`absolute right-4 top-4 flex size-5 items-center justify-center rounded-full border-2 ${
-                      activo ? 'border-[var(--accent)] bg-[var(--accent)]' : 'border-[var(--surface-2)]'
+                      activo
+                        ? 'border-[var(--accent)] bg-[var(--accent)]'
+                        // El tono anterior (--surface-2) era casi idéntico al fondo de su propia
+                        // tarjeta (--surface) — el círculo del plan no elegido se veía borrado.
+                        : 'border-[color-mix(in_oklab,var(--text-secondary)_40%,transparent)]'
                     }`}
                   >
                     {activo && <Check size={12} strokeWidth={3} color="var(--bg)" />}
@@ -228,37 +233,52 @@ export default function PaywallPage() {
           </motion.div>
 
           {/* 5. PUEDO CANCELAR — línea de tiempo de cobro (anti-cobro-sorpresa,
-              responde directo la objeción #1 de FICHA-AVATAR.md) */}
-          <motion.div variants={VARIANTS} className="mt-6 rounded-[var(--radius-card)] bg-[var(--surface-2)] px-4 py-5 shadow-[inset_0_1px_2px_rgb(0_0_0_/_0.04)]">
-            <p className="text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
-              Así funciona tu prueba — sin sorpresas
-            </p>
-            <div className="mt-4 flex items-start justify-between">
-              {[
-                { dia: 'Hoy', detalle: '$0.00 — tu lectura completa' },
-                { dia: 'Día 2', detalle: 'Te avisamos antes de cobrar' },
-                { dia: 'Día 3', detalle: `${seleccionado.cobroReal} si no cancelaste` },
-              ].map((paso, i) => (
-                <div key={paso.dia} className="flex flex-1 flex-col items-center text-center">
-                  <div className="flex w-full items-center">
-                    <div className={`h-0.5 flex-1 ${i === 0 ? 'bg-transparent' : 'bg-[var(--accent)]'}`} />
-                    <span
-                      className={`flex size-3 shrink-0 items-center justify-center rounded-full ${
-                        i === 0 ? 'bg-[var(--accent)]' : 'border-2 border-[var(--accent)] bg-[var(--surface)]'
-                      }`}
-                    />
-                    <div className={`h-0.5 flex-1 ${i === 2 ? 'bg-transparent' : 'bg-[var(--accent)]'}`} />
-                  </div>
-                  <p className="mt-2 text-xs font-bold text-[var(--text-primary)]">{paso.dia}</p>
-                  <p className="mt-0.5 px-1 text-xs leading-snug text-[var(--text-secondary)]">{paso.detalle}</p>
+              responde directo la objeción #1 de FICHA-AVATAR.md). Con Hairline
+              (borde degradé) en vez del fondo plano de antes: es la tarjeta que
+              existe específicamente para prevenir la desconfianza del avatar,
+              se gana el mismo tratamiento premium que ya usa la landing en su
+              tarjeta de garantía/plan recomendado — no toda tarjeta lo lleva
+              (regla del kit: 1-3 usos por página), pero esta lo amerita. */}
+          <motion.div variants={VARIANTS} className="mt-6">
+            <Hairline surface="surface-2" className="shadow-[inset_0_1px_2px_rgb(0_0_0_/_0.04)]">
+              <div className="px-4 py-5">
+                <p className="text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
+                  Así funciona tu prueba — sin sorpresas
+                </p>
+                <div className="mt-4 flex items-start justify-between">
+                  {[
+                    { dia: 'Hoy', detalle: '$0.00 — tu lectura completa' },
+                    { dia: 'Día 2', detalle: 'Te avisamos antes de cobrar' },
+                    { dia: 'Día 3', detalle: `${seleccionado.cobroReal} si no cancelaste` },
+                  ].map((paso, i) => (
+                    <div key={paso.dia} className="flex flex-1 flex-col items-center text-center">
+                      <div className="flex w-full items-center">
+                        <div className={`h-0.5 flex-1 ${i === 0 ? 'bg-transparent' : 'bg-[var(--accent)]'}`} />
+                        <span
+                          className={`flex size-3 shrink-0 items-center justify-center rounded-full ${
+                            i === 0 ? 'bg-[var(--accent)]' : 'border-2 border-[var(--accent)] bg-[var(--surface)]'
+                          }`}
+                        />
+                        <div className={`h-0.5 flex-1 ${i === 2 ? 'bg-transparent' : 'bg-[var(--accent)]'}`} />
+                      </div>
+                      <p className="mt-2 text-xs font-bold text-[var(--text-primary)]">{paso.dia}</p>
+                      <p className="mt-0.5 px-1 text-xs leading-snug text-[var(--text-secondary)]">{paso.detalle}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <p className="mt-4 text-xs leading-snug text-[var(--text-secondary)]">
-              Se te cobrará recién el{' '}
-              <strong className="font-semibold text-[var(--text-primary)]">{fechaDeCobro(3)}</strong> — cancela
-              cuando quieras desde tu perfil, y la Garantía de los 7 Días te cubre igual.
-            </p>
+                {/* Antes era UNA oración corrida que mezclaba el cobro (día 3) con la
+                    garantía (día 7) — alguien que lee rápido podía leer "tengo 7 días
+                    gratis". Separadas en 2 líneas, cada una con su propio plazo. */}
+                <p className="mt-4 text-xs leading-snug text-[var(--text-secondary)]">
+                  Se te cobrará recién el{' '}
+                  <strong className="font-semibold text-[var(--text-primary)]">{fechaDeCobro(3)}</strong> — cancela
+                  cuando quieras desde tu perfil.
+                </p>
+                <p className="mt-1.5 text-xs leading-snug text-[var(--text-secondary)]">
+                  ¿No te convenció igual? La Garantía de los 7 Días te devuelve tu dinero, ya cobrado.
+                </p>
+              </div>
+            </Hairline>
           </motion.div>
 
           {/* Insignias de confianza — honestas: sin nombrar una pasarela que aún no se elige (Sesión 6) */}

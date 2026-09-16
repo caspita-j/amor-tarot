@@ -175,6 +175,7 @@ export default function LandingPage() {
       <TiposDeLectura
         kicker="TIPOS DE LECTURA"
         tituloMarked="Todo lo que puedes hacer"
+        subtituloMarked="Un resumen rápido de toda la app, por si ya sabes lo que buscas."
         items={[
           {
             icon: HeartHandshake,
@@ -238,6 +239,7 @@ export default function LandingPage() {
             'Cancelas cuando quieras',
           ],
         }}
+        garantiaLabel="la Garantía de los 7 Días"
       />
 
       {/* 7. GARANTÍA — 7 días > 3 de prueba (FICHA-MERCADO.md §4), provisional

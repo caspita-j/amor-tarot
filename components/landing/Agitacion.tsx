@@ -52,8 +52,12 @@ export function Agitacion({ frases, contraste, id }: AgitacionProps) {
 
         {contraste && (
           <motion.div variants={item} className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="rounded-[var(--radius-card)] border-l-4 border-[#FFA24C] bg-[color-mix(in_oklab,#FFA24C_14%,var(--bg))] p-5">
-              <p className="text-[12px] font-bold uppercase tracking-[0.08em] text-[#B5701F]">
+            {/* "Hoy" usa --danger (no un naranja fijo): es el único token semántico de
+                "esto pesa/urge" que ya existe en ambos temas — un hex fijo se veía bien
+                por casualidad en el tema claro pero rompía la paleta en el oscuro y ni
+                siquiera pasaba el contraste mínimo (medido: 3.6:1, hace falta 4.5:1). */}
+            <div className="rounded-[var(--radius-card)] border-l-4 border-[var(--danger)] bg-[color-mix(in_oklab,var(--danger)_12%,var(--bg))] p-5">
+              <p className="text-[12px] font-bold uppercase tracking-[0.08em] text-[var(--danger)]">
                 {contraste.labelHoy}
               </p>
               <p className="mt-2 text-[15px] leading-snug font-medium text-[var(--text-primary)]">{contraste.hoy}</p>

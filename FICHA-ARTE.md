@@ -82,12 +82,19 @@
 - Página comparativa (evidencia, incluidas las descartadas): `docs/revisiones/landing-direcciones-abc.html`
   + screenshot `docs/revisiones/landing-direcciones-abc.png`.
 
-## TEMA MÍSTICO — fondo oscuro/dorado (app por dentro + página de ventas desde 2026-09-15)
+## TEMA MÍSTICO — fondo oscuro/dorado (TODA la app: por dentro + landing + onboarding + paywall)
 - Estado: APROBADA — 2026-09-10, a pedido explícito del usuario (2 rondas de referencias de apps de
-  tarot/horóscopo oscuras y ornamentadas). NO reemplaza la ficha de arriba: la paleta clara sigue
-  siendo la única aprobada para landing/onboarding/paywall (ya certificadas, 5 rondas de revisor
-  cada una — repintarlas ahora tiraría ese trabajo). Este tema es una SEGUNDA piel, exclusiva de
-  las pantallas de adentro (`/app/*` y `/login`), activada con `[data-tema="mistico"]`.
+  tarot/horóscopo oscuras y ornamentadas). Empezó como SEGUNDA piel exclusiva de las pantallas de
+  adentro (`/app/*` y `/login`), activada con `[data-tema="mistico"]`, mientras la paleta clara
+  seguía siendo la única aprobada para landing/onboarding/paywall.
+  ⚠️ ACTUALIZADO 2026-09-15/16 (2 decisiones del usuario, no redecidir): (1) al elegir la dirección
+  "A · Carta Astral" para la landing (ver sección de arriba), esta pasó al tema místico — la razón
+  original para dejarla clara ("ya certificada") dejó de aplicar porque su veredicto nunca llegó a
+  pasar el gate (ver ESTADO.md → Problemas conocidos); (2) el usuario pidió expresamente cerrar el
+  salto visual del recorrido ("sigue con el resto de los hallazgos" tras notar que ventas → onboarding
+  → paywall cambiaba de piel a mitad de camino), así que onboarding y paywall se sumaron el mismo
+  día. La EXCLUSIVIDAD de la primera versión de esta nota queda OBSOLETA: hoy el tema místico es la
+  única paleta de toda la app, sin excepción de pantalla.
 - Referencia del usuario (CONTRATO): 6 imágenes — app alemana de compatibilidad (medidor tipo
   símbolo de infinito con brillo dorado/azul), app de tarot "Sign In"/paywall/historial (mandala
   dorado, cartas con marco dorado sobre fondo casi negro), spread "Mind Body Spirit" (fondo oscuro
@@ -113,5 +120,10 @@
   motivo por sección (nadie lo pidió todavía). `FondoAura` (el fondo claro anterior) se ELIMINÓ del
   proyecto — quedó sin ningún uso una vez que las 5 pantallas de `/app/*` se envuelven cada una en
   su propio `<TemaMistico>`; `app/app/layout.tsx` ya no pinta ningún fondo, solo da estructura.
+  Sumadas 2026-09-15/16: **Landing** (`app/page.tsx`, dirección "A · Carta Astral" con la
+  `RuedaAstral` como dispositivo propio del héroe) · **Onboarding** (`components/onboarding/ui.tsx`
+  → `PantallaOnboarding`, la cáscara compartida de los 11 pasos — se tocó UNA sola vez y los 11
+  cambiaron de piel solos) · **Paywall** (`app/paywall/page.tsx`). Las 3 reutilizan el MISMO
+  `<FondoMistico>` (resplandor + estrellas) que ya usaba la app por dentro — cero fondos nuevos.
 
 ## Idioma UI: español latino neutro · Fecha de cierre: 2026-08-27 · Aprobada por el usuario: SÍ

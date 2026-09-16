@@ -129,7 +129,13 @@ export function ChipOpcion({
 }
 
 /** Chip compacto para grillas (ej. los 12 signos) — mismo lenguaje visual que
- * ChipOpcion pero pensado para caber 3 por fila. */
+ * ChipOpcion pero pensado para caber 3 por fila.
+ * ⚠️ El estado "seleccionado" se resuelve DISTINTO a propósito, no por
+ * descuido (el revisor-visual lo señaló como inconsistencia entre pasos —
+ * queda documentado acá): ChipOpcion tiene ancho de sobra para un check
+ * circular aparte del texto; en un chip de ~90px de ancho ese mismo check
+ * competiría con el nombre del signo y se vería apretado. El relleno sólido
+ * es la señal de "seleccionado" que sí cabe sin recortar nada. */
 export function ChipGrid({
   seleccionado,
   onClick,

@@ -1,6 +1,74 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
+✅ CHECKPOINT — Resto de los hallazgos de los 3 veredictos (landing/onboarding/paywall)
+corregidos, 2026-09-16, a pedido del usuario ("sigue con el resto de los hallazgos"). Se dejaron
+2 cosas fuera a propósito (abajo el detalle) y se re-lanzó el revisor-visual sobre las 3 pantallas
+para confirmar si ahora sí pasan el gate (resultado de esa segunda pasada: ver el checkpoint
+siguiente, si ya llegó, o "Problemas conocidos" si quedó corriendo al cerrar la sesión).
+
+**Landing** (`app/page.tsx`, `components/landing/*`):
+- `Agitacion.tsx`: la tarjeta "Hoy" usaba hex fijos (#FFA24C/#B5701F) que ni siquiera pasaban
+  contraste AA (medido: 3.6:1, hace falta 4.5:1) y no cambiaban con el tema. Reemplazados por
+  `var(--danger)` — token semántico ya existente en ambos temas ("esto pesa/urge"), medido en
+  4.54:1 (claro) y 6.3:1 (oscuro).
+- `Oferta.tsx`: la Garantía de los 7 Días vivía solo en su propia sección, lejos del botón de
+  compra. Se agregó el prop `garantiaLabel` + un componente `GarantiaCerca` que la repite chica
+  bajo el CTA de cada plan (mismo texto que `<Garantia nombre="...">`, sin duplicar el string a
+  mano en `app/page.tsx`).
+- `ui.tsx`: `CtaButton` y el CTA de la barra fija no tenían anillo de foco de teclado propio.
+  Se les agregó el MISMO patrón `focus-visible:ring-2 ... ring-offset-[var(--bg)]` que ya usa
+  `BotonPrincipal` en el onboarding — no una receta nueva.
+- `AppPorDentro` (carrusel) + `TiposDeLectura` (lista) repetían casi la misma información seguidas.
+  En vez de recortar contenido a mano (riesgo de gutear una sección aprobada), se le sumó un
+  `subtituloMarked` a `TiposDeLectura` que aclara su rol real: un índice rápido para quien ya vio
+  el carrusel y quiere ir directo a lo que busca, no una segunda demo.
+- **Encontrado de paso, NO corregido**: `TiposDeLectura.tsx` tiene el MISMO patrón de hex fijos
+  que `Agitacion.tsx` (línea ~34-39, mapa `TONOS`) — pero ahí el arreglo directo (usar
+  `var(--accent-2/3/4)`) puede dejar los chips casi invisibles en el tema oscuro, porque esos
+  tokens son tonos ambientales oscuros pensados para fondos grandes, no para un tinte sutil de
+  chip. Necesita criterio de diseño, no un find-replace — se delegó como tarea aparte
+  (`task_49a10e9a`, revisar colores fijos en TiposDeLectura.tsx).
+
+**Onboarding** (`app/onboarding/page.tsx`, `components/onboarding/ui.tsx`):
+- Pasos 0, 1 y 6 (situación/dolor/momento del día, ≤4 opciones): el bloque quedaba pegado arriba
+  con toda la mitad inferior vacía. Envuelto en `flex flex-1 flex-col justify-center` — mismo
+  patrón que ya usaba el paso 8 (reconocimiento) para su propio centrado.
+- Paso 7 (texto libre, mínimo 10 caracteres): el botón se apagaba sin explicar por qué. Se agregó
+  un hint ("Cuéntanos un poco más — mínimo 10 caracteres") que aparece SOLO una vez que la persona
+  ya empezó a escribir pero no llega al mínimo — nunca antes, para no regañar un campo vacío.
+  Los pasos 2 y 4 (nombre propio / de la otra persona) se dejaron TAL CUAL a propósito: ahí la
+  condición (campo vacío) es autoevidente, agregar un hint sería ruido.
+- Pasos 3 y 5 (elegir signo): la grilla plana de 12 opciones excedía el máximo recomendado de 4
+  por decisión. Se agrupó en 4 filas por elemento (Fuego/Tierra/Aire/Agua) con encabezado — las 12
+  opciones siguen todas ahí, solo organizadas en 4 decisiones chicas en vez de 1 grande.
+- `ChipOpcion` (lista, borde+check) vs `ChipGrid` (grilla compacta, relleno sólido) resuelven
+  "seleccionado" distinto — el revisor lo marcó como inconsistencia. Se documentó como decisión
+  consciente (comentario en `ChipGrid`) en vez de unificar: un check circular en un chip de ~90px
+  competiría con el nombre del signo.
+- `FICHA-ARTE.md`: la sección del tema místico decía "exclusiva de las pantallas de adentro" —
+  desactualizada desde que landing, onboarding y paywall se sumaron. Corregida con fecha y motivo.
+
+**Paywall** (`app/paywall/page.tsx`):
+- La tarjeta "Así funciona tu prueba — sin sorpresas" tenía fondo plano; se envolvió en
+  `<Hairline>` (borde degradé, importado de `components/landing/ui.tsx`) — mismo tratamiento
+  premium que ya usa la landing en su tarjeta de garantía/plan recomendado.
+- La oración "cancela cuando quieras... y la Garantía de los 7 Días te cubre igual" mezclaba 2
+  plazos distintos en un solo párrafo corrido (riesgo real: alguien que lee rápido podía creer que
+  tenía 7 días gratis, no 3). Separada en 2 líneas independientes, cada una con su propio plazo.
+- El círculo de selección del plan NO elegido usaba `border-[var(--surface-2)]`, casi idéntico al
+  fondo de su propia tarjeta — invisible como control. Cambiado a un borde con más contraste
+  (`color-mix` con `--text-secondary` al 40%).
+- **Dejado pendiente a propósito** (no es un olvido): el feedback de qué pasa si el pago tarda o
+  falla no se puede verificar todavía — la pasarela real se conecta en una sesión posterior.
+
+Verificado el flujo COMPLETO de punta a punta a 375px como usuaria real (los 11 pasos del
+onboarding, uno por uno) + la landing a 375px y 1280px + el paywall con scroll hasta la garantía.
+tsc y `npm run build` limpios en cada tanda. Evidencia fresca sobreescrita en
+`docs/revisiones/landing-A-375.png`, `landing-A-oferta.png`, `landing-A-desktop.png`,
+`onboarding-A-paso1.png`, `onboarding-A-signos.png` (nueva), `onboarding-A-375.png`,
+`paywall-A-375.png`, `paywall-A-scrolled.png`.
+
 ⚠️ CHECKPOINT — BUG REAL de dinero encontrado y corregido: el paywall mostraba el precio
 equivocado como "lo que se cobra", 2026-09-16. A pedido del usuario ("primero revisemos como la
 anterior"), se relanzó el subagente `revisor-visual` con contexto limpio sobre las 3 pantallas
