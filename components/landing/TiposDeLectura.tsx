@@ -52,8 +52,17 @@ export interface TiposDeLecturaProps {
 // clases; acá solo se pone el nombre de clase + el valor por defecto (claro).
 // El ícono, siempre dorado/lila (var(--accent)), mide buen contraste en
 // ambos: 5.9-6.6:1 sobre los 3 sólidos del tema oscuro (verificado).
+// ⚠️ tono="accent" (Historial) tenía el mismo problema pero al revés: --chip-bg
+// es un TINTE de --accent (dorado), y un dorado diluido sobre fondo oscuro se
+// ve como un marrón cálido — casi el mismo tono que el sólido de "naranja"
+// (--accent-2, ámbar), así que las dos categorías se confundían entre sí (2º
+// hallazgo menor del revisor). En vez de un 4º tono cálido, se usa
+// --surface-2 (violeta neutro oscuro) en el tema místico: contraste del
+// ícono dorado 8.04:1 (medido) y una nota fría/neutra que no compite con las
+// 3 cálidas/frías ya usadas — coherente con que "Historial" es la categoría
+// menos "emocional" de las 4.
 const TONOS: Record<TipoDeLectura['tono'], string> = {
-  accent: 'bg-[var(--chip-bg)]',
+  accent: 'tono-chip-accent bg-[var(--chip-bg)]',
   naranja: 'tono-chip-naranja bg-[color-mix(in_oklab,var(--accent-2)_18%,transparent)]',
   azul: 'tono-chip-azul bg-[color-mix(in_oklab,var(--accent-3)_35%,transparent)]',
   rosa: 'tono-chip-rosa bg-[color-mix(in_oklab,var(--accent-4)_28%,transparent)]',
@@ -107,7 +116,15 @@ export function TiposDeLectura({
                   </span>
                   <div className="min-w-0 flex-1">
                     <h3 className="text-[16px] font-semibold text-[var(--text-primary)]">{it.titulo}</h3>
-                    <p className="mt-0.5 truncate text-[14px] text-[var(--text-secondary)]">{it.descripcion}</p>
+                    {/* line-clamp-2, no truncate (1 línea): con descripciones de hasta
+                        16 palabras, 1 línea cortaba a media palabra sin comunicar nada
+                        ("Tú, La Otra Persona y La..." — el revisor lo marcó como
+                        defecto menor). 2 líneas alcanzan para leer la idea completa
+                        en casi todos los casos, y donde no, el corte cae al final de
+                        una palabra real, no a la mitad. */}
+                    <p className="mt-0.5 line-clamp-2 text-[14px] leading-snug text-[var(--text-secondary)]">
+                      {it.descripcion}
+                    </p>
                   </div>
                   <ChevronRight size={20} className="shrink-0 text-[var(--text-tertiary)]" aria-hidden="true" />
                 </a>

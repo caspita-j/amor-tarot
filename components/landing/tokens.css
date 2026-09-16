@@ -191,6 +191,14 @@
 [data-tema='mistico'] .tono-chip-rosa {
   background-color: var(--accent-4);
 }
+/* tono="accent" (Historial): sin este override se ve como --chip-bg, un tinte
+   de --accent (dorado) que diluido queda casi igual de marrón que el sólido
+   de "naranja" — 2 categorías se confundían entre sí. --surface-2 (violeta
+   neutro) las distingue sin sumar una 4ª nota cálida (bug menor encontrado
+   por el revisor-visual, 2026-09-16). */
+[data-tema='mistico'] .tono-chip-accent {
+  background-color: var(--surface-2);
+}
 
 /* Base mínima que el kit asume (no tematizar) */
 html {

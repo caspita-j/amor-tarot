@@ -152,6 +152,32 @@ Verificado visualmente ambos arreglos (capturas nuevas en `docs/revisiones/`). t
 un trabajo de pulido más grande y abierto que "corregir los hallazgos ya listados" — se le
 presenta al usuario como una decisión aparte en vez de seguir iterando sin su OK.
 
+✅ CHECKPOINT — Los 3 defectos MENORES de la certificación, corregidos, 2026-09-16, a pedido
+del usuario ("corrige eso"). Ninguno bloqueaba el gate, pero quedaron cerrados:
+1. **Landing, `TiposDeLectura.tsx`**: las descripciones (hasta 16 palabras) usaban `truncate`
+   (1 línea), cortando a media palabra ("Tú, La Otra Persona y La..."). Cambiado a
+   `line-clamp-2` — ahora la mayoría se lee completa, y donde no alcanza, el corte cae al
+   final de una palabra real.
+2. **Landing, mismo archivo**: el chip "Historial" (`tono="accent"`) usaba `--chip-bg` (un
+   tinte de dorado) que, diluido sobre fondo oscuro, se veía casi igual al sólido ámbar de
+   "Tu lectura de pareja" — 2 categorías se confundían. Se le dio su propio color sólido en el
+   tema místico (`--surface-2`, violeta neutro) siguiendo el mismo patrón de override por tema
+   que ya usan naranja/azul/rosa — contraste del ícono dorado verificado en 8.04:1. Las 4
+   categorías ya se distinguen a simple vista (ámbar/ciruela/azul-noche/violeta neutro).
+3. **Onboarding, paso 7 (texto libre)**: no había ninguna señal mientras se escribía, solo un
+   mensaje de error al fallar. Se agregó un contador en vivo ("Te faltan N caracteres para
+   continuar") que aparece apenas empiezan a escribir (nunca antes, no se nagea un campo
+   vacío) y sube de tono neutro a `--danger` solo si además ya intentaron avanzar sin llegar
+   al mínimo.
+De paso, se corrigió el propio linter de diseño (`post-edit-diseno.sh`): la regla de "hex fuera
+de tokens" leía la línea completa del `grep`, así que un HEX mencionado dentro de un
+COMENTARIO explicativo (documentando un bug ya arreglado) se marcaba como si el hex siguiera
+en el código real — mismo tipo de falso positivo que ya se había corregido antes en la regla
+de espaciado. Ahora excluye líneas que son comentario `//`, verificado con un archivo de
+prueba que confirma que un hex real en código SÍ se sigue marcando.
+Verificado visualmente los 3 arreglos (capturas ad-hoc, no archivadas — cambios menores, no
+ameritan re-lanzar el revisor-visual completo). tsc/build limpios.
+
 ✅ CHECKPOINT — CERTIFICACIÓN COMPLETA: landing + onboarding + paywall, las 3 en LISTA,
 2026-09-16 — cierra el pedido explícito del usuario ("sigue puliendo hasta que certifiquen").
 Resultado final de 4 rondas de revisor-visual con contexto limpio en cada pasada:

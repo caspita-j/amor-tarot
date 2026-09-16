@@ -393,7 +393,8 @@ export default function OnboardingPage() {
 
   // ── Paso 7: texto libre — últimas 48h (el input real del mecanismo) ──
   if (paso === 7) {
-    const listo = (r.detalle ?? '').trim().length >= 10;
+    const caracteresDetalle = (r.detalle ?? '').trim().length;
+    const listo = caracteresDetalle >= 10;
     return (
       <PantallaOnboarding pasoActual={8} totalPasos={TOTAL_PREGUNTAS} onAtras={atras}>
         <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
@@ -419,11 +420,18 @@ export default function OnboardingPage() {
             errorDetalle && !listo ? 'border-[var(--danger)]' : 'border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)]'
           }`}
         />
-        {/* Mismo patrón que los pasos 2 y 4: el botón nunca se apaga por
-            defecto — se explica el mínimo de 10 caracteres SOLO al tocar con
-            el campo corto o vacío, no mientras la persona todavía escribe. */}
-        {errorDetalle && !listo && (
-          <p className="mt-2 text-xs text-[var(--danger)]">Cuéntanos un poco más — mínimo 10 caracteres.</p>
+        {/* Contador EN VIVO mientras escribe (mejora pedida tras el veredicto:
+            antes el mínimo de 10 caracteres solo se explicaba al fallar, sin
+            ninguna señal mientras se escribía). Neutro y silencioso si nunca
+            tocaron el campo (caracteresDetalle === 0, no se nagea un campo
+            vacío); cuenta regresiva en cuanto empiezan a escribir; pasa a
+            --danger solo si además ya intentaron avanzar sin llegar al
+            mínimo (mismo patrón que los pasos 2 y 4: el botón nunca se apaga
+            por defecto). */}
+        {caracteresDetalle > 0 && !listo && (
+          <p className={`mt-2 text-xs ${errorDetalle ? 'text-[var(--danger)]' : 'text-[var(--text-secondary)]'}`}>
+            Te faltan {10 - caracteresDetalle} caracteres para continuar.
+          </p>
         )}
         <div className="mt-6">
           <BotonPrincipal

@@ -33,7 +33,16 @@ esac
 FINDINGS=""
 
 # 1. Hex hardcodeado fuera de tokens (regla 17 de UX — todo color es token).
-HEX=$(grep -nE '#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b' "$FILE_PATH" 2>/dev/null | grep -v 'currentColor' | head -5)
+#    Excluye líneas de comentario `//` (corregido 2026-09-16: un comentario que
+#    EXPLICA por qué un hex viejo ya NO se usa —p. ej. documentando un bug ya
+#    arreglado— se marcaba como si el hex siguiera en el código real. Mismo
+#    tipo de falso positivo que ya se corrigió antes en la regla de espaciado:
+#    el grep leía la línea completa, no si el hex está dentro de código o de
+#    prosa explicativa).
+HEX=$(grep -nE '#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b' "$FILE_PATH" 2>/dev/null \
+      | grep -v 'currentColor' \
+      | awk '{ rest=$0; sub(/^[0-9]+:/, "", rest); trimmed=rest; sub(/^[ \t]+/, "", trimmed); if (trimmed !~ /^\/\//) print }' \
+      | head -5)
 [ -n "$HEX" ] && FINDINGS="$FINDINGS
 ❌ Hex directo fuera de tokens (usa var(--...) o clases de tokens — archivo 10):
 $HEX"
