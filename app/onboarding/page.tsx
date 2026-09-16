@@ -101,6 +101,7 @@ export default function OnboardingPage() {
   // vacío, se muestra el mensaje en vez de no reaccionar.
   const [errorNombre, setErrorNombre] = useState(false);
   const [errorOtraPersona, setErrorOtraPersona] = useState(false);
+  const [errorDetalle, setErrorDetalle] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const reduce = useReducedMotion();
 
@@ -404,25 +405,36 @@ export default function OnboardingPage() {
         <textarea
           autoFocus
           value={r.detalle ?? ''}
-          onChange={(e) => setR({ ...r, detalle: e.target.value })}
+          onChange={(e) => {
+            setR({ ...r, detalle: e.target.value });
+            if (errorDetalle) setErrorDetalle(false);
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && listo) siguiente();
           }}
           placeholder="Ej: Vio mi historia pero no me escribió, y desde el viernes no sé si..."
           rows={6}
-          className="mt-6 w-full flex-1 resize-none rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] bg-[var(--bg)] p-5 text-base leading-relaxed text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
+          aria-invalid={errorDetalle && !listo}
+          className={`mt-6 w-full flex-1 resize-none rounded-[var(--radius-card)] border bg-[var(--bg)] p-5 text-base leading-relaxed text-[var(--text-primary)] outline-none focus:border-[var(--accent)] ${
+            errorDetalle && !listo ? 'border-[var(--danger)]' : 'border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)]'
+          }`}
         />
-        {/* El botón se apagaba sin explicar por qué (el mínimo de 10 caracteres
-            no se comunicaba en ningún lado). Solo aparece una vez que la
-            persona ya empezó a escribir — no antes, para no regañar un campo
-            todavía vacío. */}
-        {(r.detalle ?? '').trim().length > 0 && !listo && (
-          <p className="mt-2 text-xs text-[var(--text-secondary)]">
-            Cuéntanos un poco más — mínimo 10 caracteres.
-          </p>
+        {/* Mismo patrón que los pasos 2 y 4: el botón nunca se apaga por
+            defecto — se explica el mínimo de 10 caracteres SOLO al tocar con
+            el campo corto o vacío, no mientras la persona todavía escribe. */}
+        {errorDetalle && !listo && (
+          <p className="mt-2 text-xs text-[var(--danger)]">Cuéntanos un poco más — mínimo 10 caracteres.</p>
         )}
         <div className="mt-6">
-          <BotonPrincipal disabled={!listo} onClick={siguiente}>
+          <BotonPrincipal
+            onClick={() => {
+              if (!listo) {
+                setErrorDetalle(true);
+                return;
+              }
+              siguiente();
+            }}
+          >
             Sacar mis 3 cartas
           </BotonPrincipal>
         </div>

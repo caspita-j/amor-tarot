@@ -69,6 +69,49 @@ tsc y `npm run build` limpios en cada tanda. Evidencia fresca sobreescrita en
 `onboarding-A-paso1.png`, `onboarding-A-signos.png` (nueva), `onboarding-A-375.png`,
 `paywall-A-375.png`, `paywall-A-scrolled.png`.
 
+✅ CHECKPOINT — LANDING CERTIFICADA (Veredicto: LISTA), 2026-09-16, tercera pasada del
+revisor-visual, a pedido del usuario ("sigue puliendo hasta que certifiquen"). **37/40
+usabilidad · 19/20 craft · 19/20 copy** — primera de las 3 pantallas en pasar el gate (≥36/40,
+≥16/20). Se llegó ahí con 2 rondas más de arreglos después de la primera revisión:
+- `TiposDeLectura.tsx`: el arreglo directo a tokens (`var(--accent-2/3/4)`) NO alcanzaba —
+  esos tokens ya son colores oscuros en el tema místico, así que un tinte 18-35% transparente
+  se seguía fundiendo con el fondo casi negro de la lista. Se resolvió con el mismo patrón que
+  ya usa `.boton-principal`: la clase queda con el tinte suave (correcto en tema claro) y
+  `tokens.css` define un override SÓLIDO solo bajo `[data-tema='mistico']` — igual que las
+  categorías de Lecturas/Bienestar ya usan sus acentos sólidos dentro de la app.
+- `Solucion.tsx` (bloque Antes/Después) tenía el MISMO bug de colores fijos sin contraste que
+  ya se había corregido en `Agitacion.tsx` — se me había escapado por revisar un solo archivo;
+  un `grep` de los 4 hex del tema claro en todo `components/landing/` confirmó que no quedaba
+  ningún otro.
+- `ExitIntentPopup.tsx`: "No, prefiero seguir dudando" (confirm-shaming) → "Ahora no, gracias".
+- Se capturaron las 10 secciones de la landing por separado (antes solo 2 de 10 tenían
+  evidencia, y 2 hallazgos se habían detectado solo leyendo código sin poder confirmarlos).
+Quedan 2 defectos MENORES, no bloqueantes, anotados para pulido futuro (no urgente): las
+descripciones de "Tipos de lectura" se truncan a mitad de palabra (falta `line-clamp-2`), y 2
+de los 4 chips de categoría (naranja/accent) se ven parecidos entre sí en el tema oscuro.
+Evidencia: las 10 capturas en `docs/revisiones/landing-A-*.png` + `landing-veredicto.md`.
+
+⚠️ CHECKPOINT — Onboarding y paywall, MÁS CERCA de certificar pero todavía NO LISTA,
+2026-09-16, misma tercera pasada. Puntajes: **onboarding 32/40 · 15/20 craft** (subió de 29→31→32
+en 3 rondas); **paywall 35/40 · 16/20 craft · 19/20 copy** (a 1 solo punto del gate de
+usabilidad — craft y copy YA pasan).
+**Encontrado y corregido en el acto, sin esperar una 4ª pasada completa**:
+- Onboarding: el paso 7 (texto libre, mínimo 10 caracteres) se había quedado con el patrón
+  VIEJO (botón deshabilitado sin explicar) mientras los pasos 2 y 4 ya tenían el patrón nuevo
+  (botón siempre activo, error al tocar) — inconsistencia real que el revisor señaló. Unificado
+  con el mismo patrón: `errorDetalle` + mensaje en rojo al tocar con menos de 10 caracteres.
+- Paywall: en el plan Mensual, `cobroReal` y `precioMes` son el MISMO número ($6.99) — mostrar
+  "equivale a $6.99/mes" bajo un "$6.99/mes" ya grande repetía el número exacto en la zona que
+  más desconfianza genera. Ahora esa nota solo se pinta cuando los 2 valores son distintos
+  (el caso del plan Anual). También se subió de `text-xs` (12px) a `text-sm` (14px) el párrafo
+  de "así funciona tu prueba" — es el copy que más necesita leerse bien de toda la pantalla y
+  estaba por debajo del mínimo de cuerpo de la regla 5 de UX.
+**Pendiente para la próxima pasada**: re-lanzar el revisor-visual sobre onboarding y paywall con
+estos 2 arreglos ya aplicados — no se relanzó todavía en este checkpoint por límite de turno;
+es el primer paso al retomar. El defecto de onboarding sobre `ChipOpcion`/`ChipGrid` (dos
+tratamientos de "seleccionado" distintos) sigue documentado como decisión consciente, no se
+va a unificar salvo que un futuro veredicto lo vuelva a marcar como bloqueante.
+
 ✅ CHECKPOINT — Segunda pasada del revisor-visual (post-correcciones) + 2 bugs reales más
 encontrados y corregidos, 2026-09-16. Se re-lanzó `revisor-visual` con contexto limpio sobre las 3
 pantallas ya corregidas (sin ver el veredicto viejo). Resultado: **las 3 SIGUEN NO LISTA**

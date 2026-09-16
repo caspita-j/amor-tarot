@@ -221,7 +221,14 @@ export default function PaywallPage() {
                         {p.cobroReal}
                         <span className="text-sm font-semibold text-[var(--text-secondary)]">{p.cobroRealUnidad}</span>
                       </p>
-                      <p className="mt-1 text-xs text-[var(--text-secondary)]">equivale a {p.precioMes}/mes</p>
+                      {/* Solo tiene sentido en el Anual: en el Mensual cobroReal y
+                          precioMes son el MISMO número ($6.99) — mostrar "equivale a
+                          $6.99/mes" bajo un "$6.99/mes" ya visible repite el número
+                          en la zona que más desconfianza genera (bug real, encontrado
+                          por el revisor). */}
+                      {p.precioMes !== p.cobroReal && (
+                        <p className="mt-1 text-xs text-[var(--text-secondary)]">equivale a {p.precioMes}/mes</p>
+                      )}
                     </div>
                   </div>
                   <span
@@ -277,13 +284,16 @@ export default function PaywallPage() {
                 </div>
                 {/* Antes era UNA oración corrida que mezclaba el cobro (día 3) con la
                     garantía (día 7) — alguien que lee rápido podía leer "tengo 7 días
-                    gratis". Separadas en 2 líneas, cada una con su propio plazo. */}
-                <p className="mt-4 text-xs leading-snug text-[var(--text-secondary)]">
+                    gratis". Separadas en 2 líneas, cada una con su propio plazo.
+                    text-sm (14px), no text-xs: es el copy que más necesita leerse bien
+                    en toda la pantalla — el mínimo de cuerpo de la regla 5 de UX es 14px,
+                    el revisor lo marcó en 12px. */}
+                <p className="mt-4 text-sm leading-snug text-[var(--text-secondary)]">
                   Se te cobrará recién el{' '}
                   <strong className="font-semibold text-[var(--text-primary)]">{fechaDeCobro(3)}</strong> — cancela
                   cuando quieras desde tu perfil.
                 </p>
-                <p className="mt-1.5 text-xs leading-snug text-[var(--text-secondary)]">
+                <p className="mt-1.5 text-sm leading-snug text-[var(--text-secondary)]">
                   ¿No te convenció igual? La Garantía de los 7 Días te devuelve tu dinero, ya cobrado.
                 </p>
               </div>
