@@ -69,6 +69,46 @@ tsc y `npm run build` limpios en cada tanda. Evidencia fresca sobreescrita en
 `onboarding-A-paso1.png`, `onboarding-A-signos.png` (nueva), `onboarding-A-375.png`,
 `paywall-A-375.png`, `paywall-A-scrolled.png`.
 
+✅ CHECKPOINT — Segunda pasada del revisor-visual (post-correcciones) + 2 bugs reales más
+encontrados y corregidos, 2026-09-16. Se re-lanzó `revisor-visual` con contexto limpio sobre las 3
+pantallas ya corregidas (sin ver el veredicto viejo). Resultado: **las 3 SIGUEN NO LISTA**
+(landing 29/40·14/20·copy19 — el número de usabilidad varía entre pasadas porque cada corrida es
+un revisor distinto sin memoria de la anterior, no necesariamente una regresión real; onboarding
+31/40·13/20; paywall 29/40·15/20·copy18). Ninguna llega al gate (≥36/40 y ≥16/20) todavía.
+**Lo bueno**: confirmó que los 4 arreglos de cada pantalla de la tanda anterior SÍ quedaron bien
+resueltos (precio, hairline, frase separada, garantía cerca del CTA, foco de teclado, signos
+agrupados, pantallas centradas, etc.) — no hubo ningún arreglo a medias.
+**2 bugs reales nuevos, encontrados por el revisor y corregidos en el momento**:
+1. `components/landing/Solucion.tsx` (bloque "Antes/Después") tenía el MISMO bug exacto que ya se
+   había corregido en `Agitacion.tsx` — hex fijos `#FFA24C`/`#B5701F` sin contraste AA en tema
+   oscuro. Se me había escapado por revisar un solo archivo en vez de buscar el patrón en todo el
+   kit. Corregido igual: `var(--danger)`. Después de corregirlo, se hizo `grep` de los 4 hex del
+   tema claro (#FFA24C/#B5701F/#ABDBF7/#F6A8DC) en TODO `components/landing/` y `app/page.tsx`
+   para confirmar que no quedaba un tercero escondido — el único que queda es
+   `TiposDeLectura.tsx`, ya delegado aparte (`task_49a10e9a`) porque necesita criterio de diseño.
+2. Los pasos 3 y 5 del onboarding (elegir signo) NO se habían centrado verticalmente en la tanda
+   anterior — el arreglo de centrado solo se aplicó a los pasos de lista simple (0/1/6) y se saltó
+   estos dos, que también dejaban ~40% de la pantalla vacía pese a tener más contenido (4
+   encabezados + 12 chips). Envueltos en el mismo `flex flex-1 flex-col justify-center`.
+Verificado visualmente ambos arreglos (capturas nuevas en `docs/revisiones/`). tsc/build limpios.
+**Hallazgos nuevos de esta pasada que quedan SIN corregir, anotados aquí para no perderlos**:
+- Paywall: el precio grande y dorado de la tarjeta Anual es el equivalente mensual ($3.66) y el
+  cobro real ($43.99/año) queda en texto chico debajo — el revisor lo marcó como riesgo frente a
+  la objeción de "cobros ocultos". NO se tocó todavía porque es el MISMO patrón que ya usa
+  `Oferta.tsx` en la landing (que pasó sin esta observación) — cambiarlo solo en el paywall
+  crearía una inconsistencia nueva entre las dos pantallas. Si se decide corregir, debe ser una
+  decisión de diseño para AMBAS pantallas a la vez, no un parche aislado.
+- Onboarding: `ChipOpcion`/`ChipGrid` sin seleccionar usan `bg-[var(--bg)]` (el mismo color que el
+  fondo de toda la pantalla), lo que aplana la sensación de profundidad — bajó el eje de
+  "Profundidad" del craft. Candidato a subir a `bg-[var(--surface)]`, sin probar todavía.
+- Onboarding: los pasos 2 y 4 (nombre propio / de la otra persona) siguen deshabilitando el botón
+  sin ningún mensaje — decisión consciente ya explicada arriba (campo vacío = autoevidente), pero
+  el revisor insiste en marcarlo porque una de las 4 anclas fijas del CTA héroe es "nunca disabled
+  por defecto". Se mantiene la decisión; queda anotado por si se quiere revisar más adelante.
+**Decisión de alcance**: llevar las 3 pantallas hasta pasar el gate estricto (≥36/40, ≥16/20) es
+un trabajo de pulido más grande y abierto que "corregir los hallazgos ya listados" — se le
+presenta al usuario como una decisión aparte en vez de seguir iterando sin su OK.
+
 ⚠️ CHECKPOINT — BUG REAL de dinero encontrado y corregido: el paywall mostraba el precio
 equivocado como "lo que se cobra", 2026-09-16. A pedido del usuario ("primero revisemos como la
 anterior"), se relanzó el subagente `revisor-visual` con contexto limpio sobre las 3 pantallas

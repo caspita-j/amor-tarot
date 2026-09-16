@@ -248,16 +248,22 @@ export default function OnboardingPage() {
   if (paso === 3) {
     return (
       <PantallaOnboarding pasoActual={4} totalPasos={TOTAL_PREGUNTAS} onAtras={atras} onSaltar={siguiente}>
-        <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
-          ¿Cuál es tu signo?
-        </h1>
-        <GridSignos
-          seleccionado={r.signo}
-          onSelect={(s) => {
-            setR({ ...r, signo: s });
-            siguiente();
-          }}
-        />
+        {/* Mismo centrado que los pasos 0/1/6: aunque esta pantalla tiene más
+            contenido (4 encabezados + 12 chips), sigue dejando aire abajo —
+            el revisor lo marcó porque el primer arreglo solo tocó los pasos
+            de lista simple y se saltó este. */}
+        <div className="flex flex-1 flex-col justify-center">
+          <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
+            ¿Cuál es tu signo?
+          </h1>
+          <GridSignos
+            seleccionado={r.signo}
+            onSelect={(s) => {
+              setR({ ...r, signo: s });
+              siguiente();
+            }}
+          />
+        </div>
       </PantallaOnboarding>
     );
   }
@@ -293,26 +299,28 @@ export default function OnboardingPage() {
   if (paso === 5) {
     return (
       <PantallaOnboarding pasoActual={6} totalPasos={TOTAL_PREGUNTAS} onAtras={atras} onSaltar={siguiente}>
-        <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
-          ¿Y el signo de {nombreOtra}?
-        </h1>
-        <GridSignos
-          seleccionado={r.otraPersonaSigno}
-          onSelect={(s) => {
-            setR({ ...r, otraPersonaSigno: s });
-            siguiente();
-          }}
-        />
-        <button
-          type="button"
-          onClick={() => {
-            setR({ ...r, otraPersonaSigno: NO_SE_SIGNO });
-            siguiente();
-          }}
-          className="mt-4 text-center text-sm font-semibold text-[var(--text-secondary)] underline underline-offset-2"
-        >
-          No estoy segura/o de su signo
-        </button>
+        <div className="flex flex-1 flex-col justify-center">
+          <h1 className="text-balance text-2xl font-bold leading-tight [font-family:var(--font-display)]">
+            ¿Y el signo de {nombreOtra}?
+          </h1>
+          <GridSignos
+            seleccionado={r.otraPersonaSigno}
+            onSelect={(s) => {
+              setR({ ...r, otraPersonaSigno: s });
+              siguiente();
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              setR({ ...r, otraPersonaSigno: NO_SE_SIGNO });
+              siguiente();
+            }}
+            className="mt-4 text-center text-sm font-semibold text-[var(--text-secondary)] underline underline-offset-2"
+          >
+            No estoy segura/o de su signo
+          </button>
+        </div>
       </PantallaOnboarding>
     );
   }

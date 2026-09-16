@@ -118,8 +118,12 @@ export function Solucion({
 
         {antesDespues && (
           <motion.div variants={item} className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="rounded-[var(--radius-card)] border-l-4 border-[#FFA24C] bg-[color-mix(in_oklab,#FFA24C_14%,var(--bg))] p-5">
-              <p className="text-[12px] font-bold uppercase tracking-[0.08em] text-[#B5701F]">
+            {/* "Antes" usa --danger, no un naranja fijo — mismo bug y mismo arreglo
+                que ya se hizo en Agitacion.tsx: el hex quedaba bien por casualidad
+                en el tema claro pero rompía la paleta oscura y no pasaba contraste
+                AA (medido en Agitacion.tsx: 3.6:1, hace falta 4.5:1). */}
+            <div className="rounded-[var(--radius-card)] border-l-4 border-[var(--danger)] bg-[color-mix(in_oklab,var(--danger)_12%,var(--bg))] p-5">
+              <p className="text-[12px] font-bold uppercase tracking-[0.08em] text-[var(--danger)]">
                 {antesDespues.labelAntes}
               </p>
               <p className="mt-2 text-[15px] leading-snug font-medium text-[var(--text-primary)]">{antesDespues.antes}</p>
