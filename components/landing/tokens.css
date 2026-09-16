@@ -175,6 +175,23 @@
   pointer-events: none;
 }
 
+/* Miniaturas de categoría de TiposDeLectura.tsx (landing) — en el tema claro
+   un tinte 18-35% de --accent-2/3/4 es correcto (colores vivos, se diluyen
+   para no gritar); en el místico esos MISMOS tokens ya son oscuros, así que
+   el mismo tinte se funde con el fondo casi negro de la lista. El místico
+   pide su propio fondo: SÓLIDO, igual que ya usan las tarjetas de categoría
+   de Lecturas/Bienestar dentro de la app (bug real encontrado por el
+   revisor-visual, 2026-09-16). */
+[data-tema='mistico'] .tono-chip-naranja {
+  background-color: var(--accent-2);
+}
+[data-tema='mistico'] .tono-chip-azul {
+  background-color: var(--accent-3);
+}
+[data-tema='mistico'] .tono-chip-rosa {
+  background-color: var(--accent-4);
+}
+
 /* Base mínima que el kit asume (no tematizar) */
 html {
   scroll-behavior: smooth;

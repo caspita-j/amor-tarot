@@ -178,7 +178,7 @@ export function ExitIntentPopup({ ctaHref }: { ctaHref: string }) {
               onClick={cerrar}
               className="mt-3 text-xs font-semibold text-[color-mix(in_oklab,var(--bg)_75%,transparent)] underline underline-offset-2"
             >
-              No, prefiero seguir dudando
+              Ahora no, gracias
             </button>
           </motion.div>
         </motion.div>

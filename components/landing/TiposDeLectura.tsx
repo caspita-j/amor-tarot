@@ -40,11 +40,23 @@ export interface TiposDeLecturaProps {
   id?: string;
 }
 
+// Bug real que encontró el revisor: usaba hex fijos del tema claro
+// (#FFA24C/#ABDBF7/#F6A8DC) en un tinte 18-35% — invisible sobre el fondo
+// oscuro de la lista una vez la landing pasó al tema místico, porque esos
+// tokens en oscuro (--accent-2/3/4) son colores YA oscuros: un tinte
+// transparente de un color oscuro sobre un fondo casi negro se funde con él.
+// En el tema claro, en cambio, un tinte SUAVE es lo correcto (son colores
+// vivos que necesitan diluirse para no gritar). No hay una sola opacidad que
+// sirva para los dos temas — por eso, igual que .boton-principal en
+// tokens.css, el tema místico define su PROPIO fondo (sólido) para estas
+// clases; acá solo se pone el nombre de clase + el valor por defecto (claro).
+// El ícono, siempre dorado/lila (var(--accent)), mide buen contraste en
+// ambos: 5.9-6.6:1 sobre los 3 sólidos del tema oscuro (verificado).
 const TONOS: Record<TipoDeLectura['tono'], string> = {
   accent: 'bg-[var(--chip-bg)]',
-  naranja: 'bg-[color-mix(in_oklab,#FFA24C_18%,transparent)]',
-  azul: 'bg-[color-mix(in_oklab,#ABDBF7_35%,transparent)]',
-  rosa: 'bg-[color-mix(in_oklab,#F6A8DC_28%,transparent)]',
+  naranja: 'tono-chip-naranja bg-[color-mix(in_oklab,var(--accent-2)_18%,transparent)]',
+  azul: 'tono-chip-azul bg-[color-mix(in_oklab,var(--accent-3)_35%,transparent)]',
+  rosa: 'tono-chip-rosa bg-[color-mix(in_oklab,var(--accent-4)_28%,transparent)]',
 };
 
 export function TiposDeLectura({

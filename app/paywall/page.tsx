@@ -14,7 +14,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, useReducedMotion } from 'motion/react';
-import { ArrowLeft, Check, Shield, XCircle } from 'lucide-react';
+import { ArrowLeft, Check, Shield } from 'lucide-react';
 import { FondoMistico } from '@/components/app/TemaMistico';
 import { BotonPrincipal, TarjetaTarot } from '@/components/onboarding/ui';
 import { Hairline } from '@/components/landing/ui';
@@ -40,7 +40,6 @@ const PLANES = {
     // promete "sin sorpresas").
     cobroReal: '$43.99',
     cobroRealUnidad: '/año',
-    totalAnual: 'Se cobra $43.99/año',
     ahorro: 'Ahorras $39.89 al año (casi 6 meses gratis)',
   },
   mensual: {
@@ -50,7 +49,6 @@ const PLANES = {
     precioMes: '$6.99',
     cobroReal: '$6.99',
     cobroRealUnidad: '/mes',
-    totalAnual: 'Se cobra $6.99/mes',
     ahorro: null,
   },
 };
@@ -196,23 +194,34 @@ export default function PaywallPage() {
                   }`}
                 >
                   {p.badge && (
-                    <span className="absolute -top-3 right-4 rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[var(--bg)]">
+                    // Centrado (como ya hace <Oferta> en la landing), no pegado a la
+                    // derecha: ahí quedaba apilado sobre el círculo de selección,
+                    // que también vive en la esquina derecha — esquina recargada.
+                    <span className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[var(--bg)]">
                       {p.badge}
                     </span>
                   )}
-                  <div className="flex items-center justify-between">
+                  {/* pr-6 en vez de solo gap: el círculo de selección es absolute
+                      (right-4 top-4, ~20px), y el precio grande nuevo llega hasta el
+                      borde — sin este aire se solapan (bug real, visto en captura). */}
+                  <div className="flex items-center justify-between gap-3 pr-6">
                     <div>
                       <p className="text-sm font-semibold">{p.nombre}</p>
-                      <p className="mt-0.5 text-xs text-[var(--text-secondary)]">{p.totalAnual}</p>
                       {p.ahorro && <p className="mt-0.5 text-xs font-semibold text-[var(--accent)]">{p.ahorro}</p>}
                     </div>
-                    <div className="flex items-baseline gap-1">
-                      <span
-                        className={`font-bold tabular-nums [font-family:var(--font-display)] ${activo ? 'text-2xl text-[var(--accent)]' : 'text-xl'}`}
+                    {/* El número GRANDE es lo que de verdad se cobra (cobroReal), no el
+                        equivalente mensual — el revisor lo marcó como el defecto #1:
+                        justo la tarjeta que decide la compra no puede tener el cobro
+                        real en letra chica cuando el avatar teme "cobros ocultos". El
+                        equivalente mensual sigue visible, pero como nota secundaria. */}
+                    <div className="text-right">
+                      <p
+                        className={`font-bold tabular-nums leading-none [font-family:var(--font-display)] ${activo ? 'text-2xl text-[var(--accent)]' : 'text-xl'}`}
                       >
-                        {p.precioMes}
-                      </span>
-                      <span className="text-xs text-[var(--text-secondary)]">/mes</span>
+                        {p.cobroReal}
+                        <span className="text-sm font-semibold text-[var(--text-secondary)]">{p.cobroRealUnidad}</span>
+                      </p>
+                      <p className="mt-1 text-xs text-[var(--text-secondary)]">equivale a {p.precioMes}/mes</p>
                     </div>
                   </div>
                   <span
@@ -220,9 +229,9 @@ export default function PaywallPage() {
                     className={`absolute right-4 top-4 flex size-5 items-center justify-center rounded-full border-2 ${
                       activo
                         ? 'border-[var(--accent)] bg-[var(--accent)]'
-                        // El tono anterior (--surface-2) era casi idéntico al fondo de su propia
-                        // tarjeta (--surface) — el círculo del plan no elegido se veía borrado.
-                        : 'border-[color-mix(in_oklab,var(--text-secondary)_40%,transparent)]'
+                        // Subido de 40% a 60% de --text-secondary: a 40% el revisor lo vio
+                        // "un aro fino y de bajo contraste, cuesta identificarlo como control".
+                        : 'border-[color-mix(in_oklab,var(--text-secondary)_60%,transparent)]'
                     }`}
                   >
                     {activo && <Check size={12} strokeWidth={3} color="var(--bg)" />}
@@ -281,13 +290,15 @@ export default function PaywallPage() {
             </Hairline>
           </motion.div>
 
-          {/* Insignias de confianza — honestas: sin nombrar una pasarela que aún no se elige (Sesión 6) */}
-          <motion.div variants={VARIANTS} className="mt-4 flex items-center justify-center gap-4">
+          {/* Insignia de confianza — honesta: sin nombrar una pasarela que aún no se elige
+              (Sesión 6). Antes traía también "Cancela en 1 clic", pero esa misma frase ya
+              aparece en la tarjeta de arriba Y en el pie fijo de abajo — el revisor marcó
+              la repetición de "cancela cuando quieras" en 3 lugares como parte del problema
+              de densidad de la pantalla; acá se recorta, no en los otros 2 (que sí cumplen
+              un rol distinto: uno explica el plazo, el otro está junto al botón de pago). */}
+          <motion.div variants={VARIANTS} className="mt-4 flex items-center justify-center">
             <span className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-secondary)]">
               <Shield size={14} className="text-[var(--accent)]" /> Pago protegido
-            </span>
-            <span className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-secondary)]">
-              <XCircle size={14} className="text-[var(--accent)]" /> Cancela en 1 clic
             </span>
           </motion.div>
 

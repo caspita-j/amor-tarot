@@ -112,7 +112,7 @@ export function ChipOpcion({
       className={`flex w-full items-center justify-between gap-3 rounded-[var(--radius-card)] border px-5 py-4 text-left text-base font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)] ${
         seleccionado
           ? 'border-[var(--accent)] bg-[color-mix(in_oklab,var(--accent)_10%,transparent)] text-[var(--text-primary)]'
-          : 'border-[color-mix(in_oklab,var(--text-secondary)_22%,transparent)] bg-[var(--bg)] text-[var(--text-primary)]'
+          : 'border-[color-mix(in_oklab,var(--text-secondary)_22%,transparent)] bg-[var(--surface)] text-[var(--text-primary)]'
       }`}
     >
       <span>{children}</span>
@@ -129,13 +129,11 @@ export function ChipOpcion({
 }
 
 /** Chip compacto para grillas (ej. los 12 signos) — mismo lenguaje visual que
- * ChipOpcion pero pensado para caber 3 por fila.
- * ⚠️ El estado "seleccionado" se resuelve DISTINTO a propósito, no por
- * descuido (el revisor-visual lo señaló como inconsistencia entre pasos —
- * queda documentado acá): ChipOpcion tiene ancho de sobra para un check
- * circular aparte del texto; en un chip de ~90px de ancho ese mismo check
- * competiría con el nombre del signo y se vería apretado. El relleno sólido
- * es la señal de "seleccionado" que sí cabe sin recortar nada. */
+ * ChipOpcion pero pensado para caber 3 por fila. Su "seleccionado" combina
+ * relleno sólido (cabe sin recortar nada, a diferencia de un check de ancho
+ * completo) + un check pequeño en la esquina — el revisor-visual pidió que
+ * las dos variantes compartan al menos ESA firma mínima, aunque el resto del
+ * tratamiento (relleno vs. borde) siga siendo distinto por espacio. */
 export function ChipGrid({
   seleccionado,
   onClick,
@@ -152,13 +150,21 @@ export function ChipGrid({
       whileTap={reduce ? undefined : { scale: 0.95 }}
       onClick={onClick}
       aria-pressed={seleccionado}
-      className={`rounded-[var(--radius-card)] border px-2 py-3 text-center text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)] ${
+      className={`relative rounded-[var(--radius-card)] border px-2 py-3 text-center text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)] ${
         seleccionado
           ? 'border-[var(--accent)] bg-[var(--accent)] text-[var(--bg)]'
-          : 'border-[color-mix(in_oklab,var(--text-secondary)_22%,transparent)] bg-[var(--bg)] text-[var(--text-primary)]'
+          : 'border-[color-mix(in_oklab,var(--text-secondary)_22%,transparent)] bg-[var(--surface)] text-[var(--text-primary)]'
       }`}
     >
       {children}
+      {seleccionado && (
+        <span
+          aria-hidden="true"
+          className="absolute -top-1.5 -right-1.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-[var(--bg)]"
+        >
+          <Check size={10} strokeWidth={3.5} color="var(--accent)" />
+        </span>
+      )}
     </motion.button>
   );
 }

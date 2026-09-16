@@ -95,6 +95,12 @@ export default function OnboardingPage() {
   const [cartaRevelada, setCartaRevelada] = useState(false);
   const [cartaTu, setCartaTu] = useState<Carta | null>(null);
   const [navegando, setNavegando] = useState(false);
+  // Pasos 2 y 4: el botón antes se apagaba sin explicar por qué (campo vacío).
+  // El revisor-visual lo marcó como violación de "el CTA nunca está disabled
+  // por defecto" — ahora el botón SIEMPRE está activo; si tocan con el campo
+  // vacío, se muestra el mensaje en vez de no reaccionar.
+  const [errorNombre, setErrorNombre] = useState(false);
+  const [errorOtraPersona, setErrorOtraPersona] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const reduce = useReducedMotion();
 
@@ -228,15 +234,30 @@ export default function OnboardingPage() {
         <input
           autoFocus
           value={r.nombre ?? ''}
-          onChange={(e) => setR({ ...r, nombre: e.target.value })}
+          onChange={(e) => {
+            setR({ ...r, nombre: e.target.value });
+            if (errorNombre) setErrorNombre(false);
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && r.nombre?.trim()) siguiente();
           }}
           placeholder="Tu nombre"
-          className="mt-6 h-14 w-full rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] bg-[var(--bg)] px-5 text-base text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
+          aria-invalid={errorNombre}
+          className={`mt-6 h-14 w-full rounded-[var(--radius-card)] border bg-[var(--bg)] px-5 text-base text-[var(--text-primary)] outline-none focus:border-[var(--accent)] ${
+            errorNombre ? 'border-[var(--danger)]' : 'border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)]'
+          }`}
         />
+        {errorNombre && <p className="mt-2 text-xs text-[var(--danger)]">Escribe tu nombre para continuar.</p>}
         <div className="mt-auto pt-8">
-          <BotonPrincipal disabled={!r.nombre?.trim()} onClick={siguiente}>
+          <BotonPrincipal
+            onClick={() => {
+              if (!r.nombre?.trim()) {
+                setErrorNombre(true);
+                return;
+              }
+              siguiente();
+            }}
+          >
             Continuar
           </BotonPrincipal>
         </div>
@@ -279,15 +300,32 @@ export default function OnboardingPage() {
         <input
           autoFocus
           value={r.otraPersonaNombre ?? ''}
-          onChange={(e) => setR({ ...r, otraPersonaNombre: e.target.value })}
+          onChange={(e) => {
+            setR({ ...r, otraPersonaNombre: e.target.value });
+            if (errorOtraPersona) setErrorOtraPersona(false);
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && r.otraPersonaNombre?.trim()) siguiente();
           }}
           placeholder="Su nombre o inicial"
-          className="mt-6 h-14 w-full rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)] bg-[var(--bg)] px-5 text-base text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
+          aria-invalid={errorOtraPersona}
+          className={`mt-6 h-14 w-full rounded-[var(--radius-card)] border bg-[var(--bg)] px-5 text-base text-[var(--text-primary)] outline-none focus:border-[var(--accent)] ${
+            errorOtraPersona ? 'border-[var(--danger)]' : 'border-[color-mix(in_oklab,var(--text-secondary)_25%,transparent)]'
+          }`}
         />
+        {errorOtraPersona && (
+          <p className="mt-2 text-xs text-[var(--danger)]">Escribe un nombre o inicial para continuar.</p>
+        )}
         <div className="mt-auto pt-8">
-          <BotonPrincipal disabled={!r.otraPersonaNombre?.trim()} onClick={siguiente}>
+          <BotonPrincipal
+            onClick={() => {
+              if (!r.otraPersonaNombre?.trim()) {
+                setErrorOtraPersona(true);
+                return;
+              }
+              siguiente();
+            }}
+          >
             Continuar
           </BotonPrincipal>
         </div>
