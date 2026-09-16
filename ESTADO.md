@@ -1,6 +1,20 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
+✅ CHECKPOINT — PUBLICADO EN PRODUCCIÓN, 2026-09-16. El usuario abrió amorytarot.app y vio el
+diseño VIEJO: causa raíz — 15 commits (todo el rediseño místico de landing/onboarding/paywall,
+logo real, botones 3D, la certificación y los 3 detalles menores) estaban commiteados en local
+pero NUNCA se habían empujado a `origin/main`, así que Vercel seguía sirviendo `4c7092f`.
+Empujados a `origin/main` (ahora en `52769e5`); el auto-deploy de Vercel reconstruyó solo y el
+sitio quedó actualizado ~150s después. Verificado en vivo, no a ciegas: `https://amorytarot.app`
+(redirige 308 a www) sirve el tema místico — emblema real, RuedaAstral, CTA dorado 3D, sellos de
+confianza — y `/paywall` muestra el cobro real correcto ($43.99/año como número grande, "equivale
+a $3.66/mes" como pie). Capturas: docs/revisiones/live-desktop-post-deploy.png y
+live-paywall-post-deploy.png.
+⚠️ LECCIÓN OPERATIVA (repetible, anotar): "commiteado" ≠ "publicado". De ahora en más, al cerrar
+cualquier sesión que toque pantallas visibles, verificar `git status` vs `origin/main` ANTES de
+decirle al usuario que algo está listo — si no está empujado, para él no existe.
+
 ✅ CHECKPOINT — Resto de los hallazgos de los 3 veredictos (landing/onboarding/paywall)
 corregidos, 2026-09-16, a pedido del usuario ("sigue con el resto de los hallazgos"). Se dejaron
 2 cosas fuera a propósito (abajo el detalle) y se re-lanzó el revisor-visual sobre las 3 pantallas
