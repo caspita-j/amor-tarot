@@ -1,6 +1,45 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
+✅ CHECKPOINT — HOTTOK real conectado en producción + 2 bugs reales
+encontrados y corregidos con las pruebas de Hotmart, 2026-09-17. El usuario
+registró el webhook en Hotmart (URL con `www`, eventos correctos incluyendo
+"Compra reembolsada" tras corregir que había marcado "Pedido de reembolso"
+por error) y pegó el HOTTOK real en Vercel — confirmado funcionando (ya no
+rechaza con "no autorizado").
+
+**Bug real #1 — ventana anti-replay rompía los reintentos legítimos de
+Hotmart.** Al mandar la prueba de Hotmart (8 eventos), varios fallaron con
+500 (ver bug #2) y Hotmart los reintentó ~5.5 minutos después CON LA MISMA
+`creation_date` original (no la actualiza) — mi filtro de "no aceptar nada de
+hace más de 5 minutos" los rechazó como "stale", perdiendo el aviso para
+siempre. Diagnosticado viendo el payload y la respuesta reales en el
+Historial del webhook de Hotmart (no adivinado). Corregido: se QUITÓ la
+ventana anti-replay por tiempo — la protección contra repetición ya la da la
+idempotencia por `event_id` (`processed_events`), que no depende de ningún
+reloj y no tiene este efecto secundario.
+
+**Bug real #2 — ráfaga de eventos simultáneos para un correo nuevo chocaban
+entre sí.** Hotmart mandó 6 de los 8 eventos de prueba casi al mismo
+milisegundo; los que llegaron ANTES de que "Compra aprobada" creara la
+cuenta intentaron crearla ellos mismos, y varios `createUser` concurrentes
+para el MISMO correo chocan (el primero gana, los demás fallan con "ya
+registrado"). Corregido: si `createUser` falla, el webhook vuelve a buscar
+el perfil por correo antes de rendirse — si otro request ya lo creó un
+instante antes, sigue con ese id en vez de fallar. Sin este cambio, una
+compra real con el trial+la confirmación llegando casi juntos podía perder
+una de las dos.
+
+Ambos corregidos y RE-PROBADOS en local reproduciendo exactamente los dos
+escenarios (6 eventos disparados en paralelo para un correo nuevo → los 6
+`applied`, 1 sola cuenta creada, cero duplicados; un evento con fecha de
+hace 20 minutos → ya no se rechaza). tsc ✓ build ✓. Cuentas de prueba
+borradas al terminar. Publicado en producción.
+
+⚠️ Pendiente: falta repetir el "Enviar prueba" desde el panel de Hotmart una
+vez más para confirmar que los 8 eventos pasan en vivo con el fix — el
+usuario todavía no lo hizo tras este último cambio.
+
 ✅ CHECKPOINT — Webhook de Hotmart construido y probado (falta el HOTTOK real
 para activarlo del todo), 2026-09-16/17. El usuario ya creó el producto en
 Hotmart (tipo Suscripción, aprobado), los 2 planes (Mensual $6.99, Anual

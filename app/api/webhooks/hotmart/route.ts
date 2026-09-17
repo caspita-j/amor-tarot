@@ -1,8 +1,15 @@
 // Webhook de Hotmart — el único lugar donde una compra real se convierte en
-// acceso real dentro de la app (18-VENTA-HOTMART.md). Pipeline obligatorio:
-// autenticidad -> frescura -> parse -> catálogo -> idempotencia -> ledger ->
-// transición -> email -> 200. Cualquier atajo acá significa regalar Premium
-// gratis o dejar a alguien que pagó sin acceso — no hay "casi bien".
+// acceso real dentro de la app (18-VENTA-HOTMART.md). Pipeline: autenticidad
+// -> parse -> catálogo -> idempotencia -> transición -> email -> 200.
+// Cualquier atajo acá significa regalar Premium gratis o dejar a alguien que
+// pagó sin acceso — no hay "casi bien".
+//
+// ⚠️ NO hay ventana anti-replay por timestamp (a propósito, corregido tras
+// probarlo en vivo 2026-09-17): Hotmart REENVÍA un aviso que falló con el
+// `creation_date` ORIGINAL sin actualizar — un reintento legítimo de 6+
+// minutos después caía "viejo" y se perdía un reembolso/cancelación real.
+// La protección contra repetición ya la da la idempotencia (processed_events
+// por event_id) más abajo, que no depende de ningún reloj.
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
@@ -17,8 +24,6 @@ const SITE_URL = 'https://www.amorytarot.app';
 const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
-
-const REPLAY_WINDOW_MS = 5 * 60 * 1000;
 
 async function log(event_id: string | null, type: string | null, result: string) {
   await admin.from('webhook_log').insert({ event_id, type, result });
@@ -44,11 +49,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'bad request' }, { status: 400 });
   }
 
-  // 4. Frescura (anti-replay).
+  // Timestamp del EVENTO (no de la petición) — solo se usa como parte del
+  // eventId compuesto de respaldo más abajo, nunca para rechazar por "viejo"
+  // (ver el comentario de arriba: los reintentos de Hotmart lo conservan).
   const ts = payload.creation_date ?? payload.data?.purchase?.approved_date;
-  if (ts && Date.now() - Number(ts) > REPLAY_WINDOW_MS) {
-    return NextResponse.json({ error: 'stale' }, { status: 400 });
-  }
 
   const event: string = payload.event;
   const eventId: string =
@@ -90,14 +94,25 @@ export async function POST(req: NextRequest) {
   if (!userId) {
     const { data: creado, error: errCrear } = await admin.auth.admin.createUser({ email, email_confirm: true });
     if (errCrear || !creado?.user) {
-      // No marcar el evento como procesado si esto falla: así Hotmart
-      // reintenta y el cliente no queda "pagó y no entra" en silencio.
-      console.error('webhook hotmart: no se pudo crear la cuenta', { code: (errCrear as any)?.code });
-      await log(eventId, event, 'error');
-      return NextResponse.json({ error: 'no se pudo crear la cuenta' }, { status: 500 });
+      // Hotmart manda varios eventos casi simultáneos para la misma compra
+      // (probado en vivo 2026-09-17): si dos llegan a la vez para un correo
+      // nuevo, el segundo createUser choca con el primero ("ya registrado").
+      // Antes de rendirse, volver a buscar el perfil — puede que el otro
+      // request ya haya creado la cuenta un instante antes.
+      const { data: reintento } = await admin.from('profiles').select('id').eq('email', email).maybeSingle();
+      if (reintento?.id) {
+        userId = reintento.id;
+      } else {
+        // Acá sí es un fallo de verdad: no marcar el evento como procesado,
+        // así Hotmart reintenta y el cliente no queda "pagó y no entra" en silencio.
+        console.error('webhook hotmart: no se pudo crear la cuenta', { code: (errCrear as any)?.code });
+        await log(eventId, event, 'error');
+        return NextResponse.json({ error: 'no se pudo crear la cuenta' }, { status: 500 });
+      }
+    } else {
+      userId = creado.user.id;
+      esCuentaNueva = true;
     }
-    userId = creado.user.id;
-    esCuentaNueva = true;
   }
 
   const payloadHash = crypto.createHash('sha256').update(rawBody).digest('hex');
