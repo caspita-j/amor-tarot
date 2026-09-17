@@ -1,6 +1,85 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
+✅ CHECKPOINT — Webhook de Hotmart construido y probado (falta el HOTTOK real
+para activarlo del todo), 2026-09-16/17. El usuario ya creó el producto en
+Hotmart (tipo Suscripción, aprobado), los 2 planes (Mensual $6.99, Anual
+$43.99, 3 días de prueba en modalidad Gratuito) y los links de venta reales:
+- Mensual: https://pay.hotmart.com/G107642375M?off=qcmaw6ih
+- Anual:   https://pay.hotmart.com/G107642375M?off=tcud2c1t
+
+**Hallazgo del checkout real** (queda en FICHA-MERCADO.md §3): con Efecty
+(pago en efectivo) el trial de 3 días NO existe — cobra el precio completo de
+una vez. Con tarjeta sí funciona el trial. Pendiente: decidir si se deja
+Efecty así o se desactiva para que "3 días gratis" sea siempre cierto (el
+usuario no respondió esto todavía — no bloqueó seguir con el resto).
+
+**Lo construido:**
+- `profiles` ganó columnas reales de suscripción: `email` (único, backfill de
+  auth.users), `plan` (free/pro), `status`, `hotmart_subscriber_code`,
+  `trial_ends_at`, `access_until`, `grace_ends_at`, `first_paid_at`.
+- 🔒 Blindaje de seguridad encontrado y cerrado de paso: la política RLS
+  `update_own` de `profiles` permitía al usuario editar CUALQUIER columna de
+  su fila — incluidas las nuevas. Sin este cierre, cualquiera podía hacer
+  `supabase.from('profiles').update({plan:'pro'})` desde el navegador y
+  regalarse Premium. Ahora `authenticated` solo puede tocar
+  nombre/signo/otra_persona_*/foto_url/updated_at por columna (revoke+grant
+  explícito) — todo lo demás solo lo cambia el webhook (service role) o la
+  RPC `apply_hotmart_event` (security definer, execute revocado a
+  anon/authenticated).
+- Tablas nuevas: `processed_events` (idempotencia — Hotmart reenvía eventos)
+  y `webhook_log` (bitácora de cada intento, éxito y fallo).
+- `lib/hotmart-verify.ts`: hottok en tiempo constante (`timingSafeEqual`,
+  anti timing-attack), fail-secure sin secreto (rechaza todo, no un default).
+- `lib/membership-fsm.ts`: máquina de estados (trialing/active/past_due/
+  cancelled/expired/refunded/chargeback) — un evento viejo reentregado NUNCA
+  reactiva un reembolso/chargeback ya cerrado.
+- `app/api/webhooks/hotmart/route.ts`: pipeline completo (autenticidad →
+  frescura anti-replay → parseo → idempotencia+transición atómica vía RPC →
+  bienvenida). Si el correo no tiene cuenta todavía, la CREA (`admin.
+  createUser`) y le manda el enlace mágico con `signInWithOtp` — reutiliza el
+  mismo correo de marca que ya manda Supabase/Resend para el login normal,
+  sin necesitar una integración nueva de Resend.
+- `lib/supabase/proxy.ts`: **cierra el hallazgo 🔴 CRÍTICO de la auditoría de
+  seguridad** — `/app/*` ahora exige `trialing`/`active` (o `cancelled`/
+  `past_due` dentro de su plazo) antes de dejar entrar; antes cualquier
+  cuenta con sesión entraba gratis sin importar si pagó. El admin (role=
+  'admin') sigue entrando siempre, para poder probar la app.
+- `app/paywall/page.tsx`: los botones "Empezar mis 3 días gratis" ahora
+  llevan a los links REALES de Hotmart de arriba (antes era decorativo,
+  mandaba a `/login` sin pasar por ningún cobro). El link de salida
+  "Ahora no, seguir con lo básico" apuntaba a `/app` prometiendo un plan
+  gratis que nunca se construyó (con la puerta nueva, hoy hubiera hecho un
+  loop de vuelta al paywall) — cambiado a "Ahora no, gracias" → landing.
+  ⚠️ Pendiente real, no resuelto acá: decidir si algún día existe un plan
+  gratis limitado detrás de ese link, o si el modelo queda como hard paywall
+  puro (ver el pendiente ya viejo "Decidir qué queda detrás del pago").
+
+**Probado en local (no en producción todavía)**, con una cuenta descartable y
+un HOTTOK de prueba (jamás commiteado): hottok incorrecto → 401 · compra
+nueva → crea cuenta + `plan=pro`/`status=active` · el mismo evento reenviado
+→ `duplicate` (no duplica) · reembolso → corta a `status=refunded`/
+`plan=free` · un `PURCHASE_APPROVED` viejo reentregado DESPUÉS del reembolso
+→ `illegal_transition` (no resucita el acceso). tsc ✓ build ✓. Cuenta y datos
+de prueba borrados al terminar.
+
+⚠️ **Pendiente antes de que esto sirva de algo**: falta que el usuario
+registre esta URL en el panel de Hotmart (Herramientas → Webhook) —
+`https://www.amorytarot.app/api/webhooks/hotmart` (con `www`: Hotmart no
+sigue el redirect 308 del dominio sin `www`) — copie el HOTTOK real de la
+pestaña "Autenticación", lo pegue en Vercel como `HOTMART_HOTTOK`, y se
+redespliegue para que la variable entre en efecto. Sin eso, el endpoint ya
+desplegado rechaza todo con 401 (fail-secure, no expone nada).
+
+💡 IDEA A FUTURO (anotada, NO construir todavía) — Chat en vivo con un asesor/tarotista
+profesional dentro de la app, 2026-09-16, sugerida por el usuario. Recomendación dada:
+NO es para el primer contacto (hoy el mecanismo es 100% automático y barato — sumar
+personas reales trae horarios, pago a esas personas y moderación de lo que dicen);
+tiene más sentido como upsell de precio más alto para quien YA confía en la app
+(referencia del mercado: Kasamba/Purple lo cobran aparte, por minuto o sesión).
+Antes de construir: confirmar demanda real (¿usuarios lo piden?) y definirlo recién
+en FICHA-MERCADO.md si se retoma. El usuario decidió seguir con Hotmart primero.
+
 ✅ CHECKPOINT — Usuario que regresa con el mismo correo, ya no pierde su nombre en
 silencio, 2026-09-16, a pedido del usuario (probando la app, completó el onboarding
 dos veces con el mismo correo y otro nombre, y no entendió por qué "no se guardó").

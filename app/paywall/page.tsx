@@ -41,6 +41,8 @@ const PLANES = {
     cobroReal: '$43.99',
     cobroRealUnidad: '/año',
     ahorro: 'Ahorras $39.89 al año (casi 6 meses gratis)',
+    // Link de venta REAL del producto en Hotmart (sin comisión de afiliado).
+    checkoutUrl: 'https://pay.hotmart.com/G107642375M?off=tcud2c1t',
   },
   mensual: {
     id: 'mensual' as const,
@@ -50,6 +52,7 @@ const PLANES = {
     cobroReal: '$6.99',
     cobroRealUnidad: '/mes',
     ahorro: null,
+    checkoutUrl: 'https://pay.hotmart.com/G107642375M?off=qcmaw6ih',
   },
 };
 
@@ -86,13 +89,11 @@ export default function PaywallPage() {
   const continuar = () => {
     if (cargando) return;
     setCargando(true);
-    try {
-      sessionStorage.setItem('amor-tarot:plan', plan);
-    } catch {
-      // Safari privado o storage bloqueado: se sigue al login igual, el plan
-      // elegido se puede volver a confirmar ahí.
-    }
-    router.push('/login');
+    // Checkout REAL de Hotmart (dominio externo) — nunca router.push, que es
+    // solo para rutas internas. El webhook de Hotmart es quien crea la cuenta
+    // y manda el correo de acceso una vez que la persona paga de verdad; nadie
+    // entra a /app sin pasar por ahí (ver lib/supabase/proxy.ts).
+    window.location.href = seleccionado.checkoutUrl;
   };
 
   return (
@@ -343,12 +344,17 @@ export default function PaywallPage() {
             Garantía de 7 días · después, {seleccionado.cobroReal}
             {seleccionado.cobroRealUnidad} — cancela cuando quieras.
           </p>
-          {/* 7. SALIDA LIMPIA — sin culpa */}
+          {/* 7. SALIDA LIMPIA — sin culpa. Antes llevaba a /app prometiendo "lo
+              básico" gratis, pero ese plan gratuito nunca se construyó (hoy
+              /app es 100% de pago, ver lib/supabase/proxy.ts) — mandar para
+              allá era una promesa falsa que además rebotaba en un loop
+              contra este mismo paywall. Vuelve a la landing hasta que exista
+              un plan gratis real que valga la pena ofrecer acá. */}
           <Link
-            href="/app"
+            href="/"
             className="mt-3 block text-center text-sm font-medium text-[var(--text-secondary)] underline underline-offset-2"
           >
-            Ahora no, seguir con lo básico
+            Ahora no, gracias
           </Link>
         </div>
       </div>

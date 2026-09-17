@@ -18,10 +18,19 @@
 - **Ventana mínima antes de declarar que una campaña fracasó:** NO ENCONTRADO — usar el estándar de `60-OPERACION-DE-CONVERSION.md` hasta tener dato propio
 
 ## 3. CÓMO PAGA ESTE MERCADO
-- Medios de pago disponibles: pendiente de verificar en el checkout real al elegir pasarela (Sesión 6)
+- Medios de pago disponibles: verificado en el checkout REAL de Hotmart (link de venta del plan
+  Mensual), 2026-09-16, desde Colombia: **Débito/Crédito** y **Efecty** (pago en efectivo).
+  Precio mostrado en COP (conversión automática de Hotmart del USD $6.99).
 - Penetración de tarjeta de crédito: NO ENCONTRADO — fuente pendiente
 - Medio de pago dominante local: NO ENCONTRADO — fuente pendiente
-- **Consecuencia para el producto:** pendiente de definir tras elegir pasarela
+- ⚠️ **Hallazgo del checkout real (toqué cada método, no solo los miré):** al elegir **Efecty**, el
+  checkbox "Quiero un periodo gratis" DESAPARECE y el cobro pasa a ser el precio completo
+  ($23.100 COP) EN EL ACTO — Efecty es pago en efectivo de una sola vez, no admite el cobro
+  automático que necesita un trial. Con **Débito/Crédito** el trial de 3 días sí funciona normal.
+  **Consecuencia para el producto:** la promesa "3 días gratis" de la landing/paywall es cierta
+  SOLO si pagan con tarjeta. Decidir antes de anunciar tráfico: (a) dejar ambos métodos y aclarar
+  en el checkout/paywall que el trial gratis aplica solo a tarjeta, o (b) desactivar Efecty en el
+  panel de Hotmart para que la promesa sea universal sin excepciones. Pendiente de decisión.
 
 ## 4. PRUEBA Y GARANTÍA
 - Plazos de prueba que admite la pasarela: pendiente de verificar (Sesión 6, 18-VENTA-HOTMART.md)

@@ -4,6 +4,7 @@
 
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { tieneAccesoCompleto } from '@/lib/membership-fsm';
 
 // Rutas públicas del funnel (modelo onboarding-first): / → /onboarding →
 // /paywall → /login → /app. Solo /app y sus rutas de datos exigen sesión.
@@ -57,6 +58,28 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
+  }
+
+  // Puerta de pago: `/app/*` es la app completa (Regla de Oro, hallazgo de la
+  // auditoría de seguridad — antes CUALQUIER cuenta entraba gratis, pagara o
+  // no). Se revisa acá, en el único lugar por el que pasa cada request, en
+  // vez de duplicar el chequeo pantalla por pantalla.
+  if (user && path.startsWith('/app')) {
+    const { data: perfil } = await supabase
+      .from('profiles')
+      .select('status, access_until, grace_ends_at, role')
+      .eq('id', user.id)
+      .maybeSingle();
+    // El admin (el dueño del negocio) siempre entra a probar la app por
+    // dentro, pague o no — es la misma cuenta que ya usa /admin.
+    const acceso =
+      perfil?.role === 'admin' ||
+      tieneAccesoCompleto((perfil?.status as any) ?? null, new Date(), perfil?.access_until, perfil?.grace_ends_at);
+    if (!acceso) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/paywall';
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;
