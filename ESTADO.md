@@ -47,9 +47,19 @@ técnico, ya construido y probado.
   vive solo en Vercel), pero la lógica de selección y umbrales quedó
   verificada. El endpoint rechaza con 401 sin el secreto correcto. tsc ✓
   build ✓. Cuentas de prueba borradas. Publicado.
-⚠️ Pendiente real: confirmar en producción, tras el próximo disparo del cron
-(o forzándolo a mano una vez), que un correo de verdad llega a una bandeja
-de entrada — hoy solo está verificada la lógica, no la entrega real.
+✅ CONFIRMADO 2026-09-17 (mismo día, tras agregar RESEND_API_KEY y
+CRON_SECRET a Vercel): disparado el cron real en producción contra una
+cuenta descartable. Primer intento con un correo `@example.com` — Resend lo
+rechazó a propósito (no admite ese dominio de prueba, mensaje de error claro
+capturado gracias al fix de abajo). Repetido con `delivered@resend.dev`
+(dirección oficial de pruebas de Resend) → `winbackEnviados: 1`, sin
+errores: el correo de win-back día 30 se mandó de verdad, de punta a punta.
+Cuenta de prueba borrada al terminar.
+🐛 Bug real encontrado en el camino: `enviarWinback`/`enviarDunning` solo
+devolvían `true/false`, sin decir POR QUÉ fallaba un envío — imposible de
+depurar en producción sin acceso a los logs de Vercel. Corregido para que
+devuelvan `{ok, error}` y el cron incluya el mensaje real de Resend en su
+respuesta.
 
 ✅ CHECKPOINT — Embudo de conversión real (event_log), 2026-09-17. A pedido
 del usuario, tras la auditoría post-Hotmart: construido el registro de
