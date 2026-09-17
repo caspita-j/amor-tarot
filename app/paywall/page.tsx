@@ -297,6 +297,15 @@ export default function PaywallPage() {
                 <p className="mt-1.5 text-sm leading-snug text-[var(--text-secondary)]">
                   ¿No te convenció igual? La Garantía de los 7 Días te devuelve tu dinero, ya cobrado.
                 </p>
+                {/* Efecty (pago en efectivo, dentro del checkout) no admite cobro
+                    automático — Hotmart no puede ofrecer ahí el período gratis y
+                    cobra de una vez. Aclarado ACÁ (antes de que la persona elija
+                    el medio de pago en Hotmart) para que "3 días gratis" nunca se
+                    sienta como una sorpresa rota — hallazgo real probando el
+                    checkout, 2026-09-16. */}
+                <p className="mt-1.5 text-xs leading-snug text-[var(--text-tertiary)]">
+                  Si pagas en efectivo (Efecty), no aplica el período de prueba: se cobra el precio completo de una vez.
+                </p>
               </div>
             </Hairline>
           </motion.div>

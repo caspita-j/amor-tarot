@@ -30,7 +30,7 @@
   **Consecuencia para el producto:** la promesa "3 días gratis" de la landing/paywall es cierta
   SOLO si pagan con tarjeta. Decidir antes de anunciar tráfico: (a) dejar ambos métodos y aclarar
   en el checkout/paywall que el trial gratis aplica solo a tarjeta, o (b) desactivar Efecty en el
-  panel de Hotmart para que la promesa sea universal sin excepciones. Pendiente de decisión.
+  panel de Hotmart para que la promesa sea universal sin excepciones. DECIDIDO 2026-09-17: se deja Efecty activo (útil para quien no tiene tarjeta) + aclaración agregada en el paywall de la app ("Si pagas en efectivo (Efecty), no aplica el período de prueba...").
 
 ## 4. PRUEBA Y GARANTÍA
 - Plazos de prueba que admite la pasarela: pendiente de verificar (Sesión 6, 18-VENTA-HOTMART.md)
