@@ -1,6 +1,24 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
+✅ CHECKPOINT — HOTMART CONECTADO Y FUNCIONANDO EN PRODUCCIÓN, 2026-09-17.
+Repetido el "Enviar prueba" de Hotmart una vez más tras el fix de rutas de
+campo: los 8 eventos (Compra aprobada, Compra completa, Compra reembolsada,
+Chargeback, Compra atrasada, Compra con plazo vencido, Cancelación de
+Suscripción, Cambio de Plan) devolvieron `applied` — cero errores. La cadena
+completa está viva: checkout real de Hotmart → webhook verificado → cuenta
+creada/actualizada con el plan correcto → `/app` exige ese acceso → enlace
+mágico de bienvenida para cuentas nuevas.
+Quedan 2 cosas para que esto vaya a producción con tráfico real (ninguna
+bloquea seguir usando la app mientras tanto):
+- [ ] Decidir lo de Efecty (FICHA-MERCADO.md §3): dejarlo o desactivarlo para
+  que "3 días gratis" sea siempre cierto — el usuario no respondió todavía.
+- [ ] Hacer UNA compra de prueba real de punta a punta (no solo el botón
+  "Enviar prueba" de Hotmart, que no pasa por el checkout real ni crea una
+  transacción de verdad) — pagar con tarjeta real y reembolsable, y
+  confirmar que el correo de bienvenida llega y da acceso real. Es el único
+  paso de la "PRUEBA E2E" de 18-VENTA-HOTMART.md que falta.
+
 ✅ CHECKPOINT — Bug real #4, el mismo día: Hotmart estructura el correo/código
 de suscriptor/fecha de cobro DISTINTO según la familia del evento, 2026-09-17.
 El fix del bug #3 (buscar por código de suscriptor si no hay correo) seguía
