@@ -19,6 +19,33 @@ seguir usando la app mientras tanto):
 - [x] Efecty: RESUELTO 2026-09-17 — se deja activo + aclaración agregada en
   el paywall ("Si pagas en efectivo... no aplica el período de prueba").
 
+✅ CHECKPOINT — Embudo de conversión real (event_log), 2026-09-17. A pedido
+del usuario, tras la auditoría post-Hotmart: construido el registro de
+eventos que faltaba para la sección "Conversión" del panel de admin (no
+dependía de Hotmart, era la otra pieza pendiente).
+- Tabla `event_log` (anon_id + user_id opcional + evento + metadata) — RLS:
+  cualquiera puede INSERTAR su propio evento (analítica de producto sin PII,
+  no hay lectura pública), la LECTURA es solo vía la RPC
+  `admin_embudo_conversion()` (mismo patrón `es_admin()` que el resto).
+  Eventos instrumentados: landing_visto, onboarding_iniciado,
+  onboarding_completado, paywall_visto, checkout_click_mensual/anual.
+- `lib/eventos.ts`: `registrarEvento()` — anon_id propio en localStorage
+  (nunca cookie de terceros), dispara-y-olvida (nunca rompe la pantalla).
+- 🐛 Bug real encontrado probando en vivo: cada evento se registraba 2 veces
+  (doble-render de desarrollo de React). Corregido con dedupe por
+  sessionStorage (una vez por evento por sesión de navegador, no por
+  render) — verificado con una prueba limpia: exactamente 1 fila por visita.
+- `app/admin/negocio/page.tsx`: "Conversión" ya muestra el embudo real
+  (landing → onboarding iniciado/completado → paywall → click de pago) con
+  el % de caída entre cada paso, en vez de "No instrumentado".
+- ⚠️ Descubrí y corregí de paso un permiso mal puesto: las 2 funciones RPC de
+  admin creadas hoy (`admin_resumen_negocio`, `admin_embudo_conversion`)
+  quedaron ejecutables por CUALQUIERA sin iniciar sesión (Postgres otorga
+  EXECUTE a "todos" por defecto en funciones nuevas; revocar solo de "anon"
+  no alcanza, hay que revocar de PUBLIC explícitamente). Ya corregido y
+  verificado con el asesor de seguridad de Supabase — sin hallazgos nuevos.
+tsc ✓ build ✓. Publicado.
+
 ✅ CHECKPOINT — Auditoría post-Hotmart: todo lo que quedó pendiente "por falta
 de Hotmart" en sesiones anteriores, revisado y actualizado, 2026-09-17 (a
 pedido explícito del usuario). Hallazgos y qué se hizo con cada uno:

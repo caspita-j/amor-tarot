@@ -145,6 +145,38 @@ export async function leerResumenNegocio(): Promise<ResumenNegocio | null> {
   };
 }
 
+export type EmbudoConversion = {
+  landingVisto: number;
+  onboardingIniciado: number;
+  onboardingCompletado: number;
+  paywallVisto: number;
+  checkoutClickMensual: number;
+  checkoutClickAnual: number;
+};
+
+export async function leerEmbudoConversion(dias = 30): Promise<EmbudoConversion> {
+  const vacio: EmbudoConversion = {
+    landingVisto: 0,
+    onboardingIniciado: 0,
+    onboardingCompletado: 0,
+    paywallVisto: 0,
+    checkoutClickMensual: 0,
+    checkoutClickAnual: 0,
+  };
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc('admin_embudo_conversion', { p_dias: dias });
+  if (error || !data) return vacio;
+  const porEvento = new Map((data as { evento: string; total: number }[]).map((f) => [f.evento, f.total]));
+  return {
+    landingVisto: porEvento.get('landing_visto') ?? 0,
+    onboardingIniciado: porEvento.get('onboarding_iniciado') ?? 0,
+    onboardingCompletado: porEvento.get('onboarding_completado') ?? 0,
+    paywallVisto: porEvento.get('paywall_visto') ?? 0,
+    checkoutClickMensual: porEvento.get('checkout_click_mensual') ?? 0,
+    checkoutClickAnual: porEvento.get('checkout_click_anual') ?? 0,
+  };
+}
+
 export type UsuarioAdmin = {
   id: string;
   email: string;

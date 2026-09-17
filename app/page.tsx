@@ -6,6 +6,7 @@
 // Modelo de monetización: Freemium con prueba de 3 días (onboarding-first) —
 // el CTA lleva a /onboarding, nunca directo a un checkout.
 
+import { useEffect } from 'react';
 import {
   Ban,
   CircleHelp,
@@ -24,6 +25,7 @@ import {
   Users,
 } from 'lucide-react';
 import Image from 'next/image';
+import { registrarEvento } from '@/lib/eventos';
 import { FondoMistico } from '@/components/app/TemaMistico';
 import { RuedaAstral } from '@/components/landing/RuedaAstral';
 import { SellosConfianza } from '@/components/landing/ui';
@@ -55,6 +57,12 @@ const EMBLEMA_HERO = (
 const EMBLEMA_PIE = <Image src="/marca/emblema.png" alt="" width={210} height={160} className="h-6 w-auto" />;
 
 export default function LandingPage() {
+  // Embudo de conversión (admin → Negocio → Conversión) — un evento por visita,
+  // no por cada re-render.
+  useEffect(() => {
+    registrarEvento('landing_visto');
+  }, []);
+
   return (
     /* Tema oscuro/dorado también acá (FICHA-ARTE.md → "A · Carta Astral"): el
        mismo mecanismo que ya usa la app por dentro, así las 10 secciones cambian

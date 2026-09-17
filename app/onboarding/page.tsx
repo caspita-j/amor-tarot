@@ -21,6 +21,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { Moon } from 'lucide-react';
 import { BotonPrincipal, ChipGrid, ChipOpcion, PantallaOnboarding, TarjetaTarot } from '@/components/onboarding/ui';
 import { sortearCartas, type Carta } from '@/lib/tarot-data';
+import { registrarEvento } from '@/lib/eventos';
 
 const SITUACIONES = [
   'Una situationship (un casi algo)',
@@ -105,6 +106,11 @@ export default function OnboardingPage() {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const reduce = useReducedMotion();
 
+  // Embudo de conversión (admin → Negocio → Conversión) — una sola vez por visita.
+  useEffect(() => {
+    registrarEvento('onboarding_iniciado');
+  }, []);
+
   const siguiente = () => setPaso((p) => p + 1);
   const atras = () => setPaso((p) => Math.max(0, p - 1));
 
@@ -152,6 +158,7 @@ export default function OnboardingPage() {
   const irAPaywall = () => {
     if (navegando) return;
     setNavegando(true);
+    registrarEvento('onboarding_completado');
     try {
       sessionStorage.setItem('amor-tarot:onboarding', JSON.stringify(r));
     } catch (err) {

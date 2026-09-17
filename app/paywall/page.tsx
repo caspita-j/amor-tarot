@@ -18,6 +18,7 @@ import { ArrowLeft, Check, Shield } from 'lucide-react';
 import { FondoMistico } from '@/components/app/TemaMistico';
 import { BotonPrincipal, TarjetaTarot } from '@/components/onboarding/ui';
 import { Hairline } from '@/components/landing/ui';
+import { registrarEvento } from '@/lib/eventos';
 
 type Respuestas = {
   nombre?: string;
@@ -82,6 +83,11 @@ export default function PaywallPage() {
     }
   }, []);
 
+  // Embudo de conversión (admin → Negocio → Conversión) — una sola vez por visita.
+  useEffect(() => {
+    registrarEvento('paywall_visto');
+  }, []);
+
   const nombre = r.nombre?.trim() || 'de nuevo';
   const seleccionado = PLANES[plan];
   const nombreOtra = r.otraPersonaNombre?.trim() || 'La Otra Persona';
@@ -89,6 +95,7 @@ export default function PaywallPage() {
   const continuar = () => {
     if (cargando) return;
     setCargando(true);
+    registrarEvento(plan === 'anual' ? 'checkout_click_anual' : 'checkout_click_mensual');
     // Checkout REAL de Hotmart (dominio externo) — nunca router.push, que es
     // solo para rutas internas. El webhook de Hotmart es quien crea la cuenta
     // y manda el correo de acceso una vez que la persona paga de verdad; nadie
