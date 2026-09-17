@@ -1,6 +1,20 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
+✅ CHECKPOINT — Bug real #3 corregido: "Cancelación de Suscripción" sin
+correo, 2026-09-17. Con los 2 bugs anteriores corregidos, el usuario repitió
+la prueba de Hotmart: 6 de 7 pasaron (incluida "Compra reembolsada", el
+crítico). Solo falló "Cancelación de Suscripción" — confirmado con la
+columna "Email del contacto" del propio Hotmart ("-"): ese evento NO trae el
+correo del comprador, solo el código de suscriptor. Corregido: el webhook
+ahora busca la cuenta primero por correo (cuando viene) y, si no hay correo,
+por `hotmart_subscriber_code` (que ya se guardó en la compra original) —
+solo falla si no hay NINGUNO de los dos. Probado en local reproduciendo el
+caso exacto (compra con código de suscriptor → cancelación sin correo, solo
+con ese código → encuentra la MISMA cuenta y la marca `cancelled`). tsc ✓
+build ✓. Publicado. Falta que el usuario repita la prueba de Hotmart una vez
+más para confirmar los 7/7 en vivo.
+
 ✅ CHECKPOINT — HOTTOK real conectado en producción + 2 bugs reales
 encontrados y corregidos con las pruebas de Hotmart, 2026-09-17. El usuario
 registró el webhook en Hotmart (URL con `www`, eventos correctos incluyendo

@@ -80,18 +80,42 @@ export async function POST(req: NextRequest) {
   if (!newStatus) {
     return NextResponse.json({ received: true, ignored: event });
   }
-  if (!email) {
+  if (!email && !subscriberCode) {
     await log(eventId, event, 'error');
-    return NextResponse.json({ error: 'sin email en el payload' }, { status: 400 });
+    return NextResponse.json({ error: 'sin correo ni código de suscriptor en el payload' }, { status: 400 });
   }
 
-  // 5. Resolver la cuenta: ¿ya existe (por correo) o hay que crearla?
-  const { data: existente } = await admin.from('profiles').select('id').eq('email', email).maybeSingle();
-
-  let userId = existente?.id as string | undefined;
+  // 5. Resolver la cuenta. Los eventos de compra siempre traen el correo del
+  //    comprador — pero algunos de solo-suscripción (probado en vivo
+  //    2026-09-17: "Cancelación de Suscripción") NO lo traen, solo el código
+  //    de suscriptor. Como ese código ya quedó guardado en la compra
+  //    original, se puede encontrar la misma cuenta igual, sin correo.
+  let userId: string | undefined;
   let esCuentaNueva = false;
 
-  if (!userId) {
+  if (email) {
+    const { data: existente } = await admin.from('profiles').select('id').eq('email', email).maybeSingle();
+    userId = existente?.id;
+  }
+  if (!userId && subscriberCode) {
+    const { data: porSuscriptor } = await admin
+      .from('profiles')
+      .select('id')
+      .eq('hotmart_subscriber_code', subscriberCode)
+      .maybeSingle();
+    userId = porSuscriptor?.id;
+  }
+
+  if (!userId && !email) {
+    // Sin correo no hay forma de crear una cuenta nueva, y tampoco existe
+    // ninguna con este código de suscriptor todavía — no debería pasar en un
+    // evento real (la cancelación siempre es de un suscriptor que ya pagó
+    // antes), pero sin esto sería un fallo silencioso.
+    await log(eventId, event, 'error');
+    return NextResponse.json({ error: 'cuenta no encontrada por código de suscriptor' }, { status: 400 });
+  }
+
+  if (!userId && email) {
     const { data: creado, error: errCrear } = await admin.auth.admin.createUser({ email, email_confirm: true });
     if (errCrear || !creado?.user) {
       // Hotmart manda varios eventos casi simultáneos para la misma compra
@@ -140,7 +164,7 @@ export async function POST(req: NextRequest) {
   // 7. Bienvenida SOLO a cuentas nuevas con acceso recién concedido — reutiliza
   //    el mismo signInWithOtp de /login, que ya manda el correo con marca
   //    propia vía Resend (Supabase Auth ya está configurado con ese SMTP).
-  if (result === 'applied' && esCuentaNueva && (newStatus === 'trialing' || newStatus === 'active')) {
+  if (result === 'applied' && esCuentaNueva && email && (newStatus === 'trialing' || newStatus === 'active')) {
     await admin.auth.signInWithOtp({ email, options: { emailRedirectTo: `${SITE_URL}/auth/callback` } });
   }
 
