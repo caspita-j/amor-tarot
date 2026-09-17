@@ -99,6 +99,52 @@ export async function leerUsuariosPorDia(dias = 30): Promise<UsuariosPorDia[]> {
   return (data as { dia: string; nuevos: number }[]).map((f) => ({ dia: f.dia, nuevos: f.nuevos }));
 }
 
+export type ResumenNegocio = {
+  enPrueba: number;
+  pagando: number;
+  cancelados: number;
+  vencidos: number;
+  reembolsados: number;
+  contracargos: number;
+  pagoAtrasado: number;
+  nuevosPagos30d: number;
+  webhooksUltimas24h: number;
+  webhooksError24h: number;
+  ultimoWebhookRecibido: string | null;
+};
+
+export async function leerResumenNegocio(): Promise<ResumenNegocio | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc('admin_resumen_negocio').single();
+  if (error || !data) return null;
+  const fila = data as {
+    en_prueba: number;
+    pagando: number;
+    cancelados: number;
+    vencidos: number;
+    reembolsados: number;
+    contracargos: number;
+    pago_atrasado: number;
+    nuevos_pagos_30d: number;
+    webhooks_ultimas_24h: number;
+    webhooks_error_24h: number;
+    ultimo_webhook_recibido: string | null;
+  };
+  return {
+    enPrueba: fila.en_prueba,
+    pagando: fila.pagando,
+    cancelados: fila.cancelados,
+    vencidos: fila.vencidos,
+    reembolsados: fila.reembolsados,
+    contracargos: fila.contracargos,
+    pagoAtrasado: fila.pago_atrasado,
+    nuevosPagos30d: fila.nuevos_pagos_30d,
+    webhooksUltimas24h: fila.webhooks_ultimas_24h,
+    webhooksError24h: fila.webhooks_error_24h,
+    ultimoWebhookRecibido: fila.ultimo_webhook_recibido,
+  };
+}
+
 export type UsuarioAdmin = {
   id: string;
   email: string;

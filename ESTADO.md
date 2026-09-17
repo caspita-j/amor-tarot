@@ -1,5 +1,5 @@
 # ESTADO — Amor & Tarot
-Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
+Última actualización: 2026-09-17 | Sesión actual: 6 (continúa — Hotmart conectado y auditado) (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
 ✅ CHECKPOINT — HOTMART CONECTADO Y FUNCIONANDO EN PRODUCCIÓN, 2026-09-17.
 Repetido el "Enviar prueba" de Hotmart una vez más tras el fix de rutas de
@@ -9,15 +9,68 @@ Suscripción, Cambio de Plan) devolvieron `applied` — cero errores. La cadena
 completa está viva: checkout real de Hotmart → webhook verificado → cuenta
 creada/actualizada con el plan correcto → `/app` exige ese acceso → enlace
 mágico de bienvenida para cuentas nuevas.
-Quedan 2 cosas para que esto vaya a producción con tráfico real (ninguna
-bloquea seguir usando la app mientras tanto):
-- [ ] Decidir lo de Efecty (FICHA-MERCADO.md §3): dejarlo o desactivarlo para
-  que "3 días gratis" sea siempre cierto — el usuario no respondió todavía.
+Queda 1 cosa para que esto vaya a producción con tráfico real (no bloquea
+seguir usando la app mientras tanto):
 - [ ] Hacer UNA compra de prueba real de punta a punta (no solo el botón
   "Enviar prueba" de Hotmart, que no pasa por el checkout real ni crea una
   transacción de verdad) — pagar con tarjeta real y reembolsable, y
   confirmar que el correo de bienvenida llega y da acceso real. Es el único
   paso de la "PRUEBA E2E" de 18-VENTA-HOTMART.md que falta.
+- [x] Efecty: RESUELTO 2026-09-17 — se deja activo + aclaración agregada en
+  el paywall ("Si pagas en efectivo... no aplica el período de prueba").
+
+✅ CHECKPOINT — Auditoría post-Hotmart: todo lo que quedó pendiente "por falta
+de Hotmart" en sesiones anteriores, revisado y actualizado, 2026-09-17 (a
+pedido explícito del usuario). Hallazgos y qué se hizo con cada uno:
+- Los 3 veredictos de landing/onboarding/paywall (`docs/revisiones/*.md`)
+  siguen certificados LISTA con buen puntaje (37/40 en los 3) — no hacía
+  falta re-certificar nada, solo se verificó que las capturas de puntaje
+  histórico dentro de ESTADO.md no se confundieran con el veredicto final.
+- El hallazgo #3 del veredicto de paywall ("no hay estado de error de pago
+  visible, pasarela no conectada") queda resuelto por diseño, no por código:
+  el pago ahora ocurre en el checkout DE HOTMART (fuera de nuestra app), así
+  que un error de pago (tarjeta rechazada, etc.) lo maneja la propia pantalla
+  de Hotmart — no hay nada que construir acá.
+- **Garantía de los 7 Días — YA NO "PROVISIONAL"**: confirmado con la
+  documentación oficial de Hotmart que su plazo mínimo de garantía fuera de
+  Europa es de 7 días (opciones: 7/15/21/30) — como esta app solo vende en
+  LATAM + hispanos de EE. UU., es estructuralmente imposible que el plazo
+  real quede por debajo de 7 días. Detalle y fuentes en
+  `FICHA-MERCADO.md` §4.
+- **Panel de admin actualizado con datos reales de Hotmart** (antes decía
+  "Hotmart no conectado" en varios lados, ya desactualizado):
+  `app/admin/negocio/page.tsx` — "Ventas" y "Prueba gratis" ahora muestran
+  números reales (pagando, en prueba, cancelados, reembolsados,
+  contracargos, pago atrasado, salud del webhook) vía la nueva función
+  `admin_resumen_negocio()` (RPC con `es_admin()`, igual patrón que las
+  demás). "Conversión" y "LTV/CAC" siguen sin dato — NO dependen de Hotmart,
+  necesitan `event_log` y `profiles.source` (no construidos hoy, quedan
+  pendientes aparte). "Ganancia real" sigue sin poder mostrar el ingreso en
+  $ exacto porque no se guarda QUÉ plan (Mensual/Anual) tiene cada quien —
+  anotado en pantalla, no inventado. `app/admin/page.tsx` (banner y tarjeta
+  de "Negocio") también actualizados para no decir "Hotmart no conectado".
+- **Copy del paywall actualizado** (decisión pendiente desde antes, para
+  "cuando se tocara esta pantalla junto con Hotmart"): la línea "Cada mes: El
+  Espejo de las 3 Cartas..." ahora menciona también el check-in de ánimo y
+  el Historial con patrones — el gate de `/app` ya cubre ambos, así que la
+  promesa es exacta.
+- Revisados y sin acción necesaria (ya independientes de Hotmart o ya
+  resueltos): `docs/copy/bienvenida-activacion.md` y
+  `docs/copy/recuperacion-acceso.md` (dependen solo de Resend, no de
+  Hotmart, pueden avanzar aparte); el hallazgo de seguridad crítico de
+  `/app` sin gate de pago (resuelto ayer, `lib/supabase/proxy.ts`).
+⚠️ Fuera de alcance a propósito (son FEATURES NUEVAS, no "revisiones
+pendientes", y no se construyeron hoy — anotar para decidir cuándo hacerlas):
+`docs/copy/winback.md` (correos día 30/60/90 de cancelados) y
+`docs/copy/dunning.md` (correos de cobro fallido) tienen el copy listo y ya
+podrían conectarse (el webhook ya distingue `cancelled`/`past_due`), pero
+falta el cron/job que los dispare — no se armó porque el pedido de hoy era
+auditar lo pendiente, no construir automatizaciones nuevas. Avisos de
+pre-renovación del plan anual (30/7 días antes): tampoco arrancado.
+`docs/copy/acceso-post-compra.md` (la plantilla de marca del correo de
+bienvenida): el webhook hoy manda el magic link genérico de Supabase/Resend,
+no esa plantilla específica — funciona bien, pero si se quiere el diseño de
+marca completo del correo de bienvenida, es trabajo aparte.
 
 ✅ CHECKPOINT — Bug real #4, el mismo día: Hotmart estructura el correo/código
 de suscriptor/fecha de cobro DISTINTO según la familia del evento, 2026-09-17.
@@ -1481,6 +1534,7 @@ módulo del curso lo haremos"): `/app` solo exige sesión iniciada, nunca revisa
 — hoy cualquier correo puede crear cuenta gratis con acceso ilimitado, porque Hotmart todavía no está
 conectado (confirmado leyendo el código: no existe webhook, no existe tabla de suscripción). Queda
 pendiente de la próxima etapa del curso, no de esta sesión.
+[RESUELTO 2026-09-16/17 — ver checkpoint "HOTMART CONECTADO..." al principio del archivo.]
 Corregido HOY, a pedido explícito ("hace los arreglos tú mismo que puedas hacer"):
 - **Límite real (servidor) de fotos por lectura**: antes solo lo respetaba el navegador (MAX_FOTOS=3).
   Migración `limitar_fotos_y_proteger_racha` + `corregir_proteccion_racha_por_columna`: función
@@ -2191,53 +2245,39 @@ presionar ni asustar."
 Actualizado 2026-09-10 — pedido explícito del usuario: mantener esta lista al día para que, al
 conectar Hotmart, no tenga que volver a revisar toda la sesión buscando qué quedó suelto.
 
-**Servicios externos por conectar (lo grande):**
-- [ ] Hotmart — sin esto, nada de lo de abajo se puede activar. Es el "siguiente módulo del curso"
-  del usuario, no se toca hasta que él lo traiga.
-- [ ] Resend + dominio propio — el correo de Supabase (login) tiene límite de envíos bajo y solo
-  sirve para el enlace mágico; ningún otro correo del negocio (win-back, recibos, avisos) puede
-  mandarse sin esto.
+**Servicios externos:**
+- [x] Hotmart — CONECTADO 2026-09-16/17 (webhook real, control de plan/estado, checkout real).
+- [x] Resend + dominio propio — conectado (Sesión 6, checkpoint de EMAILS).
 
-**En cuanto Hotmart esté conectado, queda pendiente (ninguno se puede hacer antes):**
-- [ ] 🔴 Hacer cumplir el pago de verdad: hoy `/app` solo revisa "¿inició sesión?", nunca "¿pagó o
-  sigue en prueba?" — cualquiera con cualquier correo tiene acceso gratis e ilimitado (hallazgo
-  crítico de la auditoría de seguridad). Falta: guardar el estado de suscripción que manda el
-  webhook de Hotmart, y que `/app` (toda la app interna, no solo las lecturas) lo revise.
-- [ ] Decidir qué queda detrás del pago una vez exista ese control: el paywall YA promete "El
-  Espejo de las 3 Cartas sin límite, Compatibilidad de signos y tu Carta del día" como parte de lo
-  pago — o sea, el ritual diario completo (Carta del día + check-in de ánimo + Compatibilidad),
-  no solo las lecturas nuevas. Falta hacerlo cumplir con código cuando el trial se acabe sin pago.
-- [ ] Actualizar el copy del paywall para mencionar el check-in de ánimo / historial de patrones
-  (features nuevas de esta sesión, no existían cuando se escribió ese texto) — decisión explícita
-  del usuario: dejarlo para cuando se toque esta pantalla de una sola vez junto con Hotmart.
-- [ ] Verificar la Garantía de los 7 Días contra el panel real de Hotmart (FICHA-MERCADO.md ya lo
-  marca como PROVISIONAL desde antes de esta sesión): confirmar que admite reembolso a ≥7 días
-  corridos desde el cobro. Si el plazo real es menor, bajar el número en `/reembolsos`, landing y
-  paywall ANTES de vender.
-- [ ] Conectar la secuencia de win-back (correos de los días 30/60/90, ya escritos en
-  `docs/copy/winback.md`) — necesita el webhook de Hotmart (saber quién canceló y cuándo) + Resend
-  (poder mandarlo). El copy y la regla de negocio ya están decididos, falta el cableado técnico.
-- [ ] Cuando exista un plan anual vendiéndose de verdad: armar los avisos pre-renovación del mes 12
-  (30 días y 7 días antes del cobro) — doctrina `58-RETENCION-DE-INGRESOS.md`, no arrancado todavía.
-- [ ] El webhook de Hotmart, cuando se construya, necesita verificar la firma (HOTTOK) sobre el
-  cuerpo crudo de la petición ANTES de confiar en nada que llegue — sin eso, cualquiera podría
-  mandar un aviso falso de "compra exitosa" y darse acceso gratis (era la pregunta #4 del pedido de
-  auditoría de seguridad original del usuario, sin responder todavía porque Hotmart no existe).
-  También necesita ser idempotente (que reenviar el mismo aviso dos veces no active el acceso dos
-  veces) — patrón ya usado en este proyecto en `registrar_lectura_ia()`, reusar la misma idea.
-- [ ] **Panel de admin → pestaña "Negocio" (`app/admin/negocio/page.tsx`) — completamente vacía,
-  sus 4 secciones dependen de piezas que no existen todavía**, y NO son todas "conectar Hotmart":
-  - Conversión (landing → onboarding → pago): necesita un `event_log` nuevo — una tabla que no
-    existe hoy, para guardar cada paso del recorrido. Esto NO llega solo con Hotmart.
-  - Prueba gratis (trial): necesita ese mismo `event_log` + Hotmart (para saber cuándo empieza
-    cada prueba).
-  - Ventas: necesita Hotmart (ingresos, cancelaciones, reembolsos llegan por su webhook).
-  - Ganancia real: necesita Hotmart (ingresos) + Resend (costo de email) + confirmar la tarifa de
-    infraestructura — el costo real de IA ya se calcula bien, es lo único que sí funciona ahí.
-  - LTV/CAC por canal: necesita una columna nueva `profiles.source` (de dónde vino cada usuario,
-    no existe hoy) + el gasto de adquisición por canal (dato que solo el usuario tiene).
-  - El resumen general del admin (`app/admin/page.tsx`) tiene el mismo aviso: no genera alertas
-    automáticas de negocio todavía por la misma falta de datos.
+**Lo que dependía de "cuando Hotmart esté conectado" — actualizado 2026-09-17
+(auditoría post-Hotmart, ver el checkpoint al principio de este archivo):**
+- [x] 🔴 Hacer cumplir el pago de verdad — RESUELTO: `lib/supabase/proxy.ts` exige
+  `trialing`/`active` (o `cancelled`/`past_due` dentro de plazo) para todo `/app/*`.
+- [x] Qué queda detrás del pago — RESUELTO por la puerta de arriba: hoy `/app` completo
+  (Carta del día, check-in de ánimo, Compatibilidad, Historial) es 100% de pago, sin
+  excepciones — no hace falta un control feature por feature.
+- [x] Copy del paywall (check-in de ánimo / historial de patrones) — actualizado
+  2026-09-17 en `app/paywall/page.tsx`.
+- [x] Garantía de los 7 Días — YA NO PROVISIONAL, confirmado con la doc oficial de
+  Hotmart (piso de 7 días fuera de Europa). Ver `FICHA-MERCADO.md` §4.
+- [x] El webhook verifica el HOTTOK (tiempo constante) + es idempotente
+  (`processed_events`) — construido y probado en vivo 2026-09-16/17.
+- [x] Panel de admin → "Negocio": "Ventas" y "Prueba gratis" ya muestran datos reales
+  de Hotmart (`admin_resumen_negocio()`). "Conversión" y "LTV/CAC" siguen sin dato —
+  confirmado que NO dependen de Hotmart, ver el punto siguiente.
+- [ ] Conectar la secuencia de win-back (`docs/copy/winback.md`) y dunning
+  (`docs/copy/dunning.md`) — el copy está listo y el webhook ya distingue
+  `cancelled`/`past_due`, pero falta el cron/job que dispare los correos. NO se
+  construyó en la auditoría de hoy a propósito (es una feature nueva, no una
+  revisión pendiente) — queda para cuando se decida arrancarla.
+- [ ] Avisos pre-renovación del plan anual (30 y 7 días antes del cobro) —
+  doctrina `58-RETENCION-DE-INGRESOS.md`, no arrancado todavía.
+- [ ] `event_log` (registro paso a paso landing→onboarding→pago) y la columna
+  `profiles.source` (canal de origen) — nunca dependieron de Hotmart, siguen sin
+  construirse. Bloquean "Conversión" y "LTV/CAC" del panel de admin.
+- [ ] Guardar QUÉ plan (Mensual/Anual) tiene cada suscripción — hoy `profiles.plan`
+  solo distingue free/pro, no la periodicidad, así que "Ganancia real" del admin no
+  puede calcular el ingreso en $ exacto (sí sabe cuánta gente paga).
 
 **Sueltos, sin relación con Hotmart:**
 - [ ] Activar "Leaked Password Protection" en el panel de Supabase (Authentication → Sign In /

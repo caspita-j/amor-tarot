@@ -33,10 +33,17 @@
   panel de Hotmart para que la promesa sea universal sin excepciones. DECIDIDO 2026-09-17: se deja Efecty activo (útil para quien no tiene tarjeta) + aclaración agregada en el paywall de la app ("Si pagas en efectivo (Efecty), no aplica el período de prueba...").
 
 ## 4. PRUEBA Y GARANTÍA
-- Plazos de prueba que admite la pasarela: pendiente de verificar (Sesión 6, 18-VENTA-HOTMART.md)
-- Prueba elegida: 3 días · Garantía elegida: 7 días — decisión propia del negocio (no depende de investigación de mercado), PROVISIONAL hasta confirmar en Sesión 6 que la pasarela elegida admite reembolso a ≥7 días corridos desde la compra
+- Plazos de prueba que admite la pasarela: confirmado en el panel real de Hotmart, 2026-09-16 —
+  campo "Días de prueba" libre en el plan (se configuró en 3), modalidad "Gratuito" (sin cobro
+  durante la prueba, la única que no rompe la promesa "gratis" — ver Efecty en §3).
+- Prueba elegida: 3 días · Garantía elegida: 7 días — decisión propia del negocio.
+- ✅ CONFIRMADO 2026-09-17 (ya NO provisional): Hotmart exige un plazo de garantía mínimo de **7
+  días** para todo producto vendido fuera de Europa (7/15/21/30 son las únicas opciones; Europa
+  exige 15). Como esta app vende en LATAM + hispanos de EE. UU. (nunca Europa), es estructuralmente
+  imposible que el plazo real de Hotmart sea menor a 7 días — la promesa de la landing/paywall/
+  `/reembolsos` es segura sin depender de qué valor exacto se haya configurado en el panel.
+  Fuente: help.hotmart.com/es/article/360038569752, reembolsando.com.es/hotmart (2026-09-17).
 - Comprobación: garantía 7 > prueba 3 → SÍ
-- ⚠️ Si al verificar la pasarela real en Sesión 6 el plazo admitido es menor a 7 días, se ajusta este número y el copy de la landing ANTES de vender
 
 ## 5. CONVERSIÓN ESPERABLE
 - Conversión típica visita→registro / prueba→pago del nicho: NO ENCONTRADO — se usará el propio dato de la app como referencia desde el lanzamiento

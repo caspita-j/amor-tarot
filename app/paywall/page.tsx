@@ -174,9 +174,15 @@ export default function PaywallPage() {
             ))}
           </motion.ul>
 
-          {/* 6. CUÁL PLAN ME CONVIENE — cards seleccionables */}
+          {/* 6. CUÁL PLAN ME CONVIENE — cards seleccionables. Se sumaron el
+              check-in de ánimo y el Historial con patrones: son features
+              reales de la app que no existían cuando se escribió este texto
+              (quedó pendiente a propósito hasta tocar esta pantalla junto
+              con Hotmart — ver ESTADO.md). El gate de /app ya los cubre a
+              los dos, así que la promesa ahora es exacta. */}
           <motion.p variants={VARIANTS} className="mt-8 text-xs font-semibold text-[var(--text-secondary)]">
-            Cada mes: El Espejo de las 3 Cartas sin límite, Compatibilidad de signos y tu Carta del día.
+            Cada mes: El Espejo de las 3 Cartas sin límite, Compatibilidad de signos, tu Carta del día, tu
+            check-in de ánimo y tu Historial con patrones.
           </motion.p>
           <motion.div variants={VARIANTS} className="mt-3 flex flex-col gap-3">
             {(['anual', 'mensual'] as const).map((id) => {

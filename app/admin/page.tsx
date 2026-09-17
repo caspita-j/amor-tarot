@@ -52,9 +52,10 @@ export default async function AdminPage() {
       <div className="flex items-start gap-3 rounded-[var(--radius-card)] bg-[var(--surface)] p-4">
         <AlertTriangle size={18} color="var(--text-secondary)" className="mt-0.5 shrink-0" aria-hidden="true" />
         <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
-          Todavía no hay suficientes datos conectados (ventas, canal de origen, errores) para generar
-          avisos automáticos de negocio con confianza — se activa al conectar Hotmart y el registro de
-          eventos. Mientras tanto, no se inventa un veredicto de "todo bien" ni de alerta.
+          Hotmart ya está conectado (ventas, cancelaciones y reembolsos reales en "Negocio") — pero
+          todavía falta el canal de origen de cada usuario y un registro paso a paso del recorrido
+          (landing → onboarding → pago) para generar avisos automáticos de negocio con confianza.
+          Mientras tanto, no se inventa un veredicto de "todo bien" ni de alerta.
         </p>
       </div>
 
@@ -101,7 +102,7 @@ export default async function AdminPage() {
           icono={Briefcase}
           color="var(--accent-2)"
           titulo="Negocio"
-          descripcion="Ventas, conversión, ganancia real — qué falta conectar"
+          descripcion="Ventas reales de Hotmart, prueba gratis, ganancia"
         />
       </div>
     </div>
