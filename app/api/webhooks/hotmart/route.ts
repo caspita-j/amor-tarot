@@ -61,11 +61,23 @@ export async function POST(req: NextRequest) {
   // es del onboarding/Perfil de la app y ya tiene su propia protección
   // (ver sincronizarOnboardingSiHaceFalta) — mezclar las dos fuentes fue el
   // bug de "usuario que regresa" que se corrigió antes en esta misma sesión.
-  const email: string | undefined = (payload.data?.buyer?.email ?? payload.email)?.toLowerCase();
-  const subscriberCode: string | undefined = payload.data?.subscription?.subscriber?.code;
+  //
+  // ⚠️ Hotmart estructura esto DISTINTO según la familia del evento (probado
+  // en vivo 2026-09-17 con el payload real de "Cancelación de Suscripción"):
+  // los eventos de COMPRA traen buyer/subscription.subscriber; los de
+  // SUSCRIPCIÓN (cancelación, etc.) traen un `subscriber` a nivel raíz de
+  // `data`, con su propio email — y `date_next_charge` también se corre un
+  // nivel. Se prueban ambas rutas en cada campo.
+  const email: string | undefined = (
+    payload.data?.buyer?.email ??
+    payload.data?.subscriber?.email ??
+    payload.email
+  )?.toLowerCase();
+  const subscriberCode: string | undefined =
+    payload.data?.subscription?.subscriber?.code ?? payload.data?.subscriber?.code;
   // Fecha en la que termina el ciclo ya pagado (si Hotmart la manda) — para no
   // cortarle el acceso a quien canceló pero ya pagó el período actual.
-  const accessUntilRaw = payload.data?.subscription?.date_next_charge;
+  const accessUntilRaw = payload.data?.subscription?.date_next_charge ?? payload.data?.date_next_charge;
   const accessUntil = accessUntilRaw ? new Date(Number(accessUntilRaw)).toISOString() : null;
 
   if (event === PLAN_CHANGE_EVENT) {

@@ -1,6 +1,24 @@
 # ESTADO — Amor & Tarot
 Última actualización: 2026-09-15 | Sesión actual: 6 (capturas del carrusel de la landing actualizadas al tema místico, Integraciones reales — Supabase Etapa 2 lista, GitHub+Vercel conectados, panel de admin, pop-up de salida en landing, auditoría legal, auditoría de seguridad, mecanismo ampliado a cualquier duda, check-in de ánimo, copy de win-back listo, informe semanal, avance por categoría, voseo reforzado, dominio propio conectado, nota de bienvenida en Historial, símbolos zodiacales 3D + medidor de compatibilidad, toque de "hechizo" extendido a Lecturas e Inicio, ícono zodiacal en Perfil, TEMA MÍSTICO oscuro/dorado en TODA la app por dentro incluido Bienestar, acabado 3D vidrio/cromo en botón principal + secundario + círculo activo del nav, fondo blanco quitado del ícono de la bola de cristal, logo real reemplazado por una versión más nítida, Resend conectado + correo de login con marca propia, hola@amorytarot.app con reenvío real vía ImprovMX + avatar de Gravatar activo, correo de contacto legal actualizado en las 6 páginas, Resend agregado a la lista de subprocesadores en Privacidad, código de acceso corregido de 6 a 8 dígitos, envío de correo confirmado sano, aviso de IA en Lecturas integrado como pie de tarjeta, píldora del nav inferior pasó de negro a ámbar oscuro para resaltar, vidrio esmerilado extendido a las tarjetas de Inicio/Lecturas/Bienestar, botón "deslizar para activar" en Sacar mis 3 cartas, tarjetas de categoría de Lecturas con color propio + 3D + hover, acabado 3D en tarjetas de Historial, BUG del correo de "primera vez" (Confirm signup) corregido y CERRADO — confirmado visualmente por el usuario, signo zodiacal opcional de la otra persona enriquece la lectura con IA, íconos de "¿Cómo te sientes hoy?" con contraste corregido, círculos de "Esta semana" pasaron de opacos a blanco/crema, revisión general de fin de sesión — 1 bug más encontrado y corregido, edición de nombre en Perfil — arregla el bug real de "Hola, ahí" reportado por una usuaria)
 
+✅ CHECKPOINT — Bug real #4, el mismo día: Hotmart estructura el correo/código
+de suscriptor/fecha de cobro DISTINTO según la familia del evento, 2026-09-17.
+El fix del bug #3 (buscar por código de suscriptor si no hay correo) seguía
+fallando — pero no por timing de despliegue como se sospechó primero: viendo
+el JSON real de "Cancelación de Suscripción" que pidió el usuario del
+Historial de Hotmart, se confirmó que ese evento SÍ trae correo, pero
+en `data.subscriber.email` (no `data.buyer.email`), el código en
+`data.subscriber.code` (no `data.subscription.subscriber.code`), y la fecha
+de próximo cobro en `data.date_next_charge` (no `data.subscription.
+date_next_charge`) — los eventos de COMPRA usan una forma, los de SUSCRIPCIÓN
+usan otra. El webhook ahora prueba ambas rutas en los 3 campos. Probado en
+local reproduciendo la forma EXACTA del payload real (compra → cancelación
+con `subscriber` a nivel raíz) → encuentra la cuenta, la marca `cancelled` y
+fija `access_until` en la fecha correcta. tsc ✓ build ✓. Publicado.
+⚠️ Metodología para la próxima vez que aparezca un evento nuevo de Hotmart:
+NUNCA asumir que comparte la forma de otro evento ya visto — pedir el JSON
+real del Historial de Hotmart antes de mapear campos nuevos.
+
 ✅ CHECKPOINT — Bug real #3 corregido: "Cancelación de Suscripción" sin
 correo, 2026-09-17. Con los 2 bugs anteriores corregidos, el usuario repitió
 la prueba de Hotmart: 6 de 7 pasaron (incluida "Compra reembolsada", el
