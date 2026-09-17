@@ -53,9 +53,9 @@ export async function GET(req: NextRequest) {
     const [umbral, diaCorreo] = etapa === 0 ? [30, 30] : etapa === 1 ? [60, 60] : [90, 90];
     if (dias < umbral) continue;
 
-    const ok = await enviarWinback(p.email, p.nombre ?? '', diaCorreo as 30 | 60 | 90);
-    if (!ok) {
-      errores.push(`winback ${p.id} etapa ${etapa}`);
+    const resultado = await enviarWinback(p.email, p.nombre ?? '', diaCorreo as 30 | 60 | 90);
+    if (!resultado.ok) {
+      errores.push(`winback ${p.id} etapa ${etapa}: ${resultado.error}`);
       continue;
     }
     await admin.from('profiles').update({ winback_stage: etapa + 1 }).eq('id', p.id);
@@ -76,9 +76,9 @@ export async function GET(req: NextRequest) {
     const umbral = etapa === 0 ? 0 : etapa === 1 ? 3 : 7;
     if (dias < umbral) continue;
 
-    const ok = await enviarDunning(p.email, p.nombre ?? '', umbral as 0 | 3 | 7);
-    if (!ok) {
-      errores.push(`dunning ${p.id} etapa ${etapa}`);
+    const resultado = await enviarDunning(p.email, p.nombre ?? '', umbral as 0 | 3 | 7);
+    if (!resultado.ok) {
+      errores.push(`dunning ${p.id} etapa ${etapa}: ${resultado.error}`);
       continue;
     }
     await admin.from('profiles').update({ dunning_stage: etapa + 1 }).eq('id', p.id);

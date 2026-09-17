@@ -43,10 +43,12 @@ function parrafos(lineas: string[]): string {
   return lineas.map((l) => `<p style="margin:0 0 16px;">${l}</p>`).join('\n');
 }
 
+type ResultadoEnvio = { ok: boolean; error?: string };
+
 // ── WIN-BACK (docs/copy/winback.md) ──────────────────────────────────────
-export async function enviarWinback(email: string, nombre: string, dia: 30 | 60 | 90): Promise<boolean> {
+export async function enviarWinback(email: string, nombre: string, dia: 30 | 60 | 90): Promise<ResultadoEnvio> {
   const client = resend();
-  if (!client) return false;
+  if (!client) return { ok: false, error: 'FALTA RESEND_API_KEY' };
   const n = nombre.trim() || 'de nuevo';
 
   const variantes = {
@@ -89,13 +91,12 @@ export async function enviarWinback(email: string, nombre: string, dia: 30 | 60 
     subject: v.asunto,
     html: envoltorio(`Win-back día ${dia}`, v.cuerpo, SITE_URL, v.cta),
   });
-  return !error;
+  return error ? { ok: false, error: error.message } : { ok: true };
 }
 
-// ── DUNNING (docs/copy/dunning.md) — cobro fallido ───────────────────────
-export async function enviarDunning(email: string, nombre: string, etapa: 0 | 3 | 7): Promise<boolean> {
+export async function enviarDunning(email: string, nombre: string, etapa: 0 | 3 | 7): Promise<ResultadoEnvio> {
   const client = resend();
-  if (!client) return false;
+  if (!client) return { ok: false, error: 'FALTA RESEND_API_KEY' };
   const n = nombre.trim() || 'de nuevo';
   const cta = 'Actualizar mi método de pago →';
 
@@ -132,5 +133,5 @@ export async function enviarDunning(email: string, nombre: string, etapa: 0 | 3 
     subject: v.asunto,
     html: envoltorio(`Dunning día ${etapa}`, v.cuerpo, HOTMART_PORTAL_COMPRADOR, cta),
   });
-  return !error;
+  return error ? { ok: false, error: error.message } : { ok: true };
 }
