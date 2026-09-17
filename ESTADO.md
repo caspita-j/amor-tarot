@@ -19,6 +19,38 @@ seguir usando la app mientras tanto):
 - [x] Efecty: RESUELTO 2026-09-17 — se deja activo + aclaración agregada en
   el paywall ("Si pagas en efectivo... no aplica el período de prueba").
 
+✅ CHECKPOINT — Win-back y dunning automatizados, 2026-09-17. A pedido del
+usuario: conectar los correos de retención que ya estaban escritos
+(`docs/copy/winback.md`, `docs/copy/dunning.md`) — les faltaba el cableado
+técnico, ya construido y probado.
+- `profiles` ganó `cancelled_at`, `past_due_at`, `winback_stage`,
+  `dunning_stage` (0-3) — los fija/limpia la RPC `apply_hotmart_event`:
+  la fecha se guarda SOLO al entrar a ese estado (no se pisa en reintentos),
+  y los contadores se reinician a 0 en cuanto la cuenta reactiva de verdad.
+  Mismo blindaje de columna que plan/status: el cliente no puede tocarlas.
+- `lib/email.ts`: envía los 3 correos de win-back y los 3 de dunning vía
+  Resend (RESEND_API_KEY nueva, agregada por el usuario en Vercel — nunca
+  vista en el chat). Diseño oscuro/dorado con fuentes web-safe (los correos
+  no cargan fuentes propias de forma confiable entre clientes). El CTA de
+  dunning va al portal REAL del comprador en Hotmart
+  (consumer.hotmart.com/purchase, confirmado con la ayuda oficial — nunca
+  se inventó esa URL).
+- `app/api/cron/retencion/route.ts` + `vercel.json`: una tarea diaria
+  (14:00 UTC) protegida con `CRON_SECRET` (generado localmente, nunca visto
+  en el chat, el usuario lo copió a Vercel). Diseño por ETAPA (0→1→2→3) en
+  vez de "¿es exactamente el día 30?": si el cron se salta un día, se pone
+  al día solo en la siguiente corrida en vez de perder a alguien para
+  siempre.
+- Probado en local con cuentas descartables: encontró correctamente a un
+  cancelado de 31 días (elegible) y a uno de 10 días (NO elegible, quedó
+  afuera) — el envío real de Resend no se pudo probar en local (la clave
+  vive solo en Vercel), pero la lógica de selección y umbrales quedó
+  verificada. El endpoint rechaza con 401 sin el secreto correcto. tsc ✓
+  build ✓. Cuentas de prueba borradas. Publicado.
+⚠️ Pendiente real: confirmar en producción, tras el próximo disparo del cron
+(o forzándolo a mano una vez), que un correo de verdad llega a una bandeja
+de entrada — hoy solo está verificada la lógica, no la entrega real.
+
 ✅ CHECKPOINT — Embudo de conversión real (event_log), 2026-09-17. A pedido
 del usuario, tras la auditoría post-Hotmart: construido el registro de
 eventos que faltaba para la sección "Conversión" del panel de admin (no
